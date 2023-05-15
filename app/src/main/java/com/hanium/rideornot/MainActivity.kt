@@ -1,5 +1,9 @@
 package com.hanium.rideornot
 
+import android.content.Context
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.hanium.rideornot.databinding.ActivityMainBinding
@@ -7,11 +11,13 @@ import com.hanium.rideornot.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-
+    // private lateinit var locationManager: LocationManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
 
         initBottomNavigation()
     }
@@ -50,4 +56,10 @@ class MainActivity : AppCompatActivity() {
             false
         }
     }
+
+
+
+
+
+
 }
