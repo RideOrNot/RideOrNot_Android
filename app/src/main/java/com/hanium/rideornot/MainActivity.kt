@@ -23,17 +23,11 @@ import com.google.android.gms.tasks.Task
 import com.hanium.rideornot.databinding.ActivityMainBinding
 
 private const val LOCATION_REQUEST_PERMISSION_REQUEST_CODE: Int = 1
+private const val PRIORITY_LOCATION: @Priority Int = Priority.PRIORITY_HIGH_ACCURACY
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-
-    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    public var lastLocation: Location? = null
-    private lateinit var locationRequest: LocationRequest
-    private lateinit var locationCallback: LocationCallback
-    private lateinit var cancellationTokenSource: CancellationTokenSource
-
 
     // private val REQUEST_PERMISSION_LOCATION = 10
 
@@ -49,8 +43,8 @@ class MainActivity : AppCompatActivity() {
 
         initBottomNavigation()
 
-        initLocationService()
-        startLocationUpdates()
+        LocationService.initLocationService(this)
+        LocationService.startLocationUpdates()
 
         //geofencingClient = LocationServices.getGeofencingClient(this)
     }
@@ -94,63 +88,6 @@ class MainActivity : AppCompatActivity() {
 //       return null
 //    }
 
-    @SuppressLint("MissingPermission")
-    fun startLocationUpdates() {
-        locationRequest = LocationRequest.create().apply{
-            interval = locationUpdateInterval
-            priority = Priority.PRIORITY_HIGH_ACCURACY
-        }
-
-        var tempIndex = 0;
-        locationCallback = object: LocationCallback() {
-            override fun onLocationResult(p0: LocationResult) {
-                super.onLocationResult(p0)
-                lastLocation = p0.lastLocation
-
-                tempIndex++
-                Log.d("locationUpdate-attempt $tempIndex",
-                    "longitude: ${lastLocation?.longitude.toString()}, latitude: ${lastLocation?.latitude.toString()}")
-            }
-        }
-        fusedLocationProviderClient.requestLocationUpdates(
-            locationRequest,
-            locationCallback,
-            // 위치 업데이트를 처리할 스레드의 루퍼를 전달
-            Looper.getMainLooper()
-        )
-    }
-
-    fun stopLocationUpdates() {
-        fusedLocationProviderClient.removeLocationUpdates(locationCallback)
-    }
-
-    private fun initLocationService() {
-        cancellationTokenSource = CancellationTokenSource()
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
-        val cancellationToken: CancellationToken = cancellationTokenSource.token
-        // FINE_LOCATION, COARSE_LOCATION 의 permission check
-        // TODO: 두 권한 체크를 분리해야 할지?
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-            ||
-            ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                ),
-                // TODO: request codes 관리 방법 모색
-                LOCATION_REQUEST_PERMISSION_REQUEST_CODE
-            )
-        }
-    }
 
 
 
