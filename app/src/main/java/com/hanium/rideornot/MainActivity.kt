@@ -1,5 +1,6 @@
 package com.hanium.rideornot
 
+
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.PendingIntent
@@ -11,19 +12,10 @@ import android.location.LocationListener
 import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Looper
-import android.util.Log
-import android.widget.Toast
-import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.*
-import com.google.android.gms.tasks.CancellationToken
-import com.google.android.gms.tasks.CancellationTokenSource
-import com.google.android.gms.tasks.OnTokenCanceledListener
-import com.google.android.gms.tasks.Task
 import com.hanium.rideornot.databinding.ActivityMainBinding
+import com.hanium.rideornot.gps.GpsManager
 
-private const val LOCATION_REQUEST_PERMISSION_REQUEST_CODE: Int = 1
-private const val PRIORITY_LOCATION: @Priority Int = Priority.PRIORITY_HIGH_ACCURACY
 
 class MainActivity : AppCompatActivity() {
 
@@ -34,7 +26,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var geofencingClient: GeofencingClient
     private val geofenceList = MutableList<Geofence?>(100) { null }
 
-   private var locationUpdateInterval: Long = 2000;
+    private var locationUpdateInterval: Long = 2000;
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,10 +36,11 @@ class MainActivity : AppCompatActivity() {
 
         initBottomNavigation()
 
-        LocationService.initLocationService(this)
-        LocationService.startLocationUpdates()
+        GpsManager.initGpsManager(this)
+        //GpsManager.startLocationUpdates()
 
-        //geofencingClient = LocationServices.getGeofencingClient(this)
+
+        GpsManager.addGeofence("1", 37.540455,126.9700533 ,1000f, 1000000)
     }
 
     private fun initBottomNavigation() {
@@ -84,9 +78,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-//    private fun getStationLocation(longitude:Float, latitude:Float): Task<Location>? {
-//       return null
-//    }
 
 
 

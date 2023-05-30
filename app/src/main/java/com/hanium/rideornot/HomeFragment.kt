@@ -7,9 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import com.hanium.rideornot.LocationService.initLocationService
-import com.hanium.rideornot.LocationService.lastLocation
 import com.hanium.rideornot.databinding.FragmentHomeBinding
+import com.hanium.rideornot.gps.GpsManager
 
 class HomeFragment : Fragment() {
 
@@ -29,17 +28,18 @@ class HomeFragment : Fragment() {
 
         val locationTestButton: Button? = view.findViewById(R.id.locationTestButton)
         locationTestButton?.setOnClickListener {
-            Log.d("test","location: $LocationService.lastLocation")
+
         }
 
         val startLocationUpdateButton: Button? = view.findViewById(R.id.startLocationUpdateButton)
         startLocationUpdateButton?.setOnClickListener {
-            LocationService.startLocationUpdates()
+            GpsManager.startLocationUpdates()
         }
 
         val stopLocationUpdateButton: Button? = view.findViewById(R.id.stopLocationUpdateButton)
         stopLocationUpdateButton?.setOnClickListener {
-            LocationService.stopLocationUpdates()
+            GpsManager.stopLocationUpdates()
+
         }
 
     }
