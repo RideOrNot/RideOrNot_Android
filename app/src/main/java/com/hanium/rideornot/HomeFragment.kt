@@ -2,7 +2,6 @@ package com.hanium.rideornot
 
 import android.os.Bundle
 
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.widget.Button
 import com.hanium.rideornot.databinding.FragmentHomeBinding
@@ -37,12 +36,20 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
+
+    var tempGeofenceId: Int = 1
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val locationTestButton: Button? = view.findViewById(R.id.locationTestButton)
-        locationTestButton?.setOnClickListener {
-
+        val addGeofenceButton: Button? = view.findViewById(R.id.addGeofenceButton)
+        addGeofenceButton?.setOnClickListener {
+            GpsManager.addGeofence(
+                tempGeofenceId.toString(),
+                GpsManager.lastLocation!!.latitude,
+                GpsManager.lastLocation!!.longitude,
+                1000f,
+                100000
+            )
         }
 
         val startLocationUpdateButton: Button? = view.findViewById(R.id.startLocationUpdateButton)
