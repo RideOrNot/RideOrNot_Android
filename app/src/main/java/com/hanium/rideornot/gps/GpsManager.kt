@@ -144,9 +144,7 @@ object GpsManager {
             .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_EXIT)
             .build()
         val geoList: List<Geofence> = listOf(geoEnter, geoExit)
-        geofenceList.add(geoEnter)
-        geofenceList.add(geoExit)
-
+        
         // 모니터링할 지오펜스 목록에 생성한 객체를 추가
         geofencingClient.addGeofences(
             // INITIAL_TRIGGER 의 존재 의의에 대한 설명
@@ -157,6 +155,8 @@ object GpsManager {
             .run {
                 addOnSuccessListener {
                     Log.d("GeofenceAdditionSuccess", "Geofence added successfully")
+                    geofenceList.add(geoEnter)
+                    geofenceList.add(geoExit)
                 }
                 addOnFailureListener {
                     Log.d("GeofenceAdditionFailure", exception?.message.toString())
