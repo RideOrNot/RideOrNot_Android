@@ -47,12 +47,12 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
-    //Retrofit2
+    // Retrofit2
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
     implementation "com.squareup.retrofit2:converter-gson:2.9.0"
     implementation "com.squareup.retrofit2:adapter-rxjava2:2.9.0"
 
-    //okHttp
+    // OkHttp
     implementation "com.squareup.okhttp3:okhttp:4.10.0"
     implementation "com.squareup.okhttp3:logging-interceptor:4.10.0"
 
@@ -62,4 +62,8 @@ dependencies {
 
     // android gps api library
     implementation "com.google.android.gms:play-services-location:21.0.1"
+
+    // 네이버 지도 SDK
+    implementation 'com.naver.maps:map-sdk:3.16.2'
+
 }
