@@ -18,9 +18,10 @@ import com.hanium.rideornot.MainActivity
 
 private const val LOCATION_REQUEST_PERMISSION_REQUEST_CODE: Int = 1
 private const val PRIORITY_LOCATION: @Priority Int = Priority.PRIORITY_HIGH_ACCURACY
-private const val MAX_LOCATION_UPDATE_THREAD_COUNT =
-    1 // startLocationUpdate 를 동시에 호출할 수 있는 최대 스레드 수
+private const val MAX_LOCATION_UPDATE_THREAD_COUNT = 1 // startLocationUpdate 를 동시에 호출할 수 있는 최대 스레드 수
 private const val GEOFENCE_LIST_SIZE = 200
+private const val SUFFIX_GEOFENCE_ID_ENTER = "-enter"
+private const val SUFFIX_GEOFENCE_ID_EXIT = "-exit"
 
 object GpsManager {
 
@@ -132,19 +133,19 @@ object GpsManager {
     ) {
         // 전달받은 인수로 지오펜스 객체 생성
         val geoEnter = Geofence.Builder()
-            .setRequestId("$requestId-enter")
+            .setRequestId("$requestId$SUFFIX_GEOFENCE_ID_ENTER")
             .setCircularRegion(latitude, longitude, radius)
             .setExpirationDuration(duration)
             .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER)
             .build()
         val geoExit = Geofence.Builder()
-            .setRequestId("$requestId-exit")
+            .setRequestId("$requestId$SUFFIX_GEOFENCE_ID_EXIT")
             .setCircularRegion(latitude, longitude, radius)
             .setExpirationDuration(duration)
             .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_EXIT)
             .build()
         val geoList: List<Geofence> = listOf(geoEnter, geoExit)
-        
+
         // 모니터링할 지오펜스 목록에 생성한 객체를 추가
         geofencingClient.addGeofences(
             // INITIAL_TRIGGER 의 존재 의의에 대한 설명
@@ -168,7 +169,7 @@ object GpsManager {
         geofencingClient.removeGeofences(idList)
         for (i in idList.indices)
             geofenceList.removeIf {
-                it?.requestId == idList[i] + "-enter" || it?.requestId == idList[i] + "-exit"
+                it?.requestId == idList[i] + SUFFIX_GEOFENCE_ID_ENTER || it?.requestId == idList[i] + SUFFIX_GEOFENCE_ID_EXIT
             }
     }
 

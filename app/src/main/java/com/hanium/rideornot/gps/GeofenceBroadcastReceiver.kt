@@ -52,9 +52,10 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
 
         when (geofenceTransition) {
             Geofence.GEOFENCE_TRANSITION_ENTER -> {
+                var j = 1
                 for (i in triggeringGeofences) {
-                    var j = 1
                     Log.d("GeofenceBroadcastReceiver", "triggeringGeofences: $j - ${i.requestId}")
+                    j++
                 }
 
                 NotificationManager.createNotification(
@@ -70,9 +71,10 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
 
             }
             Geofence.GEOFENCE_TRANSITION_EXIT -> {
+                var j = 1
                 for (i in triggeringGeofences) {
-                    var j = 1
                     Log.d("GeofenceBroadcastReceiver", "triggeringGeofences: $j - ${i.requestId}")
+                    j++
                 }
 
                 NotificationManager.createNotification(

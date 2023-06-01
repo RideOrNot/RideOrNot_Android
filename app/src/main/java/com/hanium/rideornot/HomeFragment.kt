@@ -36,13 +36,13 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
-
-    var tempGeofenceId: Int = 1
+    var tempGeofenceIndex = 1
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val addGeofenceButton: Button? = view.findViewById(R.id.addGeofenceButton)
         addGeofenceButton?.setOnClickListener {
+            var tempGeofenceId = "test-$tempGeofenceIndex"
             GpsManager.addGeofence(
                 tempGeofenceId.toString(),
                 GpsManager.lastLocation!!.latitude,
@@ -50,6 +50,7 @@ class HomeFragment : Fragment() {
                 1000f,
                 100000
             )
+            tempGeofenceIndex++
         }
 
         val startLocationUpdateButton: Button? = view.findViewById(R.id.startLocationUpdateButton)

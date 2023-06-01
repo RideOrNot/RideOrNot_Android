@@ -13,14 +13,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    // private val REQUEST_PERMISSION_LOCATION = 10
-
-    private lateinit var geofencingClient: GeofencingClient
-    private val geofenceList = MutableList<Geofence?>(100) { null }
-
-    private var locationUpdateInterval: Long = 2000;
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
