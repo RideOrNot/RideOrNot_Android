@@ -1,0 +1,16 @@
+stages:
+  - build
+
+build:
+  stage: build
+  image: cje172/android_test:android-ci
+  script:
+    - chmod +x ./gradlew
+    - ./gradlew assembleDebug
+  artifacts:
+    paths:
+      - app/build/outputs/
+
+cache:
+  paths:
+    - /cache
