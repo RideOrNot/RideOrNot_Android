@@ -3,7 +3,7 @@ stages:
 
 build:
   stage: build
-  image: cje172/android_test:android-ci
+  image: cje172/ride-or-not:hanium
   script:
     - chmod +x ./gradlew
     - ./gradlew assembleDebug
