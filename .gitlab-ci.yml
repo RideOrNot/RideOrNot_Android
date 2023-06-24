@@ -5,9 +5,9 @@ build:
   stage: build
   image: cje172/ride-or-not:hanium
   script:
-    - echo "sdk.dir=$ANDROID_HOME" >> ./app/local.properties
-    - echo "BASE_URL=$BASE_URL" >> ./app/local.properties
-    - echo "NAVER_MAP=$NAVER_MAP" >> ./app/local.properties
+    - echo "sdk.dir=$ANDROID_HOME" >> local.properties
+    - echo "BASE_URL=$BASE_URL" >> local.properties
+    - echo "NAVER_MAP=$NAVER_MAP" >> local.properties
     - chmod +x ./gradlew
     - ./gradlew assembleDebug
   artifacts:
