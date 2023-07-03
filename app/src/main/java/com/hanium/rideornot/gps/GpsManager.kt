@@ -96,12 +96,7 @@ object GpsManager {
             override fun onLocationResult(p0: LocationResult) {
                 super.onLocationResult(p0)
                 lastLocation = p0.lastLocation
-
                 tempIndex++
-                Log.d(
-                    "locationUpdate-attempt $tempIndex",
-                    "latitude: ${lastLocation?.latitude.toString()}, longitude: ${lastLocation?.longitude.toString()}"
-                )
             }
         }
         fusedLocationProviderClient.requestLocationUpdates(
