@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".FavoriteFragment">
@@ -13,6 +14,9 @@
         android:layout_weight="1"
         android:ems="10"
         android:hint="검색어를 입력하세요"
+        android:inputType="text"
+        android:maxLines="1"
+        android:imeOptions="actionSearch"
         android:privateImeOptions="defaultInputMode=korean"
         app:layout_constraintVertical_bias="0.061"
         app:layout_constraintTop_toTopOf="parent"

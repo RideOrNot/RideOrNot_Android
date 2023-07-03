@@ -1,16 +1,17 @@
 package com.hanium.rideornot
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.view.*
+import android.view.inputmethod.InputMethodManager
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hanium.rideornot.databinding.FragmentFavoriteBinding
 import com.hanium.rideornot.search.ISearchHistoryRecyclerView
-import com.hanium.rideornot.search.SearchHistoryRecyclerViewAdapter
 import com.hanium.rideornot.search.SearchHistoryModel
+import com.hanium.rideornot.search.SearchHistoryRecyclerViewAdapter
 
 class FavoriteFragment : Fragment(),
     ISearchHistoryRecyclerView {
@@ -24,6 +25,25 @@ class FavoriteFragment : Fragment(),
     ): View {
         binding = FragmentFavoriteBinding.inflate(inflater, container, false)
 
+        binding.editTextSearch.setOnKeyListener { _, keyCode, event ->
+            if ((event.action== KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                // 엔터가 눌릴 때 동작
+                historyList.add(SearchHistoryModel(id=-1, binding.editTextSearch.text.toString()))
+                searchHistoryRecyclerViewAdapter.notifyDataSetChanged()
+                hideKeyboard()
+                handleSearch()
+                binding.editTextSearch.text.clear()
+                true
+            } else {
+                false
+            }
+        }
+        binding.constraintLayout.setOnTouchListener { view, event ->
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                hideKeyboard()
+            }
+            false
+        }
         return binding.root
     }
 
@@ -38,22 +58,6 @@ class FavoriteFragment : Fragment(),
             add(SearchHistoryModel(id = 2, stationName = "용산역"))
             add(SearchHistoryModel(id = 3, stationName = "홍대입구역"))
             add(SearchHistoryModel(id = 4, stationName = "상수역"))
-            add(SearchHistoryModel(id = 5, stationName = "서울역"))
-            add(SearchHistoryModel(id = 6, stationName = "용산역"))
-            add(SearchHistoryModel(id = 7, stationName = "홍대입구역"))
-            add(SearchHistoryModel(id = 8, stationName = "상수역"))
-            add(SearchHistoryModel(id = 9, stationName = "서울역"))
-            add(SearchHistoryModel(id = 10, stationName = "용산역"))
-            add(SearchHistoryModel(id = 11, stationName = "홍대입구역"))
-            add(SearchHistoryModel(id = 12, stationName = "상수역"))
-            add(SearchHistoryModel(id = 13, stationName = "서울역"))
-            add(SearchHistoryModel(id = 14, stationName = "용산역"))
-            add(SearchHistoryModel(id = 15, stationName = "홍대입구역"))
-            add(SearchHistoryModel(id = 16, stationName = "상수역"))
-            add(SearchHistoryModel(id = 17, stationName = "서울역"))
-            add(SearchHistoryModel(id = 18, stationName = "용산역"))
-            add(SearchHistoryModel(id = 19, stationName = "홍대입구역"))
-            add(SearchHistoryModel(id = 20, stationName = "상수역"))
         }
         Log.d("initRecycler", "data list : $historyList")
 
@@ -74,6 +78,20 @@ class FavoriteFragment : Fragment(),
         searchHistoryRecyclerViewAdapter.notifyDataSetChanged()
     }
 
+
+    private fun hideKeyboard() {
+        if (activity != null && requireActivity().currentFocus != null) {
+            val inputManager = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputManager.hideSoftInputFromWindow(
+                requireActivity().currentFocus!!.windowToken,
+                InputMethodManager.HIDE_NOT_ALWAYS
+            )
+        }
+    }
+
+    private fun handleSearch() {
+
+    }
 
 
 
