@@ -46,6 +46,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextSearch"
         app:layout_constraintVertical_bias="0.0"
-        tools:listitem="@layout/item_recycler_ex" />
+        tools:listitem="@layout/item_search_history_recycler_ex" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
