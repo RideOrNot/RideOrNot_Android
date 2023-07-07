@@ -1,7 +1,7 @@
 package com.hanium.rideornot.data
 
 import android.util.Log
-import com.hanium.rideornot.ArrivalView
+import com.hanium.rideornot.ui.ArrivalView
 import com.hanium.rideornot.utils.NetworkModule.Companion.getRetrofit
 import retrofit2.Call
 import retrofit2.Callback

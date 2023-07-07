@@ -1,21 +1,21 @@
-package com.hanium.rideornot
+package com.hanium.rideornot.ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.hanium.rideornot.databinding.FragmentSettingBinding
+import com.hanium.rideornot.databinding.FragmentFavoriteBinding
 
-class SettingFragment : Fragment() {
+class FavoriteFragment : Fragment() {
 
-    private lateinit var binding: FragmentSettingBinding
+    private lateinit var binding: FragmentFavoriteBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentSettingBinding.inflate(inflater, container, false)
+        binding = FragmentFavoriteBinding.inflate(inflater, container, false)
 
 
         return binding.root

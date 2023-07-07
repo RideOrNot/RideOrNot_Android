@@ -12,5 +12,24 @@
     <!-- primary color -->
     <color name="blue">#2B73F3</color>
     <color name="gray">#818181</color>
+    <color name="pink_50">#FFF1F1</color>
+
+    <!-- gray-scale color -->
+    <color name="gray_100">#FFFAFAFA</color>
+    <color name="gray_200">#FFF5F5F5</color>
+    <color name="gray_300">#FFF0F0F0</color>
+    <color name="gray_400">#FFDEDEDE</color>
+    <color name="gray_500">#FFC2C2C2</color>
+    <color name="gray_600">#FF979797</color>
+    <color name="gray_700">#FF818181</color>
+    <color name="gray_800">#FF606060</color>
+    <color name="gray_900">#FF3C3C3C</color>
+    <color name="gray_950">#FF121212</color>
+
+    <!-- 혼잡도 color -->
+    <color name="green">#02C73C</color>
+    <color name="yellow">#F59E69</color>
+    <color name="red">#FF585D</color>
+
 
 </resources>

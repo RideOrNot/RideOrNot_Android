@@ -1,4 +1,4 @@
-package com.hanium.rideornot
+package com.hanium.rideornot.ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
+import com.hanium.rideornot.R
 import com.hanium.rideornot.databinding.FragmentSearchBinding
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
