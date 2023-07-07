@@ -3,10 +3,12 @@ package com.hanium.rideornot
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.google.android.gms.location.*
 import com.hanium.rideornot.databinding.ActivityMainBinding
 import com.hanium.rideornot.gps.GpsManager
-
+import com.hanium.rideornot.ui.FavoriteFragment
+import com.hanium.rideornot.ui.HomeFragment
+import com.hanium.rideornot.ui.SearchFragment
+import com.hanium.rideornot.ui.SettingFragment
 
 
 class MainActivity : AppCompatActivity() {
