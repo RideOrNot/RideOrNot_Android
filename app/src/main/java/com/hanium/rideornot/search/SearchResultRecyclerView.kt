@@ -49,7 +49,7 @@ class SearchResultRecyclerViewAdapter(
         override fun onClick(view: View?) {
             when (view) {
                 constraintSearchItem -> {
-                    searchRecyclerViewInterface.onItemClicked(adapterPosition)
+                    searchRecyclerViewInterface.onItemClick(adapterPosition)
                 }
             }
         }

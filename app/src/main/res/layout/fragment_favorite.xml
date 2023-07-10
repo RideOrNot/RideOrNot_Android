@@ -6,46 +6,5 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".FavoriteFragment">
-
-    <EditText
-        android:id="@+id/editTextSearch"
-        android:layout_width="410dp"
-        android:layout_height="61dp"
-        android:layout_weight="1"
-        android:ems="10"
-        android:hint="검색어를 입력하세요"
-        android:inputType="text"
-        android:maxLines="1"
-        android:imeOptions="actionSearch"
-        android:privateImeOptions="defaultInputMode=korean"
-        app:layout_constraintVertical_bias="0.061"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/appCompatTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="624dp"
-        android:text="@string/favorite"
-        android:textColor="@color/black"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="371dp"
-        android:layout_height="452dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextSearch"
-        app:layout_constraintVertical_bias="0.0"
-        tools:listitem="@layout/item_search_history_recycler_ex" />
-
+    
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -52,10 +52,10 @@ class SearchHistoryRecyclerViewAdapter(
         override fun onClick(view: View?) {
             when (view) {
                 deleteSearchBtn -> {
-                    searchRecyclerViewInterface.onItemDeleteClicked(adapterPosition)
+                    searchRecyclerViewInterface.onItemDeleteClick(adapterPosition)
                 }
                 constraintSearchItem -> {
-                    searchRecyclerViewInterface.onItemClicked(adapterPosition)
+                    searchRecyclerViewInterface.onItemClick(adapterPosition)
                 }
             }
         }
