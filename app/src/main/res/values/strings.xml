@@ -7,6 +7,7 @@
     <string name="search">검색</string>
     <string name="favorite">즐겨찾기</string>
     <string name="setting">설정</string>
+    <string name="station_detail">역 상세정보</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -21,6 +22,10 @@
     <string name="congestion">혼잡도</string>
     <string name="percentage">(%)</string>
     <string name="edit">편집</string>
+
+    <!-- Station Detail -->
+    <string name="arrival_info">도착 정보</string>
+    <string name="station_congestion">역사 혼잡도</string>
 
 
 </resources>

@@ -31,5 +31,21 @@
     <color name="yellow">#F59E69</color>
     <color name="red">#FF585D</color>
 
+    <!-- 호선별 color -->
+    <color name="line_1">#0D347F</color>
+    <color name="line_2">#3B9F37</color>
+    <color name="line_3">#DD5C32</color>
+    <color name="line_4">#3165A8</color>
+    <color name="line_5">#703E8C</color>
+    <color name="line_6">#904D23</color>
+    <color name="line_7">#5B692E</color>
+    <color name="line_8">#C82363</color>
+    <color name="line_9">#B39627</color>
+    <color name="line_bundang">#DBA829</color>
+    <color name="line_sinbundang">#971F2D</color>
+    <color name="line_ui_sinseol">#B7C450</color>
+    <color name="line_gyeongui_jungang">#76B69B</color>
+    <color name="line_airport_rail_link">#0090D2</color>
+    <color name="line_gyeongchun">#2D9B76</color>
 
 </resources>
