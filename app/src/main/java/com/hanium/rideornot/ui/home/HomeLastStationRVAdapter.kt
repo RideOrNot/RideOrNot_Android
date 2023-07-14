@@ -1,13 +1,13 @@
-package com.hanium.rideornot.ui
+package com.hanium.rideornot.ui.home
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hanium.rideornot.data.ArrivalResponse
-import com.hanium.rideornot.databinding.ItemNearbyNotificationBinding
+import com.hanium.rideornot.databinding.ItemLastStationBinding
 
-class HomeNearbyNotificationRVAdapter(private var arrivalList: ArrayList<ArrivalResponse>) :
-    RecyclerView.Adapter<HomeNearbyNotificationRVAdapter.ViewHolder>() {
+class HomeLastStationRVAdapter(private var arrivalList: ArrayList<ArrivalResponse>) :
+    RecyclerView.Adapter<HomeLastStationRVAdapter.ViewHolder>() {
 
     interface MyItemClickListener {
         fun onItemClick(arrival: ArrivalResponse)
@@ -22,8 +22,8 @@ class HomeNearbyNotificationRVAdapter(private var arrivalList: ArrayList<Arrival
         viewGroup: ViewGroup,
         viewType: Int
     ): ViewHolder {
-        val binding: ItemNearbyNotificationBinding =
-            ItemNearbyNotificationBinding.inflate(
+        val binding: ItemLastStationBinding =
+            ItemLastStationBinding.inflate(
                 LayoutInflater.from(viewGroup.context),
                 viewGroup,
                 false
@@ -40,16 +40,10 @@ class HomeNearbyNotificationRVAdapter(private var arrivalList: ArrayList<Arrival
         return arrivalList.size
     }
 
-    inner class ViewHolder(val binding: ItemNearbyNotificationBinding) :
+    inner class ViewHolder(val binding: ItemLastStationBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ArrivalResponse) {
             binding.tvLineNumber.text = item.lineName
-            binding.tvUpDirection.text = item.destination
-            binding.tvDownDirection.text = item.destination
-
-            (item.arrivalTime.toString() + "분").also { binding.tvUpArrivalTimeContent.text = it }
-            (item.arrivalTime.toString() + "분").also { binding.tvDownArrivalTimeContent.text = it }
-
         }
     }
 

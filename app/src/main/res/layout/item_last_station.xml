@@ -9,7 +9,7 @@
         android:id="@+id/iv_line_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/circle_size30"
+        android:src="@drawable/btn_gray500_radius30"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

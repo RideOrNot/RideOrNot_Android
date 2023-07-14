@@ -1,4 +1,4 @@
-package com.hanium.rideornot.ui
+package com.hanium.rideornot.ui.home
 
 import android.os.Bundle
 
@@ -6,11 +6,15 @@ import androidx.fragment.app.Fragment
 import com.hanium.rideornot.databinding.FragmentHomeBinding
 import android.view.*
 import android.widget.Toast
+import com.hanium.rideornot.MainActivity
+import com.hanium.rideornot.R
 import com.hanium.rideornot.data.ArrivalResponse
 import com.hanium.rideornot.data.ArrivalService
+import com.hanium.rideornot.data.ArrivalView
 import com.hanium.rideornot.notification.ContentType
 import com.hanium.rideornot.notification.NotificationManager
 import com.hanium.rideornot.notification.NotificationModel
+import com.hanium.rideornot.ui.StationDetailFragment
 
 class HomeFragment : Fragment(), ArrivalView {
 
@@ -19,9 +23,16 @@ class HomeFragment : Fragment(), ArrivalView {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
+        // 추후 삭제 **
+        binding.clNotice.setOnClickListener {
+            (context as MainActivity).supportFragmentManager.beginTransaction()
+//                .setCustomAnimations(R.anim.fade_in, R.anim.slide_out, R.anim.fade_in, R.anim.slide_out)
+                .replace(R.id.frm_main, StationDetailFragment())
+                .commitAllowingStateLoss()
+        }
 
         // getArrivalInfo()
 
@@ -76,13 +87,13 @@ class HomeFragment : Fragment(), ArrivalView {
         arrivalService.getArrivalInfo("서울") // 임의로 서울역
     }
 
-    override fun onArrivalSuccess(result: ArrivalResponse) {
+    override fun onArrivalSuccess(result: ArrayList<ArrivalResponse>) {
         // 승차 알림 테스트
         // 지금 위치로부터 지하철역까지 걸어가는 시간은 추가 안 한 상태.
         // "지금 10초 뛰면, 서울역(1호선)에서 광운대행 - 시청방면 열차를 탈 수 있어요"
         val notificationContent =
-            "지금 " + result.arrivalTime + "초 뛰면, " + "서울역" + "(" +
-                    result.lineName + "호선)에서 " + result.destination + " 열차를 탈 수 있어요"
+            "지금 " + result[0].arrivalTime + "초 뛰면, " + "서울역" + "(" +
+                    result[0].lineName + "호선)에서 " + result[0].destination + " 열차를 탈 수 있어요"
 
         val notificationManager = NotificationManager
         notificationManager.createNotification(
@@ -100,9 +111,4 @@ class HomeFragment : Fragment(), ArrivalView {
         Toast.makeText(context, "열차 도착 정보 조회 API 호출에 실패했습니다.", Toast.LENGTH_SHORT).show()
     }
 
-}
-
-interface ArrivalView {
-    fun onArrivalSuccess(result: ArrivalResponse)
-    fun onArrivalFailure(code: Int, message: String)
 }

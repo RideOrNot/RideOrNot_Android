@@ -5,29 +5,22 @@
     android:layout_height="wrap_content"
     android:paddingVertical="18dp">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/iv_line_number"
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_line_number"
+        style="@style/Text.Title3"
         android:layout_width="wrap_content"
+        android:layout_marginStart="10dp"
         android:layout_height="wrap_content"
-        android:src="@drawable/circle_size30"
+        android:background="@drawable/btn_gray500_radius30"
+        android:backgroundTint="@color/green"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:text="3"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/cl_up_nearby_notification"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_line_number"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="3"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_line_number"
-        app:layout_constraintEnd_toEndOf="@+id/iv_line_number"
-        app:layout_constraintStart_toStartOf="@+id/iv_line_number"
-        app:layout_constraintTop_toTopOf="@+id/iv_line_number" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_up_nearby_notification"
@@ -35,50 +28,50 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="40dp"
         app:layout_constraintEnd_toStartOf="@+id/cl_down_nearby_notification"
-        app:layout_constraintStart_toEndOf="@+id/iv_line_number"
+        app:layout_constraintStart_toEndOf="@+id/btn_line_number"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_up_direction"
-            android:layout_width="wrap_content"
+            style="@style/Text.Title3"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="대화 방면"
+            app:layout_constraintEnd_toEndOf="parent"
             android:textColor="@color/gray_900"
-            android:textSize="16sp"
-            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_up_arrival_time"
+            style="@style/Text.Body2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="도착까지 "
             android:textColor="@color/gray_800"
-            android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_up_direction" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_up_arrival_time_content"
+            style="@style/Text.Body2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="o분"
             android:textColor="@color/blue"
-            android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="@+id/tv_up_arrival_time"
             app:layout_constraintStart_toEndOf="@+id/tv_up_arrival_time"
             app:layout_constraintTop_toTopOf="@+id/tv_up_arrival_time" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_up_congestion_title"
+            style="@style/Text.Body2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="@string/congestion"
             android:textColor="@color/gray_800"
-            android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_up_arrival_time" />
 
@@ -94,12 +87,12 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_up_congestion"
+            style="@style/Text.Body2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
             android:text="@string/percentage"
             android:textColor="@color/gray_800"
-            android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="@+id/tv_up_congestion_title"
             app:layout_constraintStart_toEndOf="@+id/iv_up_congestion"
             app:layout_constraintTop_toTopOf="@+id/tv_up_congestion_title" />
@@ -110,53 +103,51 @@
         android:id="@+id/cl_down_nearby_notification"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-
-        android:layout_marginHorizontal="20dp"
+        android:layout_marginEnd="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/cl_up_nearby_notification"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_down_direction"
+            style="@style/Text.Title3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="오금 방면"
             android:textColor="@color/gray_900"
-            android:textSize="16sp"
-            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_down_arrival_time"
+            style="@style/Text.Body2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="도착까지 "
             android:textColor="@color/gray_800"
-            android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_down_direction" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_down_arrival_time_content"
+            style="@style/Text.Body2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="o분"
             android:textColor="@color/blue"
-            android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="@+id/tv_down_arrival_time"
             app:layout_constraintStart_toEndOf="@+id/tv_down_arrival_time"
             app:layout_constraintTop_toTopOf="@+id/tv_down_arrival_time" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_down_congestion_title"
+            style="@style/Text.Body2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="@string/congestion"
             android:textColor="@color/gray_800"
-            android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_down_arrival_time" />
 
@@ -173,12 +164,12 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_down_congestion"
+            style="@style/Text.Body2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
             android:text="@string/percentage"
             android:textColor="@color/gray_800"
-            android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="@+id/tv_down_congestion_title"
             app:layout_constraintStart_toEndOf="@+id/iv_down_congestion"
             app:layout_constraintTop_toTopOf="@+id/tv_down_congestion_title" />
