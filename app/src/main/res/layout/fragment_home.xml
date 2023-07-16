@@ -54,7 +54,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginTop="30dp"
-                android:background="@drawable/rect_pink50_radius20"
+                android:background="@drawable/rect_white_radius20"
+                android:backgroundTint="@color/pink_50"
                 android:paddingHorizontal="15dp"
                 android:paddingVertical="20dp"
                 app:layout_constraintTop_toTopOf="parent">
@@ -122,7 +123,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginTop="20dp"
-                android:background="@drawable/rect_white_border20_gray500"
+                android:background="@drawable/rect_white_border1_gray500_radius20"
                 android:paddingHorizontal="15dp"
                 android:paddingVertical="20dp"
                 app:layout_constraintTop_toBottomOf="@+id/tv_nearby_notification_title">
@@ -190,7 +191,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginTop="20dp"
-                android:background="@drawable/rect_white_border20_gray500"
+                android:background="@drawable/rect_white_border1_gray500_radius20"
                 android:paddingHorizontal="15dp"
                 android:paddingVertical="22dp"
                 app:layout_constraintTop_toBottomOf="@+id/tv_last_station_title">

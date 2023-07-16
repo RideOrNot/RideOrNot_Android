@@ -33,6 +33,15 @@ class StationDetailFragment : Fragment(), ArrivalView {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentStationDetailBinding.inflate(inflater, container, false)
+
+
+
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         binding.rvLine.adapter = lineRVAdapter
 
         // TDL: 추후 이전 화면에서 선택된 역 전달받는 코드 추가 필요
@@ -44,7 +53,8 @@ class StationDetailFragment : Fragment(), ArrivalView {
         val station = "양재"
         CoroutineScope(Dispatchers.Main).launch {
             val lineId = withContext(Dispatchers.IO) { stationDao.findLineByName(station) }
-            val lineList = withContext(Dispatchers.IO) { lineDao.getLinesByIds(lineId) as ArrayList<Line> }
+            val lineList =
+                withContext(Dispatchers.IO) { lineDao.getLinesByIds(lineId) as ArrayList<Line> }
 
             // 도착 정보 조회
             getArrivalInfo(station)
@@ -62,9 +72,6 @@ class StationDetailFragment : Fragment(), ArrivalView {
                 }
             })
         }
-
-
-        return binding.root
     }
 
 
@@ -74,32 +81,36 @@ class StationDetailFragment : Fragment(), ArrivalView {
 
         // 상행과 하행 방향으로 데이터를 나누기
         // ** 추후 lineName별로 조회하도록 수정 필요!! 현재 임시로 3호선 설정
-        for (arrival in arrivalList) {
-            if (arrival.direction == "상행" && arrival.lineName == "1003") {
-                upDirectionList.add(arrival)
-            } else if (arrival.direction == "하행" && arrival.lineName == "1003") {
-                downDirectionList.add(arrival)
+        if (upDirectionList.isNotEmpty() && downDirectionList.isNotEmpty()) {
+            for (arrival in arrivalList) {
+                if (arrival.direction == "상행" && arrival.lineName == "1003") {
+                    upDirectionList.add(arrival)
+                } else if (arrival.direction == "하행" && arrival.lineName == "1003") {
+                    downDirectionList.add(arrival)
+                }
+                arrival.destination = arrival.destination.substringBefore("행")
             }
-            arrival.destination = arrival.destination.substringBefore("행")
+            // 상행, 하행 방향 데이터를 arrivalTime 순으로 정렬, 상위 2개 데이터 추출
+            val upTopTwoList = upDirectionList.sortedBy { it.arrivalTime }.take(2)
+            val downTopTwoList = downDirectionList.sortedBy { it.arrivalTime }.take(2)
+
+
+            // 상행, 하행에 따라 방면을 구분해서 시간 순으로 2개씩 표시
+            binding.tvUpFirstArrivalStation.text = upTopTwoList[0].destination
+            binding.tvUpFirstArrivalTime.text = formatArrivalTime(upTopTwoList[0].arrivalTime)
+
+            binding.tvUpSecondArrivalStation.text = upTopTwoList[1].destination
+            binding.tvUpSecondArrivalTime.text = formatArrivalTime(upTopTwoList[1].arrivalTime)
+
+
+            binding.tvDownFirstArrivalStation.text = downTopTwoList[0].destination
+            binding.tvDownFirstArrivalTime.text = formatArrivalTime(downTopTwoList[0].arrivalTime)
+
+            binding.tvDownSecondArrivalStation.text = downTopTwoList[1].destination
+            binding.tvDownSecondArrivalTime.text = formatArrivalTime(downTopTwoList[1].arrivalTime)
+        } else {
+
         }
-        // 상행, 하행 방향 데이터를 arrivalTime 순으로 정렬, 상위 2개 데이터 추출
-        val upTopTwoList = upDirectionList.sortedBy { it.arrivalTime }.take(2)
-        val downTopTwoList = downDirectionList.sortedBy { it.arrivalTime }.take(2)
-
-
-        // 상행, 하행에 따라 방면을 구분해서 시간 순으로 2개씩 표시
-        binding.tvUpFirstArrivalStation.text = upTopTwoList[0].destination
-        binding.tvUpFirstArrivalTime.text = formatArrivalTime(upTopTwoList[0].arrivalTime)
-
-        binding.tvUpSecondArrivalStation.text = upTopTwoList[1].destination
-        binding.tvUpSecondArrivalTime.text = formatArrivalTime(upTopTwoList[1].arrivalTime)
-
-
-        binding.tvDownFirstArrivalStation.text = downTopTwoList[0].destination
-        binding.tvDownFirstArrivalTime.text = formatArrivalTime(downTopTwoList[0].arrivalTime)
-
-        binding.tvDownSecondArrivalStation.text = downTopTwoList[1].destination
-        binding.tvDownSecondArrivalTime.text = formatArrivalTime(downTopTwoList[1].arrivalTime)
 
     }
 

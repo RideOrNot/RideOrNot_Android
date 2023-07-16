@@ -27,5 +27,17 @@
     <string name="arrival_info">도착 정보</string>
     <string name="station_congestion">역사 혼잡도</string>
 
+    <!-- Setting -->
+    <string name="account_setting">계정 설정</string>
+    <string name="account_info">계정 정보</string>
+    <string name="walking_speed_setting">걸음 속도 설정</string>
+    <string name="notification_setting">알림 설정</string>
+    <string name="push_notification_reception">Push 알림 수신</string>
+    <string name="etc_setting">기타</string>
+    <string name="logout">로그아웃</string>
+    <string name="unregister">회원탈퇴</string>
+
+    <!-- Dialog -->
+    <string name="check">확인</string>
 
 </resources>
