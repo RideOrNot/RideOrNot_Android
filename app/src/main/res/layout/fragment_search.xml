@@ -19,13 +19,6 @@
 <!--            app:layout_constraintStart_toStartOf="parent"-->
 <!--            app:layout_constraintTop_toTopOf="parent" />-->
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fcv_map"
-        android:name="com.naver.maps.map.MapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout="@layout/fragment_search" />
 
 
     <EditText
@@ -39,21 +32,28 @@
         android:maxLines="1"
         android:imeOptions="actionSearch"
         android:privateImeOptions="defaultInputMode=korean"
-        app:layout_constraintVertical_bias="0.061"
-        app:layout_constraintTop_toBottomOf="@+id/fcv_map"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
-        android:layout_width="371dp"
-        android:layout_height="452dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintVertical_bias="0.4"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextSearch"
-        app:layout_constraintVertical_bias="0.0"
         tools:listitem="@layout/item_search_history_recycler_ex" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fcv_map"
+        android:name="com.naver.maps.map.MapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:layout="@layout/fragment_search" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
