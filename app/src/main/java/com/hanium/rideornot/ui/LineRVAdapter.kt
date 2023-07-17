@@ -25,6 +25,11 @@ class LineRVAdapter(var lineList: ArrayList<Line>) :
 
     var selectedItemPosition = 0
 
+    fun updateData(newLineList: ArrayList<Line>) {
+        lineList = newLineList
+        notifyDataSetChanged()
+    }
+
     override fun onCreateViewHolder(
         viewGroup: ViewGroup,
         viewType: Int

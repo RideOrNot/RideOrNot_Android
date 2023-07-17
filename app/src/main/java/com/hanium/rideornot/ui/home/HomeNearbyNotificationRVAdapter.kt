@@ -3,10 +3,11 @@ package com.hanium.rideornot.ui.home
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.hanium.rideornot.data.ArrivalResponse
+import com.hanium.rideornot.data.response.Arrival
+import com.hanium.rideornot.data.response.ArrivalResponse
 import com.hanium.rideornot.databinding.ItemNearbyNotificationBinding
 
-class HomeNearbyNotificationRVAdapter(private var arrivalList: ArrayList<ArrivalResponse>) :
+class HomeNearbyNotificationRVAdapter(private var arrivalList: ArrayList<Arrival>) :
     RecyclerView.Adapter<HomeNearbyNotificationRVAdapter.ViewHolder>() {
 
     interface MyItemClickListener {
@@ -42,8 +43,8 @@ class HomeNearbyNotificationRVAdapter(private var arrivalList: ArrayList<Arrival
 
     inner class ViewHolder(val binding: ItemNearbyNotificationBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: ArrivalResponse) {
-            binding.btnLineNumber.text = item.lineName
+        fun bind(item: Arrival) {
+            binding.btnLineNumber.text = item.lineId
             binding.tvUpDirection.text = item.destination
             binding.tvDownDirection.text = item.destination
 
