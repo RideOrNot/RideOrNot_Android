@@ -18,7 +18,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name_kr"
         android:supportsRtl="true"
-        android:theme="@style/Theme.RideOrNot"
+        android:theme="@style/Theme.Splash"
         android:usesCleartextTraffic="true"
         tools:targetApi="31"
         android:enableOnBackInvokedCallback="true">
