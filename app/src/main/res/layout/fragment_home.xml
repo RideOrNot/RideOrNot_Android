@@ -73,6 +73,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
+                    android:backgroundTint="@color/pink_50"
                     android:orientation="vertical"
                     app:layout_constraintBottom_toBottomOf="@+id/iv_notice"
                     app:layout_constraintStart_toEndOf="@+id/iv_notice"
@@ -83,6 +84,7 @@
                         style="@style/Text.Header1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:backgroundTint="@color/pink_50"
                         android:text="정보 알림" />
 
                     <androidx.appcompat.widget.AppCompatTextView
@@ -91,6 +93,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
+                        android:backgroundTint="@color/pink_50"
                         android:text="합정역 00방면 5분 지연 예상" />
 
                 </LinearLayout>

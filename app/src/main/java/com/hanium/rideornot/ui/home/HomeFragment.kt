@@ -25,6 +25,11 @@ class HomeFragment : Fragment() {
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
+        // TDL
+        // 사용자 주변의 지하철 역을 알아내야 함.
+        // -> 주변 역 도착정보 표시 필요
+        // 최근 역 RecyclerView 연결 필요
+
         // 추후 삭제 **
         binding.clNotice.setOnClickListener {
             (context as MainActivity).supportFragmentManager.beginTransaction()

@@ -9,8 +9,8 @@
         android:id="@+id/btn_line_number"
         style="@style/Text.Title3"
         android:layout_width="wrap_content"
-        android:layout_marginStart="10dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         android:background="@drawable/btn_gray500_radius30"
         android:backgroundTint="@color/green"
         android:minWidth="0dp"
@@ -37,8 +37,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="대화 방면"
-            app:layout_constraintEnd_toEndOf="parent"
             android:textColor="@color/gray_900"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
