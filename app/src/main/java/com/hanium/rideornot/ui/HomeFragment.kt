@@ -1,20 +1,32 @@
 package com.hanium.rideornot.ui
 
+import android.content.IntentSender
 import android.os.Bundle
 
+import android.util.Log
 import androidx.fragment.app.Fragment
 import com.hanium.rideornot.databinding.FragmentHomeBinding
 import android.view.*
 import android.widget.Toast
+import com.google.android.gms.auth.api.identity.BeginSignInRequest
+import com.google.android.gms.auth.api.identity.Identity
+import com.google.android.gms.auth.api.identity.SignInClient
+import com.hanium.rideornot.BuildConfig
 import com.hanium.rideornot.data.ArrivalResponse
 import com.hanium.rideornot.data.ArrivalService
 import com.hanium.rideornot.notification.ContentType
 import com.hanium.rideornot.notification.NotificationManager
 import com.hanium.rideornot.notification.NotificationModel
 
+
+private const val REQ_ONE_TAP = 2
+
 class HomeFragment : Fragment(), ArrivalView {
 
     private lateinit var binding: FragmentHomeBinding
+    private lateinit var oneTapClient: SignInClient
+    private lateinit var signInRequest: BeginSignInRequest
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -22,6 +34,44 @@ class HomeFragment : Fragment(), ArrivalView {
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
+        val googleWebClientId = BuildConfig.GOOGLE_WEB_CLIENT_ID
+        oneTapClient = Identity.getSignInClient(requireActivity())
+        signInRequest = BeginSignInRequest.builder()
+            .setPasswordRequestOptions(
+                BeginSignInRequest.PasswordRequestOptions.builder()
+                    .setSupported(true)
+                    .build()
+            )
+            .setGoogleIdTokenRequestOptions(
+                BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
+                    .setSupported(true)
+                    // Your server's client ID, not your Android client ID.
+                    .setServerClientId(googleWebClientId)
+                    // Only show accounts previously used to sign in.
+                    // 첫 로그인 시 false로, 로그인 정보가 있을 땐 true로 설정
+                    .setFilterByAuthorizedAccounts(false)
+                    .build()
+            )
+            // Automatically sign in when exactly one credential is retrieved.
+            .setAutoSelectEnabled(true)
+            .build()
+
+        oneTapClient.beginSignIn(signInRequest)
+            .addOnSuccessListener(requireActivity()) { result ->
+                try {
+                    startIntentSenderForResult(
+                        result.pendingIntent.intentSender, REQ_ONE_TAP,
+                        null, 0, 0, 0, null
+                    )
+                } catch (e: IntentSender.SendIntentException) {
+                    Log.e("oneTapUiFailure", "Couldn't start One Tap UI: ${e.localizedMessage}")
+                }
+            }
+            .addOnFailureListener(requireActivity()) { e ->
+                // No saved credentials found. Launch the One Tap sign-up flow, or
+                // do nothing and continue presenting the signed-out UI.
+                Log.d("beginSignInFailure", e.localizedMessage)
+            }
 
         // getArrivalInfo()
 
