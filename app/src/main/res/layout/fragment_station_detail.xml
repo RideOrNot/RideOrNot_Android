@@ -146,7 +146,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:src="@drawable/ic_arrow_small_prev"
+                android:src="@drawable/ic_arrow_small_prev_transp50"
                 app:layout_constraintBottom_toBottomOf="@+id/iv_line_bg"
                 app:layout_constraintStart_toStartOf="@+id/iv_line_bg"
                 app:layout_constraintTop_toTopOf="@+id/iv_line_bg" />
@@ -167,7 +167,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
-                android:src="@drawable/ic_arrow_small_next"
+                android:src="@drawable/ic_arrow_small_next_transp50"
                 app:layout_constraintBottom_toBottomOf="@+id/iv_line_bg"
                 app:layout_constraintEnd_toEndOf="@+id/iv_line_bg"
                 app:layout_constraintTop_toTopOf="@+id/iv_line_bg" />
@@ -195,7 +195,7 @@
                     android:id="@+id/cl_up_direction"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/rect_white_border20_gray500"
+                    android:background="@drawable/rect_white_border1_gray500_radius20"
                     android:paddingHorizontal="15dp"
                     android:paddingVertical="12dp"
                     app:layout_constraintEnd_toStartOf="@+id/v_direction"
@@ -230,6 +230,19 @@
                     <!--                        app:layout_constraintTop_toBottomOf="@+id/v_up_direction"-->
                     <!--                        tools:itemCount="1"-->
                     <!--                        tools:listitem="@layout/item_station_detail_arrival" />-->
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tv_up_no_arrival_data_message"
+                        style="@style/Text.Body2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:text="@string/not_exist_arrival_info_message"
+                        android:visibility="invisible"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/v_up_direction" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_up_first_arrival_station"
@@ -294,7 +307,7 @@
                     android:id="@+id/cl_down_direction"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/rect_white_border20_gray500"
+                    android:background="@drawable/rect_white_border1_gray500_radius20"
                     android:paddingHorizontal="15dp"
                     android:paddingVertical="12dp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -329,6 +342,19 @@
 <!--                        app:layout_constraintTop_toBottomOf="@+id/v_down_direction"-->
 <!--                        tools:itemCount="1"-->
 <!--                        tools:listitem="@layout/item_station_detail_arrival" />-->
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tv_down_no_arrival_data_message"
+                        style="@style/Text.Body2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:text="@string/not_exist_arrival_info_message"
+                        android:visibility="invisible"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/v_down_direction" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_down_first_arrival_station"

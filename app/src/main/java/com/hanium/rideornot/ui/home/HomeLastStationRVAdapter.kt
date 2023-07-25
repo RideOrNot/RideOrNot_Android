@@ -3,7 +3,7 @@ package com.hanium.rideornot.ui.home
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.hanium.rideornot.data.ArrivalResponse
+import com.hanium.rideornot.data.response.ArrivalResponse
 import com.hanium.rideornot.databinding.ItemLastStationBinding
 
 class HomeLastStationRVAdapter(private var arrivalList: ArrayList<ArrivalResponse>) :
@@ -43,7 +43,7 @@ class HomeLastStationRVAdapter(private var arrivalList: ArrayList<ArrivalRespons
     inner class ViewHolder(val binding: ItemLastStationBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ArrivalResponse) {
-            binding.tvLineNumber.text = item.lineName
+//            binding.tvLineNumber.text = item.lineName
         }
     }
 

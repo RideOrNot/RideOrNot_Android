@@ -4,18 +4,175 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.SettingFragment">
+    tools:context=".ui.setting.SettingFragment">
 
     <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_account_setting_title"
+        style="@style/Text.Title1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="22dp"
         android:layout_marginTop="40dp"
-        android:text="@string/setting"
-        android:textColor="@color/black"
-        android:textSize="24sp"
-        android:textStyle="bold"
+        android:paddingVertical="23dp"
+        android:text="@string/account_setting"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/ll_account_setting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/tv_account_setting_title">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_account_info"
+            style="@style/Text.Body1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:drawableEnd="@drawable/ic_arrow_small_next"
+            android:gravity="start"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="18dp"
+            android:stateListAnimator="@null"
+            android:text="@string/account_info"
+            android:tint="@color/blue" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_500" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_walking_speed_setting"
+            style="@style/Text.Body1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:drawableEnd="@drawable/ic_arrow_small_next"
+            android:gravity="start"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="18dp"
+            android:stateListAnimator="@null"
+            android:text="@string/walking_speed_setting"
+            android:tint="@color/blue" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/v_first"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@color/gray_300"
+        app:layout_constraintTop_toBottomOf="@+id/ll_account_setting" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_notification_setting_title"
+        style="@style/Text.Title1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="22dp"
+        android:paddingVertical="23dp"
+        android:text="@string/notification_setting"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/v_first" />
+
+    <LinearLayout
+        android:id="@+id/ll_notification_setting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/tv_notification_setting_title">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_push_notification_reception"
+            style="@style/Text.Body1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="start"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="18dp"
+            android:stateListAnimator="@null"
+            android:text="@string/push_notification_reception"
+            android:textAllCaps="false"
+            android:tint="@color/blue" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switch_push_notification_reception"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:thumb="@drawable/switch_thumb"
+            app:track="@drawable/selector_switch" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/v_second"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@color/gray_300"
+        app:layout_constraintTop_toBottomOf="@+id/ll_notification_setting" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_etc_setting_title"
+        style="@style/Text.Title1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="22dp"
+        android:paddingVertical="23dp"
+        android:text="@string/etc_setting"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/v_second" />
+
+    <LinearLayout
+        android:id="@+id/ll_etc_setting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/tv_etc_setting_title">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_logout"
+            style="@style/Text.Body1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:drawableEnd="@drawable/ic_arrow_small_next"
+            android:gravity="start"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="18dp"
+            android:stateListAnimator="@null"
+            android:text="@string/logout"
+            android:tint="@color/blue" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_500" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_unregister"
+            style="@style/Text.Body1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:drawableEnd="@drawable/ic_arrow_small_next"
+            android:gravity="start"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="18dp"
+            android:stateListAnimator="@null"
+            android:text="@string/unregister"
+            android:tint="@color/blue" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_500" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
