@@ -65,7 +65,7 @@ class StationDetailFragment : Fragment() {
         lineRVAdapter.setMyItemClickListener(object : LineRVAdapter.MyItemClickListener {
             override fun onItemClick(line: Line) {
                 setLineCustom(station, line.lineName)
-//                viewModel.loadArrivalInfo(station, line.lineId)
+                viewModel.loadArrivalInfo(station, line.lineId)
             }
         })
 
