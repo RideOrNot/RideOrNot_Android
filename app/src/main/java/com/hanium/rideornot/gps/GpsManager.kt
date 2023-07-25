@@ -96,12 +96,7 @@ object GpsManager {
             override fun onLocationResult(p0: LocationResult) {
                 super.onLocationResult(p0)
                 lastLocation = p0.lastLocation
-
                 tempIndex++
-                Log.d(
-                    "locationUpdate-attempt $tempIndex",
-                    "latitude: ${lastLocation?.latitude.toString()}, longitude: ${lastLocation?.longitude.toString()}"
-                )
             }
         }
         fusedLocationProviderClient.requestLocationUpdates(
@@ -122,7 +117,7 @@ object GpsManager {
 
     /** 지오펜스를 생성하고 모니터링할 지오펜스 목록에 추가.
      * Enter, Exit를 각각 트리거하는 지오펜스 두 개를 생성함.
-     * 실제 requestId는 "{$requestId}-enter", "{$requestId}-exit"로 설정됨 */
+     * 실제 requestId는 "{$requestId}-enter", "{$requestId}-exit"로 설정됨. */
     @SuppressLint("MissingPermission")
     fun addGeofence(
         requestId: String,
@@ -165,6 +160,8 @@ object GpsManager {
             }
     }
 
+    /** 제거할 지오펜스의 requestId 리스트를 전달하면, 해당하는 지오펜스들이 제거됨.
+     * ex) requestId로 "test" 를 전달하면 requestId = "test-enter" || "test-exit" 에 해당하는 지오펜스가 제거됨. */
     fun removeGeofences(idList: List<String>) {
         geofencingClient.removeGeofences(idList)
         for (i in idList.indices)

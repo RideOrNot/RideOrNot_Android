@@ -9,6 +9,7 @@ import com.hanium.rideornot.ui.home.HomeFragment
 import com.hanium.rideornot.ui.SearchFragment
 import com.hanium.rideornot.ui.setting.SettingFragment
 
+
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
