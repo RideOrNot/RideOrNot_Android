@@ -54,11 +54,14 @@ class SearchFragment : Fragment(),
     ): View {
         binding = FragmentSearchBinding.inflate(inflater, container, false)
 
-        //        binding.editTextSearch.addTextChangedListener(object : TextWatcher {
+        // TODO: 검색 버튼을 안 눌러도 실시간으로 검색결과가 뜨게 하고 싶은 경우, 이 메서드 사용
+//        binding.editTextSearch.addTextChangedListener(object : TextWatcher {
 //            override fun afterTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
 //
 //            }
 //        })
+        
+        binding.recyclerView.setHasFixedSize(true)
 
         binding.editTextSearch.setOnKeyListener { _, keyCode, event ->
             if ((event.action == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
@@ -78,7 +81,14 @@ class SearchFragment : Fragment(),
                 false
             }
         }
+        // TODO: 검색창 바깥부분 터치 시 키보드 내려가는 기능 동작 안하는 문제 수정
         binding.constraintLayout.setOnTouchListener { view, event ->
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                hideKeyboard()
+            }
+            false
+        }
+        binding.fcvMap.setOnTouchListener { view, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
                 hideKeyboard()
             }
