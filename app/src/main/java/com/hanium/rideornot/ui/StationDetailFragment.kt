@@ -17,8 +17,6 @@ import com.hanium.rideornot.data.response.Arrival
 import com.hanium.rideornot.databinding.FragmentStationDetailBinding
 import com.hanium.rideornot.domain.Line
 import com.hanium.rideornot.ui.common.ViewModelFactory
-import java.text.SimpleDateFormat
-import java.util.*
 import kotlin.collections.ArrayList
 
 class StationDetailFragment : Fragment() {
@@ -81,7 +79,7 @@ class StationDetailFragment : Fragment() {
 
     private fun initView(arrivalResult: ArrivalResponse) {
         // 시간
-        binding.tvTime.text = formatRefreshTime(arrivalResult.arrivalList[0].currentTime)
+        binding.tvTime.text = formatRefreshTime(arrivalResult.currentTime)
 
         // 혼잡도
         binding.tvStationCongestionContent.text = arrivalResult.congestion.toString()
@@ -137,25 +135,21 @@ class StationDetailFragment : Fragment() {
 
 
     /**
-     * 새로고침 시간을 받아서 오전/오후와 12시간제로 형식화된 문자열로 반환
-     * @param refreshTime 새로고침 시간 (예: "2023-07-17 PM 16:14:14")
-     * @return 오전/오후와 12시간제 형식으로 형식화된 시간 (예: "오후 04:14")
+     * 새로고침 시간을 받아서 12시간제로 형식화된 문자열로 반환
+     * @param refreshTime 새로고침 시간 (예: "2023-07-17 오후 16:14:14")
+     * @return 12시간제 형식으로 형식화된 시간 (예: "오후 04:14")
      */
     private fun formatRefreshTime(refreshTime: String): String {
-        val inputFormat = SimpleDateFormat("yyyy-MM-dd a HH:mm:ss", Locale.getDefault())
-        val date = inputFormat.parse(refreshTime)
+        // 문자열에서 시간 부분을 추출
+        val timeParts = refreshTime.split(" ")[2].split(":")
+        val hours = timeParts[0].toInt()
+        val minutes = timeParts[1].toInt()
 
-        val calendar = Calendar.getInstance()
-        calendar.time = date!!
+        // 12시간제로 변환
+        val amPm = if (refreshTime.contains("오후")) "오후" else "오전"
+        val convertedHours = if (hours % 12 == 0) 12 else hours % 12
 
-        // 오전과 오후를 구분
-        val amPm = if (calendar.get(Calendar.AM_PM) == Calendar.AM) "오전" else "오후"
-
-        // 12시간제로 형식화된 시간
-        val outputFormat = SimpleDateFormat("hh:mm", Locale.getDefault())
-        val formattedTime = outputFormat.format(date)
-
-        return "$amPm $formattedTime"
+        return "$amPm ${String.format("%02d", convertedHours)}:${String.format("%02d", minutes)}"
     }
 
 

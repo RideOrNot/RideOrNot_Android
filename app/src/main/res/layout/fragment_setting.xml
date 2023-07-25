@@ -106,6 +106,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
             android:thumb="@drawable/switch_thumb"
+            android:checked="true"
             app:track="@drawable/selector_switch" />
 
     </LinearLayout>
