@@ -34,10 +34,10 @@ class SearchHistoryRecyclerViewAdapter(
     inner class ViewHolder(itemView: View) :
         RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
-        private val searchResult: TextView = itemView.findViewById(R.id.search_result)
-        private val deleteSearchBtn: ImageView = itemView.findViewById(R.id.delete_search_btn)
+        private val searchResult: TextView = itemView.findViewById(R.id.tv_search_result)
+        private val deleteSearchBtn: ImageView = itemView.findViewById(R.id.iv_delete_search_btn)
         private val constraintSearchItem: ConstraintLayout =
-            itemView.findViewById(R.id.constraint_search_item)
+            itemView.findViewById(R.id.cl_search_item)
 
         init {
             // 리스너 연결
