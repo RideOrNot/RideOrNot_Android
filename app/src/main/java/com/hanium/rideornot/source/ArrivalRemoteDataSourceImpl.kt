@@ -7,9 +7,9 @@ import com.hanium.rideornot.data.response.ArrivalResponse
 class ArrivalRemoteDataSourceImpl(
     private val arrivalService: ArrivalService
 ) : ArrivalRemoteDataSource {
-    override suspend fun getArrivalInfoList(stationId: String, lineId: Int): ArrivalResponse {
+    override suspend fun getArrivalList(stationId: String, lineId: Int): ArrivalResponse {
         return try {
-            val response = arrivalService.getArrivalInfoList(stationId, lineId)
+            val response = arrivalService.getArrivalList(stationId, lineId)
             if (response.resultCode == "SUCCESS") {
                 response.result
             } else {

@@ -5,11 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hanium.rideornot.data.response.Arrival
 import com.hanium.rideornot.data.response.ArrivalResponse
-import com.hanium.rideornot.domain.Line
-import com.hanium.rideornot.domain.LineDao
-import com.hanium.rideornot.domain.StationDao
-import com.hanium.rideornot.domain.StationDatabase
+import com.hanium.rideornot.domain.*
 import com.hanium.rideornot.repository.ArrivalRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -17,11 +15,17 @@ import kotlinx.coroutines.withContext
 
 class StationDetailViewModel(context: Context, private val arrivalRepository: ArrivalRepository) : ViewModel() {
 
-    private val _arrivalInfoList = MutableLiveData<ArrivalResponse>()
-    val arrivalInfoList: LiveData<ArrivalResponse> = _arrivalInfoList
+    private val _arrivalList = MutableLiveData<ArrivalResponse>()
+    val arrivalList: LiveData<ArrivalResponse> = _arrivalList
+
+    private val _arrivalInfoList = MutableLiveData<List<Arrival>>()
+    val arrivalInfoList: LiveData<List<Arrival>> = _arrivalInfoList
 
     private val _lineList = MutableLiveData<List<Line>>()
     val lineList: LiveData<List<Line>> = _lineList
+
+    private val _stationItem = MutableLiveData<Station>()
+    val stationItem: LiveData<Station> = _stationItem
 
     private val database = StationDatabase.getInstance(context)
     private var stationDao: StationDao = database!!.stationDao()
@@ -32,9 +36,18 @@ class StationDetailViewModel(context: Context, private val arrivalRepository: Ar
 //        loadArrivalInfo(stationName)
 //    }
 
+    // 해당 역, 호선의 도착 정보 얻기_ArrivalResponse
+    fun loadArrivalList(stationId: String, lineId: Int) {
+        viewModelScope.launch {
+            val arrivalList = arrivalRepository.getArrivalList(stationId, lineId)
+            _arrivalList.value = arrivalList
+        }
+    }
+
+    // 해당 역, 호선의 도착 정보 얻기_ArrivalInfo
     fun loadArrivalInfo(stationId: String, lineId: Int) {
         viewModelScope.launch {
-            val arrivalInfoList = arrivalRepository.getArrivalInfoList(stationId, lineId)
+            val arrivalInfoList = arrivalRepository.getArrivalList(stationId, lineId).arrivalList
             _arrivalInfoList.value = arrivalInfoList
         }
     }
@@ -48,4 +61,11 @@ class StationDetailViewModel(context: Context, private val arrivalRepository: Ar
         }
     }
 
+    // 해당 역, 호선의 양옆 역 얻기
+    fun loadNeighboringStation(stationName: String, lineId: Int) {
+        viewModelScope.launch {
+            val stationItem = withContext(Dispatchers.IO) { stationDao.findNeighboringStation(stationName, lineId) }
+            _stationItem.value = stationItem
+        }
+    }
 }

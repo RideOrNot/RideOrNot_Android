@@ -12,4 +12,6 @@ interface StationDao {
     @Query("SELECT line_id FROM station WHERE statn_name LIKE :stationName")
     fun findLineByName(stationName: String): List<Int>
 
+    @Query("SELECT * FROM station WHERE statn_name LIKE :stationName AND line_id = :lineId")
+    fun findNeighboringStation(stationName: String, lineId: Int): Station
 }

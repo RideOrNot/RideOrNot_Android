@@ -3,11 +3,13 @@ package com.hanium.rideornot.ui
 import android.content.res.ColorStateList
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
@@ -27,6 +29,8 @@ class StationDetailFragment : Fragment() {
 
     private val viewModel: StationDetailViewModel by viewModels { ViewModelFactory(requireContext()) }
 
+    private var countDownTimer : CountDownTimer? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -45,13 +49,28 @@ class StationDetailFragment : Fragment() {
 
         // 임시로 양재역 설정
         val station = "양재"
-        viewModel.loadArrivalInfo(station, 1003)
-        viewModel.arrivalInfoList.observe(viewLifecycleOwner) { arrivalInfoList ->
-            initView(arrivalInfoList)
+        viewModel.loadArrivalList(station, 1003)
+        viewModel.arrivalList.observe(viewLifecycleOwner) { arrivalList ->
+//            countDownTimer?.cancel()
+            initView(arrivalList)
+        }
+
+        viewModel.loadNeighboringStation(station, 1003)
+        viewModel.stationItem.observe(viewLifecycleOwner) { stationItem ->
+            binding.tvBeforeStationName.text = when {
+                stationItem.beforeStationId1 == 0 -> "종착"
+                stationItem.beforeStationId2 == 0 -> stationItem.beforeStation1
+                else -> "${stationItem.beforeStation1}/${stationItem.beforeStation2}"
+            }
+
+            binding.tvNextStationName.text = when {
+                stationItem.nextStationId1 == 0 -> "종착"
+                stationItem.nextStationId2 == 0 -> stationItem.nextStation1
+                else -> "${stationItem.nextStation1}/${stationItem.nextStation2}"
+            }
         }
 
         viewModel.loadLineList(station)
-
         viewModel.lineList.observe(viewLifecycleOwner) { lineList ->
             // lineList 데이터를 사용하여 UI 업데이트 등 필요한 작업 수행
             // 예: RecyclerView 어댑터에 데이터 설정, UI에 출력 등
@@ -65,21 +84,34 @@ class StationDetailFragment : Fragment() {
         lineRVAdapter.setMyItemClickListener(object : LineRVAdapter.MyItemClickListener {
             override fun onItemClick(line: Line) {
                 setLineCustom(station, line.lineName)
-                viewModel.loadArrivalInfo(station, line.lineId)
+//                countDownTimer?.cancel()
+                viewModel.loadNeighboringStation(station, line.lineId)
+                viewModel.loadArrivalList(station, line.lineId)
             }
         })
 
         // 새로고침
         binding.btnRefresh.setOnClickListener {
-            viewModel.loadArrivalInfo(station, lineRVAdapter.getItem(lineRVAdapter.selectedItemPosition).lineId)
+//            countDownTimer?.cancel()
+            // 애니메이션
+            val rotateAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.rotate360)
+            binding.btnRefresh.startAnimation(rotateAnimation)
+
+            viewModel.loadArrivalList(station, lineRVAdapter.getItem(lineRVAdapter.selectedItemPosition).lineId)
         }
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // 타이머 중지
+        countDownTimer?.cancel()
     }
 
 
     private fun initView(arrivalResult: ArrivalResponse) {
         // 시간
-        binding.tvTime.text = formatRefreshTime(arrivalResult.currentTime)
+        (formatRefreshTime(arrivalResult.currentTime) + " 기준").also { binding.tvTime.text = it }
 
         // 혼잡도
         binding.tvStationCongestionContent.text = arrivalResult.congestion.toString()
@@ -114,7 +146,9 @@ class StationDetailFragment : Fragment() {
             timeView.visibility = View.VISIBLE
             val firstArrival = directionList[0]
             stationView.text = firstArrival.destination.substringBefore("행")
-            timeView.text = formatArrivalTime(firstArrival.arrivalTime)
+//            timeView.text = formatArrivalTime(firstArrival.arrivalTime)
+            timeView.text = updateArrivalTimeWithTimer(firstArrival.arrivalTime, timeView)
+
         } else {
             stationView.visibility = View.INVISIBLE
             timeView.visibility = View.INVISIBLE
@@ -131,6 +165,33 @@ class StationDetailFragment : Fragment() {
         val minutes = arrivalTime / 60
         val seconds = arrivalTime % 60
         return "${minutes}분 ${seconds}초"
+    }
+
+    private fun updateArrivalTimeWithTimer(arrivalTime: Int, timeView: TextView): String {
+        // 기존에 실행 중이던 타이머가 있으면 취소
+//        countDownTimer?.cancel()
+
+        // 타이머 설정
+        countDownTimer = object : CountDownTimer((arrivalTime * 1000).toLong(), 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                // 타이머가 갱신될 때마다 현재 도착 시간을 UI에 업데이트
+                val currentTime = (millisUntilFinished / 1000).toInt()
+                val formattedTime = formatArrivalTime(currentTime)
+
+                // UI에 도착 시간 표시
+                timeView.text = formattedTime
+            }
+
+            override fun onFinish() {
+                // 타이머 종료 시, 도착 정보를 다시 호출
+            }
+        }
+
+        // 타이머 시작
+        countDownTimer?.start()
+
+        // 초기 도착 시간을 형식화하여 반환
+        return formatArrivalTime(arrivalTime)
     }
 
 
@@ -159,6 +220,7 @@ class StationDetailFragment : Fragment() {
      * @param lineName 호선 이름
      */
     private fun setLineCustom(stationName: String, lineName: String) {
+        (stationName + "역").also { binding.tvStationName.text = it }
         binding.btnLineNumber.text = stationName
 
         val lineColorResId = when (lineName) {
