@@ -1,7 +1,7 @@
-package com.hanium.rideornot.search
+package com.hanium.rideornot.ui.search
 
 
-interface ISearchHistoryRecyclerView {
+interface ISearchHistoryRV {
     fun onItemDeleteClick(position: Int)
     fun onItemClick(position: Int)
 }
