@@ -5,22 +5,37 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_line"
+        style="@style/Text.Title3"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:background="@drawable/btn_white_border2_gray400_radius30"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:text="3"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/tv_search_result"
         android:layout_width="wrap_content"
         android:layout_height="45dp"
-        android:textSize="26dp"
         android:layout_marginStart="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        android:textSize="26dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btn_line"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <View
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:background="@color/gray_400"
         android:layout_marginHorizontal="10dp"
+        android:background="@color/gray_400"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_search_result" />
 

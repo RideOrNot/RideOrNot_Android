@@ -11,10 +11,12 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.UiThread
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.hanium.rideornot.R
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hanium.rideornot.databinding.FragmentSearchBinding
 import com.hanium.rideornot.domain.SearchHistory
+import com.hanium.rideornot.domain.StationDatabase
 import com.hanium.rideornot.ui.SearchHistoryViewModel
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
@@ -22,6 +24,7 @@ import com.naver.maps.map.OnMapReadyCallback
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
 class SearchFragment : Fragment(),
     OnMapReadyCallback,
@@ -32,7 +35,7 @@ class SearchFragment : Fragment(),
     private lateinit var searchHistoryRVAdapter: SearchHistoryRVAdapter
     private lateinit var searchResultRVAdapter: SearchResultRVAdapter
     private lateinit var searchHistoryViewModel: SearchHistoryViewModel
-    private val coroutineScope : CoroutineScope = CoroutineScope(Dispatchers.Main)
+    private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Main)
 
     private val tempStations = listOf(
         SearchResultModel(id = 1, stationId = -1, stationName = "서울역"),
@@ -127,29 +130,23 @@ class SearchFragment : Fragment(),
     }
 
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        searchHistoryViewModel.searchHistoryList.observe(viewLifecycleOwner, Observer { searchHistoryList ->
-            // 데이터가 로드된 후에 RecyclerView를 초기화
-            searchHistoryRVAdapter = SearchHistoryRVAdapter(searchHistoryList, this)
-            // RecyclerView 초기화
-            initRecycler()
-        })
+        searchHistoryViewModel.searchHistoryList.observe(
+            viewLifecycleOwner,
+            Observer { searchHistoryList ->
+                // 데이터가 로드된 후에 RecyclerView를 초기화
+                searchHistoryRVAdapter = SearchHistoryRVAdapter(searchHistoryList, this)
+                // RecyclerView 초기화
+                initRecycler()
+            })
     }
 
     private fun initRecycler() {
-//        historyList.apply {
-//            add(SearchHistoryModel(id = 1, stationName = "서울역"))
-//            add(SearchHistoryModel(id = 2, stationName = "용산역"))
-//            add(SearchHistoryModel(id = 3, stationName = "홍대입구역"))
-//            add(SearchHistoryModel(id = 4, stationName = "상수역"))
-//        }
-
         binding.recyclerView.layoutManager =
             LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
-        searchHistoryRVAdapter = SearchHistoryRVAdapter(searchHistoryViewModel.searchHistoryList.value!!, this)
+        searchHistoryRVAdapter =
+            SearchHistoryRVAdapter(searchHistoryViewModel.searchHistoryList.value!!, this)
         binding.recyclerView.adapter = searchHistoryRVAdapter
         searchHistoryRVAdapter.notifyDataSetChanged()
     }
@@ -178,40 +175,16 @@ class SearchFragment : Fragment(),
     }
 
     private fun handleSearch(list: List<SearchResultModel>) {
-        val text: String = binding.editTextSearch.text.toString()
-        val res: MutableList<SearchResultModel> = mutableListOf()
-        if (text == "") {
-            return
-        }
-        for (element in list) {
-            var matchCnt = 0
-            var index = 0
-            while (index < element.stationName.length) {
-                if (element.stationName[index] == text[0]) {
-                    for (i in text) {
-                        if (index >= element.stationName.length) {
-                            break
-                        }
-                        if (i == element.stationName[index]) {
-                            index++
-                            matchCnt++
-                        } else {
-                            index++
-                            matchCnt = 0
-                            break
-                        }
-                    }
-                } else {
-                    index++
-                }
-                if (matchCnt == text.length) {
-                    res.add(element)
-                    break
-                }
+        val searchQuery: String = binding.editTextSearch.text.toString()
+        if (searchQuery.isNotEmpty()) {
+            val stationDao = StationDatabase.getInstance(requireContext())!!.stationDao()
+            lifecycleScope.launch {
+                val searchResult = stationDao.findStationsByName(searchQuery)
+                searchResultRVAdapter = SearchResultRVAdapter(searchResult, this@SearchFragment)
+                binding.recyclerView.adapter = searchResultRVAdapter
             }
         }
-        searchResultRVAdapter = SearchResultRVAdapter(res, this)
-        binding.recyclerView.adapter = searchResultRVAdapter
+
     }
 
 

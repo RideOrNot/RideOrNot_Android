@@ -12,4 +12,7 @@ interface StationDao {
     @Query("SELECT line_id FROM station WHERE statn_name LIKE :stationName")
     fun findLineByName(stationName: String): List<Int>
 
+    @Query("SELECT * FROM station WHERE statn_name LIKE '%' || :searchQuery || '%'")
+    suspend fun findStationsByName(searchQuery: String): List<Station>
+
 }
