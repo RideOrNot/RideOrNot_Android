@@ -18,9 +18,6 @@ class StationDetailViewModel(context: Context, private val arrivalRepository: Ar
     private val _arrivalList = MutableLiveData<ArrivalResponse>()
     val arrivalList: LiveData<ArrivalResponse> = _arrivalList
 
-    private val _arrivalInfoList = MutableLiveData<List<Arrival>>()
-    val arrivalInfoList: LiveData<List<Arrival>> = _arrivalInfoList
-
     private val _lineList = MutableLiveData<List<Line>>()
     val lineList: LiveData<List<Line>> = _lineList
 
@@ -41,14 +38,6 @@ class StationDetailViewModel(context: Context, private val arrivalRepository: Ar
         viewModelScope.launch {
             val arrivalList = arrivalRepository.getArrivalList(stationId, lineId)
             _arrivalList.value = arrivalList
-        }
-    }
-
-    // 해당 역, 호선의 도착 정보 얻기_ArrivalInfo
-    fun loadArrivalInfo(stationId: String, lineId: Int) {
-        viewModelScope.launch {
-            val arrivalInfoList = arrivalRepository.getArrivalList(stationId, lineId).arrivalList
-            _arrivalInfoList.value = arrivalInfoList
         }
     }
 

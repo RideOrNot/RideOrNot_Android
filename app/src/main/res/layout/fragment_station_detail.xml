@@ -16,6 +16,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btn_move_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
@@ -73,7 +74,7 @@
             <View
                 android:id="@+id/v_first"
                 android:layout_width="match_parent"
-                android:layout_height="14dp"
+                android:layout_height="8dp"
                 android:layout_marginTop="30dp"
                 android:background="@color/gray_300"
                 app:layout_constraintTop_toBottomOf="@+id/rv_line" />
@@ -263,7 +264,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/pretendard_bold"
-                        android:text="4분"
+                        android:text="4분 후"
                         android:textColor="@color/blue"
                         app:layout_constraintBottom_toBottomOf="@+id/tv_up_first_arrival_station"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -285,7 +286,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/pretendard_bold"
-                        android:text="8분"
+                        android:text="8분 후"
                         android:textColor="@color/blue"
                         app:layout_constraintBottom_toBottomOf="@+id/tv_up_second_arrival_station"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -376,7 +377,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/pretendard_bold"
-                        android:text="4분"
+                        android:text="4분 후"
                         android:textColor="@color/blue"
                         app:layout_constraintBottom_toBottomOf="@+id/tv_down_first_arrival_station"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -398,7 +399,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/pretendard_bold"
-                        android:text="8분"
+                        android:text="8분 후"
                         android:textColor="@color/blue"
                         app:layout_constraintBottom_toBottomOf="@+id/tv_down_second_arrival_station"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -412,7 +413,7 @@
             <View
                 android:id="@+id/v_second"
                 android:layout_width="match_parent"
-                android:layout_height="14dp"
+                android:layout_height="8dp"
                 android:layout_marginTop="30dp"
                 android:background="@color/gray_300"
                 app:layout_constraintTop_toBottomOf="@+id/cl_direction" />
