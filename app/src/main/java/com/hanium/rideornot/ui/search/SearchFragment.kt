@@ -2,6 +2,8 @@ package com.hanium.rideornot.ui.search
 
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -55,11 +57,22 @@ class SearchFragment : Fragment(),
         binding = FragmentSearchBinding.inflate(inflater, container, false)
 
         // TODO: 검색 버튼을 안 눌러도 실시간으로 검색결과가 뜨게 하고 싶은 경우, 이 메서드 사용
-//        binding.editTextSearch.addTextChangedListener(object : TextWatcher {
-//            override fun afterTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-//
-//            }
-//        })
+        binding.editTextSearch.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                val searchText = s?.toString() ?: ""
+                if (searchText.isNotEmpty()) {
+                    handleSearch()
+                } else {
+                    binding.recyclerView.adapter = searchHistoryRVAdapter
+                }
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+        })
         searchHistoryViewModel = SearchHistoryViewModel(requireContext())
 
         binding.recyclerView.setHasFixedSize(true)
@@ -76,7 +89,7 @@ class SearchFragment : Fragment(),
                 ) // TODO: ID값 수정
                 searchHistoryRVAdapter.notifyDataSetChanged()
                 hideKeyboard()
-                handleSearch(tempStations)
+                handleSearch()
                 binding.editTextSearch.text.clear()
                 true
             } else {
@@ -96,12 +109,12 @@ class SearchFragment : Fragment(),
             }
             false
         }
-        binding.editTextSearch.setOnTouchListener { view, event ->
-            if (event.action == MotionEvent.ACTION_DOWN) {
-                binding.recyclerView.adapter = searchHistoryRVAdapter
-            }
-            false
-        }
+//        binding.editTextSearch.setOnTouchListener { view, event ->
+//            if (event.action == MotionEvent.ACTION_DOWN) {
+//                binding.recyclerView.adapter = searchHistoryRVAdapter
+//            }
+//            false
+//        }
 
         initView()
 
@@ -137,7 +150,6 @@ class SearchFragment : Fragment(),
             Observer { searchHistoryList ->
                 // 데이터가 로드된 후에 RecyclerView를 초기화
                 searchHistoryRVAdapter = SearchHistoryRVAdapter(searchHistoryList, this)
-                // RecyclerView 초기화
                 initRecycler()
             })
     }
@@ -147,7 +159,6 @@ class SearchFragment : Fragment(),
             LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
         searchHistoryRVAdapter =
             SearchHistoryRVAdapter(searchHistoryViewModel.searchHistoryList.value!!, this)
-        binding.recyclerView.adapter = searchHistoryRVAdapter
         searchHistoryRVAdapter.notifyDataSetChanged()
     }
 
@@ -158,7 +169,6 @@ class SearchFragment : Fragment(),
     override fun onItemDeleteClick(position: Int) {
         val searchHistoryToDelete = searchHistoryRVAdapter.itemList[position]
         searchHistoryViewModel.deleteSearchHistory(searchHistoryToDelete)
-        // historyList.removeAt(position) -> 원래 코드
         searchHistoryRVAdapter.notifyDataSetChanged()
     }
 
@@ -174,7 +184,7 @@ class SearchFragment : Fragment(),
         }
     }
 
-    private fun handleSearch(list: List<SearchResultModel>) {
+    private fun handleSearch() {
         val searchQuery: String = binding.editTextSearch.text.toString()
         if (searchQuery.isNotEmpty()) {
             val stationDao = StationDatabase.getInstance(requireContext())!!.stationDao()
