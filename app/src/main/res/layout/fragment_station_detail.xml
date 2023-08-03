@@ -16,6 +16,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btn_move_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
@@ -73,7 +74,7 @@
             <View
                 android:id="@+id/v_first"
                 android:layout_width="match_parent"
-                android:layout_height="14dp"
+                android:layout_height="8dp"
                 android:layout_marginTop="30dp"
                 android:background="@color/gray_300"
                 app:layout_constraintTop_toBottomOf="@+id/rv_line" />
@@ -110,7 +111,7 @@
                 android:minWidth="0dp"
                 android:minHeight="0dp"
                 android:padding="4dp"
-                android:src="@drawable/ic_refresh"
+                android:src="@drawable/ic_refresh_in_circle"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_time"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/tv_time" />
@@ -152,6 +153,7 @@
                 app:layout_constraintTop_toTopOf="@+id/iv_line_bg" />
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_before_station_name"
                 style="@style/Text.Title3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -173,6 +175,7 @@
                 app:layout_constraintTop_toTopOf="@+id/iv_line_bg" />
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_next_station_name"
                 style="@style/Text.Title3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -238,6 +241,7 @@
                         android:layout_height="wrap_content"
                         android:maxLines="1"
                         android:text="@string/not_exist_arrival_info_message"
+                        android:textColor="@color/gray_800"
                         android:visibility="invisible"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -260,7 +264,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/pretendard_bold"
-                        android:text="4분"
+                        android:text="4분 후"
                         android:textColor="@color/blue"
                         app:layout_constraintBottom_toBottomOf="@+id/tv_up_first_arrival_station"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -282,7 +286,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/pretendard_bold"
-                        android:text="8분"
+                        android:text="8분 후"
                         android:textColor="@color/blue"
                         app:layout_constraintBottom_toBottomOf="@+id/tv_up_second_arrival_station"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -333,15 +337,15 @@
                         app:layout_constraintStart_toStartOf="@+id/tv_down_direction"
                         app:layout_constraintTop_toBottomOf="@+id/tv_down_direction" />
 
-<!--                    <androidx.recyclerview.widget.RecyclerView-->
-<!--                        android:id="@+id/rv_down_arrival"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
-<!--                        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                        app:layout_constraintTop_toBottomOf="@+id/v_down_direction"-->
-<!--                        tools:itemCount="1"-->
-<!--                        tools:listitem="@layout/item_station_detail_arrival" />-->
+                    <!--                    <androidx.recyclerview.widget.RecyclerView-->
+                    <!--                        android:id="@+id/rv_down_arrival"-->
+                    <!--                        android:layout_width="match_parent"-->
+                    <!--                        android:layout_height="wrap_content"-->
+                    <!--                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
+                    <!--                        app:layout_constraintBottom_toBottomOf="parent"-->
+                    <!--                        app:layout_constraintTop_toBottomOf="@+id/v_down_direction"-->
+                    <!--                        tools:itemCount="1"-->
+                    <!--                        tools:listitem="@layout/item_station_detail_arrival" />-->
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_down_no_arrival_data_message"
@@ -350,6 +354,7 @@
                         android:layout_height="wrap_content"
                         android:maxLines="1"
                         android:text="@string/not_exist_arrival_info_message"
+                        android:textColor="@color/gray_800"
                         android:visibility="invisible"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -372,7 +377,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/pretendard_bold"
-                        android:text="4분"
+                        android:text="4분 후"
                         android:textColor="@color/blue"
                         app:layout_constraintBottom_toBottomOf="@+id/tv_down_first_arrival_station"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -394,7 +399,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/pretendard_bold"
-                        android:text="8분"
+                        android:text="8분 후"
                         android:textColor="@color/blue"
                         app:layout_constraintBottom_toBottomOf="@+id/tv_down_second_arrival_station"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -408,7 +413,7 @@
             <View
                 android:id="@+id/v_second"
                 android:layout_width="match_parent"
-                android:layout_height="14dp"
+                android:layout_height="8dp"
                 android:layout_marginTop="30dp"
                 android:background="@color/gray_300"
                 app:layout_constraintTop_toBottomOf="@+id/cl_direction" />

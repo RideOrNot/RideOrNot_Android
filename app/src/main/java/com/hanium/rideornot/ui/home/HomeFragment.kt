@@ -5,19 +5,31 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.hanium.rideornot.databinding.FragmentHomeBinding
 import android.view.*
-import android.widget.Toast
+import android.view.animation.AnimationUtils
+import androidx.fragment.app.viewModels
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.hanium.rideornot.MainActivity
 import com.hanium.rideornot.R
 import com.hanium.rideornot.data.response.ArrivalResponse
-import com.hanium.rideornot.data.ArrivalService
+import com.hanium.rideornot.data.response.Arrival
+import com.hanium.rideornot.domain.Station
 import com.hanium.rideornot.notification.ContentType
 import com.hanium.rideornot.notification.NotificationManager
 import com.hanium.rideornot.notification.NotificationModel
 import com.hanium.rideornot.ui.StationDetailFragment
+import com.hanium.rideornot.ui.common.ViewModelFactory
 
 class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
+
+    private lateinit var homeNearbyNotificationRVAdapter: HomeNearbyNotificationRVAdapter
+    private var homeLastStationRVAdapter = HomeLastStationRVAdapter(ArrayList())
+
+    private val viewModel: HomeViewModel by viewModels { ViewModelFactory(requireContext()) }
+
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,23 +42,16 @@ class HomeFragment : Fragment() {
         // -> 주변 역 도착정보 표시 필요
         // 최근 역 RecyclerView 연결 필요
 
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+
         // 추후 삭제 **
         binding.clNotice.setOnClickListener {
             (context as MainActivity).supportFragmentManager.beginTransaction()
 //                .setCustomAnimations(R.anim.fade_in, R.anim.slide_out, R.anim.fade_in, R.anim.slide_out)
                 .replace(R.id.frm_main, StationDetailFragment())
+                .addToBackStack(null)
                 .commitAllowingStateLoss()
         }
-
-        // getArrivalInfo()
-
-        // 주변 알림 RecyclerView 연결 + 더미 데이터
-//        val arrivalData = ArrayList<ArrivalResponse>()
-//        arrivalData.add(ArrivalResponse(3, "남부터미널 방면", "3", "남부터미널"))
-//        val homeNearbyNotificationRVAdapter = HomeNearbyNotificationRVAdapter(arrivalData)
-//        binding.rvNearbyNotification.adapter = homeNearbyNotificationRVAdapter
-
-        // 최근 역 RecyclerView 연결
 
 
         return binding.root
@@ -55,6 +60,45 @@ class HomeFragment : Fragment() {
     var tempGeofenceIndex = 1
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        homeNearbyNotificationRVAdapter =
+            HomeNearbyNotificationRVAdapter(requireContext(), ArrayList())
+
+        var station = "양재" // 추후 삭제
+
+        // 주변 도착 정보 조회
+        viewModel.showNearestStationName(fusedLocationClient)
+        viewModel.nearestStation.observe(viewLifecycleOwner) { nearestStation ->
+            station = nearestStation
+        }
+        binding.rvNearbyNotification.adapter = homeNearbyNotificationRVAdapter
+        binding.rvLastStation.adapter = homeLastStationRVAdapter
+
+        // 최근 역 - 더미 데이터
+        val stations = Station(100, 37.948605, 127.061003, "소요산", 1001)
+        val stationList = ArrayList<Station>()
+        stationList.add(stations)
+        homeLastStationRVAdapter.updateData(stationList)
+
+
+        viewModel.arrivalInfoList.observe(viewLifecycleOwner) { arrivalInfoList ->
+            (station + "역").also { binding.tvNearbyNotificationStationName.text = it }
+
+            homeNearbyNotificationRVAdapter.updateData(arrivalInfoList as ArrayList<Arrival>)
+
+            if (arrivalInfoList.isEmpty())
+                binding.tvNotExistArrivalInfo.visibility = View.VISIBLE
+            else
+                binding.tvNotExistArrivalInfo.visibility = View.INVISIBLE
+        }
+
+        // 새로 고침
+        binding.fabRefresh.setOnClickListener {
+            val rotateAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.rotate360)
+            binding.fabRefresh.startAnimation(rotateAnimation)
+
+            // 도착정보 API 호출
+            viewModel.loadArrivalInfo(station)
+        }
 
 //        val addGeofenceButton: Button? = view.findViewById(R.id.addGeofenceButton)
 //        addGeofenceButton?.setOnClickListener {
@@ -82,14 +126,6 @@ class HomeFragment : Fragment() {
 
     }
 
-    // 열차 도착 정보 조회
-    private fun getArrivalInfo() {
-//        val arrivalService = ArrivalService()
-//        arrivalService.setArrivalView(this)
-//
-//        // 열차 도착 정보 조회 API 호출
-//        arrivalService.getArrivalInfo("서울") // 임의로 서울역
-    }
 
     fun onArrivalSuccess(result: ArrivalResponse) {
         // 승차 알림 테스트

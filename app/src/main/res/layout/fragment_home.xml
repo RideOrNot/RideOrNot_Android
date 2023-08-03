@@ -9,7 +9,7 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/tb_top"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="56dp"
         android:background="@color/white"
         android:elevation="4dp"
         app:contentInsetStart="0dp"
@@ -29,7 +29,7 @@
                 app:srcCompat="@drawable/ic_app_logo_no_background" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                style="@style/Text.Display2"
+                style="@style/Text.Header1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/app_name_kr" />
@@ -38,10 +38,28 @@
 
     </androidx.appcompat.widget.Toolbar>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_refresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="14dp"
+        android:contentDescription="@string/refresh"
+        android:scaleType="center"
+        android:src="@drawable/ic_refresh"
+        app:backgroundTint="@color/blue"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@null" />
+
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingBottom="40dp"
         android:scrollbars="none"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tb_top">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -72,7 +90,7 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
+                    android:layout_marginStart="14dp"
                     android:backgroundTint="@color/pink_50"
                     android:orientation="vertical"
                     app:layout_constraintBottom_toBottomOf="@+id/iv_notice"
@@ -93,8 +111,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:backgroundTint="@color/pink_50"
-                        android:text="합정역 00방면 5분 지연 예상" />
+                        android:text="합정역 00방면 5분 지연 예상"
+                        android:textColor="@color/pink" />
 
                 </LinearLayout>
 
@@ -114,7 +132,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="25dp"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="40dp"
                 android:text="@string/nearby_notification"
                 android:textColor="@color/gray_950"
                 app:layout_constraintStart_toStartOf="parent"
@@ -151,11 +169,26 @@
                     app:layout_constraintStart_toEndOf="@+id/tv_nearby_notification_station_name"
                     app:layout_constraintTop_toTopOf="@+id/tv_nearby_notification_station_name" />
 
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_not_exist_arrival_info"
+                    style="@style/Text.Body1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/not_exist_arrival_info_message"
+                    android:visibility="invisible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_nearby_notification_station_name" />
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_nearby_notification"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:nestedScrollingEnabled="false"
+                    android:overScrollMode="never"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintTop_toBottomOf="@+id/tv_nearby_notification_station_name"
                     tools:listitem="@layout/item_nearby_notification" />
@@ -168,7 +201,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="24dp"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="40dp"
                 android:text="@string/last_station"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cl_nearby_notification" />
@@ -203,6 +236,7 @@
                     android:id="@+id/rv_last_station"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:overScrollMode="never"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
