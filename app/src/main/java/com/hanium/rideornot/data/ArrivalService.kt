@@ -15,11 +15,10 @@ interface ArrivalService {
         @Path("lineId") lineId: Int
     ): BaseResponse<ArrivalResponse>
 
-    // 해당 역, 출구에 대한 도착 정보 조회
-    @GET("/stations/arrivalInfo")
-    suspend fun getArrivalListByStationAndExitName(
-        @Query("stationName") stationName: String,
-        @Query("exitName") exitName: Int
+    // 해당 역에 대한 모든 도착 정보 조회
+    @GET("/stations/arrivalInfo/{stationId}")
+    suspend fun getArrivalListByStationId(
+        @Path("stationId") stationId: String,
     ): BaseResponse<ArrivalResponse>
 
 }

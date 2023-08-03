@@ -7,4 +7,8 @@ class ArrivalRepository(private val remoteDataSource: ArrivalRemoteDataSource) {
     suspend fun getArrivalList(stationId: String, lineId: Int): ArrivalResponse {
         return remoteDataSource.getArrivalList(stationId, lineId)
     }
+
+    suspend fun getArrivalListByStationId(stationId: String): ArrivalResponse {
+        return remoteDataSource.getArrivalListByStationId(stationId)
+    }
 }
