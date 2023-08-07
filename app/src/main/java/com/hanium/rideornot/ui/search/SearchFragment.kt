@@ -12,14 +12,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.UiThread
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.hanium.rideornot.R
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.internal.ViewUtils.hideKeyboard
 import com.hanium.rideornot.databinding.FragmentSearchBinding
 import com.hanium.rideornot.domain.SearchHistory
 import com.hanium.rideornot.domain.StationDatabase
-import com.hanium.rideornot.ui.SearchHistoryViewModel
+import com.hanium.rideornot.ui.SearchViewModel
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
@@ -36,19 +38,8 @@ class SearchFragment : Fragment(),
     private lateinit var binding: FragmentSearchBinding
     private lateinit var searchHistoryRVAdapter: SearchHistoryRVAdapter
     private lateinit var searchResultRVAdapter: SearchResultRVAdapter
-    private lateinit var searchHistoryViewModel: SearchHistoryViewModel
+    private lateinit var searchViewModel: SearchViewModel
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Main)
-
-    private val tempStations = listOf(
-        SearchResultModel(id = 1, stationId = -1, stationName = "서울역"),
-        SearchResultModel(id = 3, stationId = -1, stationName = "합정역"),
-        SearchResultModel(id = 4, stationId = -1, stationName = "서울울역"),
-        SearchResultModel(id = 2, stationId = -1, stationName = "서울서울역"),
-        SearchResultModel(id = 5, stationId = -1, stationName = "서서울역"),
-        SearchResultModel(id = 6, stationId = -1, stationName = "서울 역"),
-        SearchResultModel(id = 7, stationId = -1, stationName = "서울 역서울"),
-        SearchResultModel(id = 8, stationId = -1, stationName = "서울 역 서 울역"),
-    )
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -73,7 +64,9 @@ class SearchFragment : Fragment(),
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             }
         })
-        searchHistoryViewModel = SearchHistoryViewModel(requireContext())
+        searchViewModel = SearchViewModel(requireContext())
+        binding.recyclerView.layoutManager =
+            LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
 
         binding.recyclerView.setHasFixedSize(true)
 
@@ -81,16 +74,17 @@ class SearchFragment : Fragment(),
             if ((event.action == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
                 // 엔터가 눌릴 때 동작
                 // TODO: 일치하는 Station 객체를 직접 추가하도록 변경
-                searchHistoryViewModel.insertSearchHistory(
-                    SearchHistory(
-                        stationId = -1,
-                        stationName = binding.editTextSearch.text.toString()
-                    )
-                ) // TODO: ID값 수정
-                searchHistoryRVAdapter.notifyDataSetChanged()
-                hideKeyboard()
-                handleSearch()
-                binding.editTextSearch.text.clear()
+                coroutineScope.launch {
+                    searchViewModel.insertSearchHistory(
+                        SearchHistory(
+                            stationId = -1,
+                            stationName = binding.editTextSearch.text.toString()
+                        )
+                    ) // TODO: ID값 수정\
+                    hideKeyboard()
+                    handleSearch()
+                    binding.editTextSearch.text.clear()
+                }
                 true
             } else {
                 false
@@ -109,12 +103,6 @@ class SearchFragment : Fragment(),
             }
             false
         }
-//        binding.editTextSearch.setOnTouchListener { view, event ->
-//            if (event.action == MotionEvent.ACTION_DOWN) {
-//                binding.recyclerView.adapter = searchHistoryRVAdapter
-//            }
-//            false
-//        }
 
         initView()
 
@@ -145,20 +133,18 @@ class SearchFragment : Fragment(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        searchHistoryViewModel.searchHistoryList.observe(
-            viewLifecycleOwner,
-            Observer { searchHistoryList ->
-                // 데이터가 로드된 후에 RecyclerView를 초기화
-                searchHistoryRVAdapter = SearchHistoryRVAdapter(searchHistoryList, this)
-                initRecycler()
-            })
+        searchViewModel.searchHistoryList.observe(this, Observer {
+            initRecycler()
+            binding.recyclerView.adapter = searchHistoryRVAdapter
+            searchHistoryRVAdapter.notifyDataSetChanged()
+        })
     }
 
     private fun initRecycler() {
         binding.recyclerView.layoutManager =
             LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
         searchHistoryRVAdapter =
-            SearchHistoryRVAdapter(searchHistoryViewModel.searchHistoryList.value!!, this)
+            SearchHistoryRVAdapter(searchViewModel.searchHistoryList.value!!, this)
         searchHistoryRVAdapter.notifyDataSetChanged()
     }
 
@@ -167,9 +153,11 @@ class SearchFragment : Fragment(),
     }
 
     override fun onItemDeleteClick(position: Int) {
-        val searchHistoryToDelete = searchHistoryRVAdapter.itemList[position]
-        searchHistoryViewModel.deleteSearchHistory(searchHistoryToDelete)
-        searchHistoryRVAdapter.notifyDataSetChanged()
+        coroutineScope.launch {
+            val searchHistoryToDelete = searchHistoryRVAdapter.itemList[position]
+            searchViewModel.deleteSearchHistory(searchHistoryToDelete)
+            searchHistoryRVAdapter.notifyDataSetChanged()
+        }
     }
 
 

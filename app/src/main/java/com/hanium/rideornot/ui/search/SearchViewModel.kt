@@ -11,7 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-class SearchHistoryViewModel(context: Context) : ViewModel() {
+class SearchViewModel(context: Context) : ViewModel() {
 
     val searchHistoryList: LiveData<List<SearchHistory>>
     private val repository: SearchHistoryRepository
@@ -22,13 +22,13 @@ class SearchHistoryViewModel(context: Context) : ViewModel() {
         searchHistoryList = repository.getAllData
     }
 
-    fun insertSearchHistory(searchHistory: SearchHistory) {
+    suspend fun insertSearchHistory(searchHistory: SearchHistory) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.insertSearchHistory(searchHistory)
         }
     }
 
-    fun deleteSearchHistory(searchHistory: SearchHistory) {
+    suspend fun deleteSearchHistory(searchHistory: SearchHistory) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.deleteSearchHistory(searchHistory)
         }
