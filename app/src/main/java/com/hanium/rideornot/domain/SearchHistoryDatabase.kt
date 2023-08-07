@@ -27,8 +27,7 @@ abstract class SearchHistoryDatabase : RoomDatabase() {
                         context.applicationContext,
                         SearchHistoryDatabase::class.java,
                         "search-history-database"
-                    ).createFromAsset("searchHistory.db")
-                        .build()
+                    ).build()
                 }
             }
 
