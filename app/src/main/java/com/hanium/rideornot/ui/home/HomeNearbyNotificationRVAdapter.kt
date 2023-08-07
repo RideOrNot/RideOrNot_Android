@@ -3,6 +3,7 @@ package com.hanium.rideornot.ui.home
 import android.content.Context
 import android.content.res.ColorStateList
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -10,13 +11,10 @@ import com.hanium.rideornot.R
 import com.hanium.rideornot.data.response.Arrival
 import com.hanium.rideornot.data.response.ArrivalResponse
 import com.hanium.rideornot.databinding.ItemNearbyNotificationBinding
-import com.hanium.rideornot.domain.LineDao
-import com.hanium.rideornot.domain.StationDao
-import com.hanium.rideornot.domain.StationDatabase
 
 class HomeNearbyNotificationRVAdapter(
     context: Context,
-    private var arrivalList: ArrayList<Arrival>
+    private var arrivalList: List<List<Arrival>>
 ) :
     RecyclerView.Adapter<HomeNearbyNotificationRVAdapter.ViewHolder>() {
 
@@ -29,7 +27,7 @@ class HomeNearbyNotificationRVAdapter(
         mItemClickListener = itemClickListener
     }
 
-    fun updateData(newArrivalList: ArrayList<Arrival>) {
+    fun updateData(newArrivalList: List<List<Arrival>>) {
         arrivalList = newArrivalList
         notifyDataSetChanged()
     }
@@ -58,21 +56,91 @@ class HomeNearbyNotificationRVAdapter(
 
     inner class ViewHolder(val binding: ItemNearbyNotificationBinding, val context: Context) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: Arrival) {
-            setLineCustom(item.lineId, binding, context)
+        fun bind(item: List<Arrival>) {
+            setLineCustom(item[0].lineId, binding, context)
 
-            binding.btnLineNumber.text = item.lineId
+            binding.btnLineNumber.text = item[0].lineId
+            binding.btnLineNumber.isSelected = true
+
+            // 상행과 하행 / 외선과 내선 방향으로 도착 정보 데이터를 나누기
+            val upDirectionList = item.filter { it.direction == "상행" || it.direction == "외선" }
+            val downDirectionList = item.filter { it.direction == "하행" || it.direction == "내선" }
+
+            // 각 방향별로 가장 빠른 2개의 도착 정보 선택 (arrivalTime이 0인 경우는 제외)
+            val fastestUpDirection = upDirectionList.filter { it.arrivalTime != 0 }
+                .sortedBy { it.arrivalTime }
+                .take(2)
+
+            val fastestDownDirection = downDirectionList.filter { it.arrivalTime != 0 }
+                .sortedBy { it.arrivalTime }
+                .take(2)
+
+            if (fastestUpDirection.isNotEmpty()) {
+                binding.tvUpNoArrivalDataMessage.visibility = View.INVISIBLE
+                binding.tvUpFirstArrivalStation.visibility = View.VISIBLE
+                binding.tvUpFirstArrivalTime.visibility = View.VISIBLE
+
+                val firstArrival = upDirectionList[0]
+                binding.tvUpFirstArrivalStation.text = firstArrival.destination.substringBefore("행")
+                binding.tvUpFirstArrivalTime.text =
+                    if (firstArrival.arrivalTime / 60 == 0) "곧 도착" else "${firstArrival.arrivalTime / 60}분"
+
+                if (upDirectionList.size >= 2) {
+                    binding.tvUpSecondArrivalStation.visibility = View.VISIBLE
+                    binding.tvUpSecondArrivalTime.visibility = View.VISIBLE
+
+                    val secondArrival = upDirectionList[1]
+                    binding.tvUpSecondArrivalStation.text =
+                        secondArrival.destination.substringBefore("행")
+                    binding.tvUpSecondArrivalTime.text =
+                        if (secondArrival.arrivalTime / 60 == 0) "곧 도착" else "${secondArrival.arrivalTime / 60}분"
+                }
+            } else {
+                binding.tvUpNoArrivalDataMessage.visibility = View.VISIBLE
+                binding.tvUpNoArrivalDataMessage.isSelected = true
+
+                binding.tvUpFirstArrivalStation.visibility = View.INVISIBLE
+                binding.tvUpFirstArrivalTime.visibility = View.INVISIBLE
+
+                binding.tvUpSecondArrivalStation.visibility = View.INVISIBLE
+                binding.tvUpSecondArrivalTime.visibility = View.INVISIBLE
+            }
+
+            if (fastestDownDirection.isNotEmpty()) {
+                binding.tvDownNoArrivalDataMessage.visibility = View.INVISIBLE
+                binding.tvDownFirstArrivalStation.visibility = View.VISIBLE
+                binding.tvDownFirstArrivalTime.visibility = View.VISIBLE
+
+                val firstArrival = downDirectionList[0]
+                binding.tvDownFirstArrivalStation.text =
+                    firstArrival.destination.substringBefore("행")
+                binding.tvDownFirstArrivalTime.text =
+                    if (firstArrival.arrivalTime / 60 == 0) "곧 도착" else "${firstArrival.arrivalTime / 60}분"
+
+                if (downDirectionList.size >= 2) {
+                    binding.tvDownSecondArrivalStation.visibility = View.VISIBLE
+                    binding.tvDownSecondArrivalTime.visibility = View.VISIBLE
+
+                    val secondArrival = downDirectionList[1]
+                    binding.tvDownSecondArrivalStation.text =
+                        secondArrival.destination.substringBefore("행")
+                    binding.tvDownSecondArrivalTime.text =
+                        if (secondArrival.arrivalTime / 60 == 0) "곧 도착" else "${secondArrival.arrivalTime / 60}분"
+                }
+            } else {
+                binding.tvDownNoArrivalDataMessage.visibility = View.VISIBLE
+                binding.tvDownNoArrivalDataMessage.isSelected = true
+
+                binding.tvDownFirstArrivalStation.visibility = View.INVISIBLE
+                binding.tvDownFirstArrivalTime.visibility = View.INVISIBLE
+
+                binding.tvDownSecondArrivalStation.visibility = View.INVISIBLE
+                binding.tvDownSecondArrivalTime.visibility = View.INVISIBLE
+            }
+
+
 //            binding.tvUpDirection.text = item.destination
 //            binding.tvDownDirection.text = item.destination
-
-            binding.tvUpFirstArrivalStation.text = item.destination
-            binding.tvUpFirstArrivalTime.text = item.destination
-
-            binding.tvUpSecondArrivalStation.text = item.destination
-            binding.tvUpSecondArrivalTime.text = item.destination
-
-            (item.arrivalTime.toString() + "분").also { binding.tvUpFirstArrivalTime.text = it }
-            (item.arrivalTime.toString() + "분").also { binding.tvUpSecondArrivalTime.text = it }
 
         }
     }

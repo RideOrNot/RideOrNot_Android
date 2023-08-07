@@ -12,7 +12,6 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.hanium.rideornot.R
 import com.hanium.rideornot.data.response.ArrivalResponse
-import com.hanium.rideornot.data.response.Arrival
 import com.hanium.rideornot.domain.Station
 import com.hanium.rideornot.ui.common.ViewModelFactory
 
@@ -39,7 +38,6 @@ class HomeFragment : Fragment() {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
-
         return binding.root
     }
 
@@ -51,7 +49,7 @@ class HomeFragment : Fragment() {
 
         var station = "양재" // 추후 삭제
 
-        // 주변 알림 - 도착 정보 조회
+        // 주변 알림 - 근처 역, 도착 정보 조회
         viewModel.showNearestStationName(fusedLocationClient)
         viewModel.nearestStation.observe(viewLifecycleOwner) { nearestStation ->
             station = nearestStation
@@ -69,8 +67,12 @@ class HomeFragment : Fragment() {
         viewModel.arrivalInfoList.observe(viewLifecycleOwner) { arrivalInfoList ->
             (station + "역").also { binding.tvNearbyNotificationStationName.text = it }
 
-            homeNearbyNotificationRVAdapter.updateData(arrivalInfoList as ArrayList<Arrival>)
+            // 같은 lineId를 같는 도착 정보끼리 리스트로 묶어 RecyclerView에 전달
+            val groupedArrivalInfoMap = arrivalInfoList.groupBy { it.lineId }
+            val groupedArrivalInfoList = groupedArrivalInfoMap.values.toList()
+            homeNearbyNotificationRVAdapter.updateData(groupedArrivalInfoList)
 
+            // 도착 정보가 없는 경우
             if (arrivalInfoList.isEmpty())
                 binding.tvNotExistArrivalInfo.visibility = View.VISIBLE
             else
@@ -82,15 +84,17 @@ class HomeFragment : Fragment() {
             val rotateAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.rotate360)
             binding.fabRefresh.startAnimation(rotateAnimation)
 
-            // 도착정보 API 호출
+            // 도착 정보 API 호출
             viewModel.loadArrivalInfo(station)
         }
 
         // 주변 알림 - 더보기
         binding.btnNearbyNotificationMoreInfo.setOnClickListener {
-            val stationName = binding.tvNearbyNotificationStationName.text.toString().replace("역", "")
+            val stationName =
+                binding.tvNearbyNotificationStationName.text.toString().replace("역", "")
             viewModel.loadLineList(stationName)
 
+            // 역 상세정보 화면으로 이동
             findNavController().navigate(
                 HomeFragmentDirections.actionFragmentHomeToActivityStationDetail(stationName)
             )

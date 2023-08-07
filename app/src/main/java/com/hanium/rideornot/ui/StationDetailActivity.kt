@@ -54,6 +54,8 @@ class StationDetailActivity : AppCompatActivity() {
 
             // 이전/이후 역 로드
             viewModel.loadNeighboringStation(stationName, lineId)
+            binding.tvBeforeStationName.isSelected = true
+            binding.tvNextStationName.isSelected = true
 
             setLineCustom(stationName, lineList[0].lineName)
         }
@@ -130,9 +132,11 @@ class StationDetailActivity : AppCompatActivity() {
         binding.tvStationCongestionContent.text = arrivalResult.congestion.toString()
 
         // 도착 정보
-        // 상행과 하행 방향으로 데이터를 나누기
-        val upDirectionList = arrivalResult.arrivalList.filter { it.direction == "상행" }
-        val downDirectionList = arrivalResult.arrivalList.filter { it.direction == "하행" }
+        // 상행과 하행 / 외선과 내선 방향으로 데이터를 나누기
+        val upDirectionList =
+            arrivalResult.arrivalList.filter { it.direction == "상행" || it.direction == "외선" }
+        val downDirectionList =
+            arrivalResult.arrivalList.filter { it.direction == "하행" || it.direction == "내선" }
 
         // 상행 방면 데이터 표시
         showDirectionData(
