@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.hanium.rideornot.R
 import com.hanium.rideornot.domain.SearchHistory
@@ -54,10 +53,10 @@ class SearchHistoryRVAdapter(
         override fun onClick(view: View?) {
             when (view) {
                 deleteSearchBtn -> {
-                    searchRecyclerViewInterface.onItemDeleteClick(adapterPosition)
+                    searchRecyclerViewInterface.onSearchHistoryItemDeleteClick(adapterPosition)
                 }
                 constraintSearchItem -> {
-                    searchRecyclerViewInterface.onItemClick(adapterPosition)
+                    searchRecyclerViewInterface.onSearchHistoryItemClick(adapterPosition)
                 }
             }
         }

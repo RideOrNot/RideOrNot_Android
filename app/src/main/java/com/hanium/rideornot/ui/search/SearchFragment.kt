@@ -12,14 +12,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.UiThread
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.hanium.rideornot.R
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.internal.ViewUtils.hideKeyboard
 import com.hanium.rideornot.databinding.FragmentSearchBinding
 import com.hanium.rideornot.domain.SearchHistory
+import com.hanium.rideornot.domain.Station
 import com.hanium.rideornot.domain.StationDatabase
 import com.hanium.rideornot.ui.SearchViewModel
 import com.naver.maps.map.MapFragment
@@ -134,13 +133,13 @@ class SearchFragment : Fragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         searchViewModel.searchHistoryList.observe(this, Observer {
-            initRecycler()
+            initSearchHistoryRecycler()
             binding.recyclerView.adapter = searchHistoryRVAdapter
             searchHistoryRVAdapter.notifyDataSetChanged()
         })
     }
 
-    private fun initRecycler() {
+    private fun initSearchHistoryRecycler() {
         binding.recyclerView.layoutManager =
             LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
         searchHistoryRVAdapter =
@@ -148,11 +147,11 @@ class SearchFragment : Fragment(),
         searchHistoryRVAdapter.notifyDataSetChanged()
     }
 
-    override fun onItemClick(position: Int) {
+    override fun onSearchHistoryItemClick(position: Int) {
 
     }
 
-    override fun onItemDeleteClick(position: Int) {
+    override fun onSearchHistoryItemDeleteClick(position: Int) {
         coroutineScope.launch {
             val searchHistoryToDelete = searchHistoryRVAdapter.itemList[position]
             searchViewModel.deleteSearchHistory(searchHistoryToDelete)
@@ -177,12 +176,11 @@ class SearchFragment : Fragment(),
         if (searchQuery.isNotEmpty()) {
             val stationDao = StationDatabase.getInstance(requireContext())!!.stationDao()
             lifecycleScope.launch {
-                val searchResult = stationDao.findStationsByName(searchQuery)
-                searchResultRVAdapter = SearchResultRVAdapter(searchResult, this@SearchFragment)
+                val searchResult = stationDao.findStationsByName(searchQuery).distinctBy { it.stationName }
+                searchResultRVAdapter = SearchResultRVAdapter(requireContext(), searchResult, searchViewModel, this@SearchFragment)
                 binding.recyclerView.adapter = searchResultRVAdapter
             }
         }
-
     }
 
 
