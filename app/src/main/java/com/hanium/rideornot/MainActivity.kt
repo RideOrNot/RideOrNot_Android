@@ -6,7 +6,7 @@ import com.hanium.rideornot.databinding.ActivityMainBinding
 import com.hanium.rideornot.gps.GpsManager
 import com.hanium.rideornot.ui.FavoriteFragment
 import com.hanium.rideornot.ui.home.HomeFragment
-import com.hanium.rideornot.ui.SearchFragment
+import com.hanium.rideornot.ui.search.SearchFragment
 import com.hanium.rideornot.ui.setting.SettingFragment
 
 
