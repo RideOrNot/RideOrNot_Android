@@ -152,11 +152,11 @@ class SearchFragment : Fragment(),
     }
 
     override fun onSearchResultItemClick(station: Station) {
-        switchToStationDetailFragment(station)
+        switchToStationDetailFragment(station.stationName)
     }
 
-    override fun onSearchHistoryItemClick(position: Int) {
-
+    override fun onSearchHistoryItemClick(stationName: String) {
+        switchToStationDetailFragment(stationName)
     }
 
     override fun onSearchHistoryItemDeleteClick(position: Int) {
@@ -200,8 +200,8 @@ class SearchFragment : Fragment(),
     override fun onItemClick(position: Int) {
     }
 
-    private fun switchToStationDetailFragment(station: Station) {
-        Log.d("SwitchToStationDetailFragment", "Succeeded, station: ${station.stationName}")
+    private fun switchToStationDetailFragment(stationName: String) {
+        Log.d("SwitchToStationDetailFragment", "Succeeded, station: $stationName")
         val stationDetailFragment = StationDetailFragment()
         requireActivity().supportFragmentManager.beginTransaction()
             .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)

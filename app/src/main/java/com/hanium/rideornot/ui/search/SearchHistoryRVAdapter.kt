@@ -10,10 +10,11 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.hanium.rideornot.R
 import com.hanium.rideornot.domain.SearchHistory
+import com.hanium.rideornot.ui.SearchViewModel
 
 class SearchHistoryRVAdapter(
     var itemList: List<SearchHistory>,
-    private var searchRecyclerViewInterface: ISearchHistoryRV
+    private val searchRecyclerViewInterface: ISearchHistoryRV,
 ) :
     RecyclerView.Adapter<SearchHistoryRVAdapter.ViewHolder>() {
 
@@ -48,15 +49,15 @@ class SearchHistoryRVAdapter(
 
         fun bind(item: SearchHistory) {
             searchResult.text = item.stationName
+            constraintSearchItem.setOnClickListener {
+                searchRecyclerViewInterface.onSearchHistoryItemClick(item.stationName)
+            }
         }
 
         override fun onClick(view: View?) {
             when (view) {
                 deleteSearchBtn -> {
                     searchRecyclerViewInterface.onSearchHistoryItemDeleteClick(adapterPosition)
-                }
-                constraintSearchItem -> {
-                    searchRecyclerViewInterface.onSearchHistoryItemClick(adapterPosition)
                 }
             }
         }
