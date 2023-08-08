@@ -52,7 +52,7 @@ class SearchResultRVAdapter(
         //private val lineBtn: AppCompatButton = itemView.findViewById(R.id.btn_line)
         private val constraintSearchItem: ConstraintLayout =
             itemView.findViewById(R.id.cl_search_item)
-        private val ll_line: LinearLayout = itemView.findViewById(R.id.ll_lines)
+        private val lineLinearLayout: LinearLayout = itemView.findViewById(R.id.ll_lines)
 
         init {
             // 리스너 연결
@@ -61,13 +61,13 @@ class SearchResultRVAdapter(
 
         fun bind(item: Station) {
             CoroutineScope(Dispatchers.Main).launch {
-                val lineList = searchViewModel.findLineByName(item.stationName).await()
-                for (element in lineList) {
-                    val lineItemView = LayoutInflater.from(context).inflate(R.layout.item_line, ll_line, false)
+                val lineIdList = searchViewModel.findLinesByStationName(item.stationName)
+                for (lineId in lineIdList) {
+                    val lineItemView = LayoutInflater.from(context).inflate(R.layout.item_line, lineLinearLayout, false)
                     lineItemView.id = View.generateViewId()
                     val lineBtn = lineItemView.findViewById<AppCompatButton>(R.id.btn_line)
-                    lineBtn.text = item.
-                    val color = ContextCompat.getColor(context, getLineColorIdByLineId(element))
+                    lineBtn.text = searchViewModel.getLineNameByLineId(lineId).firstOrNull().toString()
+                    val color = ContextCompat.getColor(context, getLineColorIdByLineId(lineId))
                     lineBtn.backgroundTintList = ColorStateList.valueOf(color)
                     val backgroundDrawable = lineBtn.background as? GradientDrawable
                     backgroundDrawable?.setStroke(4, color)

@@ -25,21 +25,21 @@ fun getLineColorIdByLineName(lineName: String) : Int {
 
 fun getLineColorIdByLineId(lineId: Int) : Int {
     val lineColorResId = when (lineId) {
-        1 -> R.color.line_1
-        2 -> R.color.line_2
-        3 -> R.color.line_3
-        4 -> R.color.line_4
-        5 -> R.color.line_5
-        6 -> R.color.line_6
-        7 -> R.color.line_7
-        8 -> R.color.line_8
-        9 -> R.color.line_9
-        15 -> R.color.line_bundang
-        19 -> R.color.line_sinbundang
-        113 -> R.color.line_ui_sinseol
-        16 -> R.color.line_gyeongui_jungang
-        40 -> R.color.line_airport_rail_link
-        18 -> R.color.line_gyeongchun
+        1001 -> R.color.line_1
+        1002 -> R.color.line_2
+        1003 -> R.color.line_3
+        1004 -> R.color.line_4
+        1005 -> R.color.line_5
+        1006 -> R.color.line_6
+        1007 -> R.color.line_7
+        1008 -> R.color.line_8
+        1009 -> R.color.line_9
+        1063 -> R.color.line_bundang
+        1065 -> R.color.line_sinbundang
+        1067 -> R.color.line_ui_sinseol
+        1075 -> R.color.line_gyeongui_jungang
+        1077 -> R.color.line_airport_rail_link
+        1092 -> R.color.line_gyeongchun
         else -> R.color.gray_400
     }
     return lineColorResId
