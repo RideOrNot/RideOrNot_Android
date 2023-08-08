@@ -189,7 +189,6 @@ class SearchFragment : Fragment(),
                     requireContext(),
                     searchResult,
                     searchViewModel,
-                    this@SearchFragment,
                     this@SearchFragment
                 )
                 binding.recyclerView.adapter = searchResultRVAdapter

@@ -3,6 +3,7 @@ package com.hanium.rideornot.ui.search
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.drawable.GradientDrawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,7 +27,6 @@ class SearchResultRVAdapter(
     private var itemList: List<Station>,
     private var searchViewModel: SearchViewModel,
     private var searchRecyclerViewInterface: ISearchResultRV,
-    private val itemClickListener: OnItemClickListener
 ) :
     RecyclerView.Adapter<SearchResultRVAdapter.ViewHolder>() {
 
@@ -57,11 +57,12 @@ class SearchResultRVAdapter(
         private val lineLinearLayout: LinearLayout = itemView.findViewById(R.id.ll_lines)
 
         init {
-
+            constraintSearchItem.setOnClickListener(this)
         }
 
         fun bind(item: Station) {
             CoroutineScope(Dispatchers.Main).launch {
+                lineLinearLayout.removeAllViews()
                 val lineIdList = searchViewModel.findLinesByStationName(item.stationName)
                 for (lineId in lineIdList) {
                     val lineItemView = LayoutInflater.from(context).inflate(R.layout.item_line, lineLinearLayout, false)
@@ -79,22 +80,24 @@ class SearchResultRVAdapter(
                 }
                 stationNameTextView.text = item.stationName
             }
-            constraintSearchItem.setOnClickListener {
-                searchRecyclerViewInterface.onSearchResultItemClick(item)
-                searchViewModel.insertSearchHistory(
-                    SearchHistory(
-                        stationId = item.stationId,
-                        stationName = item.stationName
-                    )
-                )
-            }
         }
+
 
         override fun onClick(view: View?) {
             when (view) {
-//                constraintSearchItem -> {
-//                    searchRecyclerViewInterface.onSearchResultItemClick(adapterPosition)
-//                }
+                constraintSearchItem -> {
+                    val position = adapterPosition
+                    if (position != RecyclerView.NO_POSITION) {
+                        val clickedItem = itemList[position]
+                        searchRecyclerViewInterface.onSearchResultItemClick(clickedItem)
+                        searchViewModel.insertSearchHistory(
+                            SearchHistory(
+                                stationId = clickedItem.stationId,
+                                stationName = clickedItem.stationName
+                            )
+                        )
+                    }
+                }
 
             }
         }
