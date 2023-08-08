@@ -12,6 +12,7 @@
     <!-- primary color -->
     <color name="blue">#2B73F3</color>
     <color name="gray">#818181</color>
+    <color name="pink">#FF7473</color>
     <color name="pink_50">#FFF1F1</color>
 
     <!-- gray-scale color -->

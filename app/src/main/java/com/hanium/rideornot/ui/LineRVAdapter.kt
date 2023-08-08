@@ -47,13 +47,12 @@ class LineRVAdapter(var lineList: ArrayList<Line>) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(lineList[position], position == selectedItemPosition)
         holder.binding.btnLine.setOnClickListener {
-            val selectedPosition = holder.adapterPosition
-            if (selectedPosition != RecyclerView.NO_POSITION) {
+            if (selectedItemPosition != position) {
                 val previousSelectedPosition = selectedItemPosition
-                selectedItemPosition = selectedPosition
+                selectedItemPosition = position
 
                 notifyItemChanged(previousSelectedPosition)
-                notifyItemChanged(selectedPosition)
+                notifyItemChanged(selectedItemPosition)
             }
             mItemClickListener.onItemClick(lineList[position])
         }
@@ -77,6 +76,16 @@ class LineRVAdapter(var lineList: ArrayList<Line>) :
         }
     }
 
+    // 호선명 추출
+    private fun getLineDisplayName(lineName: String): String {
+        val suffix = "호선"
+        return if (lineName.endsWith(suffix)) {
+            lineName.substringBefore(suffix)
+        } else {
+            lineName.substringBefore("선")
+        }
+    }
+
     // 호선별 커스텀
     private fun setLineCustom(
         item: Line,
@@ -84,307 +93,41 @@ class LineRVAdapter(var lineList: ArrayList<Line>) :
         context: Context,
         isSelected: Boolean
     ) {
-        when (item.lineName) {
-            "1호선" -> {
-                if (isSelected) {
-                    binding.btnLine.backgroundTintList =
-                        ColorStateList.valueOf(ContextCompat.getColor(context, R.color.line_1))
-                    binding.btnLine.setTextColor(ContextCompat.getColor(context, R.color.white))
-                } else {
-                    binding.btnLine.setTextColor(ContextCompat.getColor(context, R.color.black))
+        val lineColorResId = when (item.lineName) {
+            "1호선" -> R.color.line_1
+            "2호선" -> R.color.line_2
+            "3호선" -> R.color.line_3
+            "4호선" -> R.color.line_4
+            "5호선" -> R.color.line_5
+            "6호선" -> R.color.line_6
+            "7호선" -> R.color.line_7
+            "8호선" -> R.color.line_8
+            "9호선" -> R.color.line_9
+            "분당선" -> R.color.line_bundang
+            "신분당선" -> R.color.line_sinbundang
+            "우이신설선" -> R.color.line_ui_sinseol
+            "경의중앙선" -> R.color.line_gyeongui_jungang
+            "공항철도" -> R.color.line_airport_rail_link
+            "경춘선" -> R.color.line_gyeongchun
+            else -> R.color.gray_400
+        }
 
-                    // 버튼의 배경 Drawable 테두리(border) 색상 변경
-                    val backgroundDrawable = binding.btnLine.background as? GradientDrawable
-                    backgroundDrawable?.setStroke(
-                        4,
-                        ContextCompat.getColor(context, R.color.line_1)
-                    )
-                    binding.btnLine.background = backgroundDrawable
-                }
-                binding.btnLine.text = item.csvLine.toString()
-            }
-            "2호선" -> {
-                if (isSelected) {
-                    binding.btnLine.backgroundTintList =
-                        ColorStateList.valueOf(ContextCompat.getColor(context, R.color.line_2))
-                    binding.btnLine.setTextColor(ContextCompat.getColor(context, R.color.white))
-                } else {
-                    binding.btnLine.setTextColor(ContextCompat.getColor(context, R.color.black))
+        binding.btnLine.text = getLineDisplayName(item.lineName)
+        binding.btnLine.setTextColor(
+            ContextCompat.getColor(
+                context,
+                if (isSelected) R.color.white else R.color.black
+            )
+        )
 
-                    // 버튼의 배경 Drawable 테두리(border) 색상 변경
-                    val backgroundDrawable = binding.btnLine.background as? GradientDrawable
-                    backgroundDrawable?.setStroke(
-                        4,
-                        ContextCompat.getColor(context, R.color.line_2)
-                    )
-                    binding.btnLine.background = backgroundDrawable
-                }
-                binding.btnLine.text = item.csvLine.toString()
-            }
-            "3호선" -> {
-                if (isSelected) {
-                    binding.btnLine.backgroundTintList =
-                        ColorStateList.valueOf(ContextCompat.getColor(context, R.color.line_3))
-                    binding.btnLine.setTextColor(ContextCompat.getColor(context, R.color.white))
-                } else {
-                    binding.btnLine.setTextColor(ContextCompat.getColor(context, R.color.black))
-
-                    // 버튼의 배경 Drawable 테두리(border) 색상 변경
-                    val backgroundDrawable = binding.btnLine.background as? GradientDrawable
-                    backgroundDrawable?.setStroke(
-                        4,
-                        ContextCompat.getColor(context, R.color.line_3)
-                    )
-                    binding.btnLine.background = backgroundDrawable
-                }
-                binding.btnLine.text = item.csvLine.toString()
-            }
-            "4호선" -> {
-                if (isSelected) {
-                    binding.btnLine.backgroundTintList =
-                        ColorStateList.valueOf(ContextCompat.getColor(context, R.color.line_4))
-                    binding.btnLine.setTextColor(ContextCompat.getColor(context, R.color.white))
-                } else {
-                    binding.btnLine.setTextColor(ContextCompat.getColor(context, R.color.black))
-
-                    // 버튼의 배경 Drawable 테두리(border) 색상 변경
-                    val backgroundDrawable = binding.btnLine.background as? GradientDrawable
-                    backgroundDrawable?.setStroke(
-                        4,
-                        ContextCompat.getColor(context, R.color.line_4)
-                    )
-                    binding.btnLine.background = backgroundDrawable
-                }
-                binding.btnLine.text = item.csvLine.toString()
-            }
-            "5호선" -> {
-                if (isSelected) {
-                    binding.btnLine.backgroundTintList =
-                        ColorStateList.valueOf(ContextCompat.getColor(context, R.color.line_5))
-                    binding.btnLine.setTextColor(ContextCompat.getColor(context, R.color.white))
-                } else {
-                    binding.btnLine.setTextColor(ContextCompat.getColor(context, R.color.black))
-
-                    // 버튼의 배경 Drawable 테두리(border) 색상 변경
-                    val backgroundDrawable = binding.btnLine.background as? GradientDrawable
-                    backgroundDrawable?.setStroke(
-                        4,
-                        ContextCompat.getColor(context, R.color.line_5)
-                    )
-                    binding.btnLine.background = backgroundDrawable
-                }
-                binding.btnLine.text = item.csvLine.toString()
-            }
-            "6호선" -> {
-                if (isSelected) {
-                    binding.btnLine.backgroundTintList =
-                        ColorStateList.valueOf(ContextCompat.getColor(context, R.color.line_6))
-                    binding.btnLine.setTextColor(ContextCompat.getColor(context, R.color.white))
-                } else {
-                    binding.btnLine.setTextColor(ContextCompat.getColor(context, R.color.black))
-
-                    // 버튼의 배경 Drawable 테두리(border) 색상 변경
-                    val backgroundDrawable = binding.btnLine.background as? GradientDrawable
-                    backgroundDrawable?.setStroke(
-                        4,
-                        ContextCompat.getColor(context, R.color.line_6)
-                    )
-                    binding.btnLine.background = backgroundDrawable
-                }
-                binding.btnLine.text = item.csvLine.toString()
-            }
-            "7호선" -> {
-                if (isSelected) {
-                    binding.btnLine.backgroundTintList =
-                        ColorStateList.valueOf(ContextCompat.getColor(context, R.color.line_7))
-                    binding.btnLine.setTextColor(ContextCompat.getColor(context, R.color.white))
-                } else {
-                    binding.btnLine.setTextColor(ContextCompat.getColor(context, R.color.black))
-
-                    // 버튼의 배경 Drawable 테두리(border) 색상 변경
-                    val backgroundDrawable = binding.btnLine.background as? GradientDrawable
-                    backgroundDrawable?.setStroke(
-                        4,
-                        ContextCompat.getColor(context, R.color.line_7)
-                    )
-                    binding.btnLine.background = backgroundDrawable
-                }
-                binding.btnLine.text = item.csvLine.toString()
-            }
-            "8호선" -> {
-                if (isSelected) {
-                    binding.btnLine.backgroundTintList =
-                        ColorStateList.valueOf(ContextCompat.getColor(context, R.color.line_8))
-                    binding.btnLine.setTextColor(ContextCompat.getColor(context, R.color.white))
-                } else {
-                    binding.btnLine.setTextColor(ContextCompat.getColor(context, R.color.black))
-
-                    // 버튼의 배경 Drawable 테두리(border) 색상 변경
-                    val backgroundDrawable = binding.btnLine.background as? GradientDrawable
-                    backgroundDrawable?.setStroke(
-                        4,
-                        ContextCompat.getColor(context, R.color.line_8)
-                    )
-                    binding.btnLine.background = backgroundDrawable
-                }
-                binding.btnLine.text = item.csvLine.toString()
-            }
-            "9호선" -> {
-                if (isSelected) {
-                    binding.btnLine.backgroundTintList =
-                        ColorStateList.valueOf(ContextCompat.getColor(context, R.color.line_9))
-                    binding.btnLine.setTextColor(ContextCompat.getColor(context, R.color.white))
-                } else {
-                    binding.btnLine.setTextColor(ContextCompat.getColor(context, R.color.black))
-
-                    // 버튼의 배경 Drawable 테두리(border) 색상 변경
-                    val backgroundDrawable = binding.btnLine.background as? GradientDrawable
-                    backgroundDrawable?.setStroke(
-                        4,
-                        ContextCompat.getColor(context, R.color.line_9)
-                    )
-                    binding.btnLine.background = backgroundDrawable
-                }
-                binding.btnLine.text = item.csvLine.toString()
-            }
-            "분당선" -> {
-                if (isSelected) {
-                    binding.btnLine.backgroundTintList =
-                        ColorStateList.valueOf(
-                            ContextCompat.getColor(
-                                context,
-                                R.color.line_bundang
-                            )
-                        )
-                    binding.btnLine.setTextColor(ContextCompat.getColor(context, R.color.white))
-                } else {
-                    binding.btnLine.setTextColor(ContextCompat.getColor(context, R.color.black))
-
-                    // 버튼의 배경 Drawable 테두리(border) 색상 변경
-                    val backgroundDrawable = binding.btnLine.background as? GradientDrawable
-                    backgroundDrawable?.setStroke(
-                        4,
-                        ContextCompat.getColor(context, R.color.line_bundang)
-                    )
-                    binding.btnLine.background = backgroundDrawable
-                }
-                binding.btnLine.text = item.lineName
-            }
-            "신분당선" -> {
-                if (isSelected) {
-                    binding.btnLine.backgroundTintList =
-                        ColorStateList.valueOf(
-                            ContextCompat.getColor(
-                                context,
-                                R.color.line_sinbundang
-                            )
-                        )
-                    binding.btnLine.setTextColor(ContextCompat.getColor(context, R.color.white))
-                } else {
-                    binding.btnLine.setTextColor(ContextCompat.getColor(context, R.color.black))
-
-                    // 버튼의 배경 Drawable 테두리(border) 색상 변경
-                    val backgroundDrawable = binding.btnLine.background as? GradientDrawable
-                    backgroundDrawable?.setStroke(
-                        4,
-                        ContextCompat.getColor(context, R.color.line_sinbundang)
-                    )
-                    binding.btnLine.background = backgroundDrawable
-                }
-                binding.btnLine.text = item.lineName
-            }
-            "우이신설선" -> {
-                if (isSelected) {
-                    binding.btnLine.backgroundTintList =
-                        ColorStateList.valueOf(
-                            ContextCompat.getColor(
-                                context,
-                                R.color.line_ui_sinseol
-                            )
-                        )
-                    binding.btnLine.setTextColor(ContextCompat.getColor(context, R.color.white))
-                } else {
-                    binding.btnLine.setTextColor(ContextCompat.getColor(context, R.color.black))
-
-                    // 버튼의 배경 Drawable 테두리(border) 색상 변경
-                    val backgroundDrawable = binding.btnLine.background as? GradientDrawable
-                    backgroundDrawable?.setStroke(
-                        4,
-                        ContextCompat.getColor(context, R.color.line_ui_sinseol)
-                    )
-                    binding.btnLine.background = backgroundDrawable
-                }
-                binding.btnLine.text = item.lineName
-            }
-            "경의중앙선" -> {
-                if (isSelected) {
-                    binding.btnLine.backgroundTintList =
-                        ColorStateList.valueOf(
-                            ContextCompat.getColor(
-                                context,
-                                R.color.line_gyeongui_jungang
-                            )
-                        )
-                    binding.btnLine.setTextColor(ContextCompat.getColor(context, R.color.white))
-                } else {
-                    binding.btnLine.setTextColor(ContextCompat.getColor(context, R.color.black))
-
-                    // 버튼의 배경 Drawable 테두리(border) 색상 변경
-                    val backgroundDrawable = binding.btnLine.background as? GradientDrawable
-                    backgroundDrawable?.setStroke(
-                        4,
-                        ContextCompat.getColor(context, R.color.line_gyeongui_jungang)
-                    )
-                    binding.btnLine.background = backgroundDrawable
-                }
-                binding.btnLine.text = item.lineName
-            }
-            "공항철도" -> {
-                if (isSelected) {
-                    binding.btnLine.backgroundTintList =
-                        ColorStateList.valueOf(
-                            ContextCompat.getColor(
-                                context,
-                                R.color.line_airport_rail_link
-                            )
-                        )
-                    binding.btnLine.setTextColor(ContextCompat.getColor(context, R.color.white))
-                } else {
-                    binding.btnLine.setTextColor(ContextCompat.getColor(context, R.color.black))
-
-                    // 버튼의 배경 Drawable 테두리(border) 색상 변경
-                    val backgroundDrawable = binding.btnLine.background as? GradientDrawable
-                    backgroundDrawable?.setStroke(
-                        4,
-                        ContextCompat.getColor(context, R.color.line_airport_rail_link)
-                    )
-                    binding.btnLine.background = backgroundDrawable
-                }
-                binding.btnLine.text = item.lineName
-            }
-            "경춘선" -> {
-                if (isSelected) {
-                    binding.btnLine.backgroundTintList =
-                        ColorStateList.valueOf(
-                            ContextCompat.getColor(
-                                context,
-                                R.color.line_gyeongchun
-                            )
-                        )
-                    binding.btnLine.setTextColor(ContextCompat.getColor(context, R.color.white))
-                } else {
-                    binding.btnLine.setTextColor(ContextCompat.getColor(context, R.color.black))
-
-                    // 버튼의 배경 Drawable 테두리(border) 색상 변경
-                    val backgroundDrawable = binding.btnLine.background as? GradientDrawable
-                    backgroundDrawable?.setStroke(
-                        4,
-                        ContextCompat.getColor(context, R.color.line_gyeongchun)
-                    )
-                    binding.btnLine.background = backgroundDrawable
-                }
-                binding.btnLine.text = item.lineName
-            }
+        if (isSelected) {
+            binding.btnLine.backgroundTintList =
+                ColorStateList.valueOf(ContextCompat.getColor(context, lineColorResId))
+        } else {
+            binding.btnLine.backgroundTintList = null
+            val backgroundDrawable = binding.btnLine.background as? GradientDrawable
+            backgroundDrawable?.setStroke(4, ContextCompat.getColor(context, lineColorResId))
+            binding.btnLine.background = backgroundDrawable
         }
     }
 

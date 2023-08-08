@@ -6,5 +6,8 @@ import androidx.room.Query
 @Dao
 interface LineDao {
     @Query("SELECT * FROM line WHERE line_id IN (:lineIds)")
-    fun getLinesByIds(lineIds: List<Int>): List<Line>
+    suspend fun getLinesByIds(lineIds: List<Int>): List<Line>
+
+    @Query("SELECT line_name FROM line WHERE line_id = :lineId")
+    suspend fun getLineNameById(lineId: Int): String
 }

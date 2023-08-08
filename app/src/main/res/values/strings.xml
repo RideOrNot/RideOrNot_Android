@@ -22,6 +22,7 @@
     <string name="congestion">혼잡도</string>
     <string name="percentage">(%)</string>
     <string name="edit">편집</string>
+    <string name="refresh">새로고침</string>
 
     <!-- Station Detail -->
     <string name="arrival_info">도착 정보</string>

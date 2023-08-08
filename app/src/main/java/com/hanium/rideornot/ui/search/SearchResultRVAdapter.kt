@@ -66,6 +66,7 @@ class SearchResultRVAdapter(
                     val lineItemView = LayoutInflater.from(context).inflate(R.layout.item_line, ll_line, false)
                     lineItemView.id = View.generateViewId()
                     val lineBtn = lineItemView.findViewById<AppCompatButton>(R.id.btn_line)
+                    lineBtn.text = item.
                     val color = ContextCompat.getColor(context, getLineColorIdByLineId(element))
                     lineBtn.backgroundTintList = ColorStateList.valueOf(color)
                     val backgroundDrawable = lineBtn.background as? GradientDrawable
