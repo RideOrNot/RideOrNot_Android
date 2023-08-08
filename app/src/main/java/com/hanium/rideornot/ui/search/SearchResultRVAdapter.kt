@@ -12,8 +12,10 @@ import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.recyclerview.widget.RecyclerView
 import com.hanium.rideornot.R
+import com.hanium.rideornot.domain.SearchHistory
 import com.hanium.rideornot.domain.Station
 import com.hanium.rideornot.ui.SearchViewModel
 import com.hanium.rideornot.utils.getLineColorIdByLineId
@@ -49,14 +51,11 @@ class SearchResultRVAdapter(
         RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
         private val stationNameTextView: TextView = itemView.findViewById(R.id.tv_search_result)
-        //private val lineBtn: AppCompatButton = itemView.findViewById(R.id.btn_line)
-        private val constraintSearchItem: ConstraintLayout =
-            itemView.findViewById(R.id.cl_search_item)
+        private val constraintSearchItem: ConstraintLayout = itemView.findViewById(R.id.cl_search_item)
         private val lineLinearLayout: LinearLayout = itemView.findViewById(R.id.ll_lines)
 
         init {
-            // 리스너 연결
-            constraintSearchItem.setOnClickListener(this)
+
         }
 
         fun bind(item: Station) {
@@ -72,12 +71,20 @@ class SearchResultRVAdapter(
                     val backgroundDrawable = lineBtn.background as? GradientDrawable
                     backgroundDrawable?.setStroke(4, color)
                     lineBtn.background = backgroundDrawable
-
                     // lineItemView를 부모 view의 LinearLayout에 추가
                     val parentLayout = itemView.findViewById<LinearLayout>(R.id.ll_lines)
                     parentLayout.addView(lineItemView)
                 }
                 stationNameTextView.text = item.stationName
+            }
+
+            constraintSearchItem.setOnClickListener {
+                searchViewModel.insertSearchHistory(
+                    SearchHistory(
+                        stationId = item.stationId,
+                        stationName = item.stationName
+                    )
+                )
             }
         }
 

@@ -13,12 +13,6 @@ abstract class SearchHistoryDatabase : RoomDatabase() {
     companion object {
         private var instance: SearchHistoryDatabase? = null
 
-//        fun getInstance(context: Context): SearchHistoryDatabase {
-//            return instance ?: synchronized(this) {
-//                instance ?: buildDatabase(context).also { instance = it }
-//            }
-//        }
-        
         @Synchronized
         fun getInstance(context: Context): SearchHistoryDatabase? {
             if (instance == null) {

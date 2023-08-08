@@ -26,7 +26,7 @@ class SearchViewModel(context: Context) : ViewModel() {
         searchHistoryList = searchHistoryRepository.getAllData
     }
 
-    suspend fun insertSearchHistory(searchHistory: SearchHistory) {
+    fun insertSearchHistory(searchHistory: SearchHistory) {
         viewModelScope.launch(Dispatchers.IO) {
             searchHistoryRepository.insertSearchHistory(searchHistory)
         }
