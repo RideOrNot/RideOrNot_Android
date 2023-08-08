@@ -1,6 +1,8 @@
 package com.hanium.rideornot.ui.search
 
+import com.hanium.rideornot.domain.Station
+
 
 interface ISearchResultRV {
-    fun onSearchHistoryItemClick(position: Int)
+    fun onSearchResultItemClick(station: Station)
 }

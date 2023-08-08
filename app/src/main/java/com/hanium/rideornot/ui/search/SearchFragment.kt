@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -21,6 +22,8 @@ import com.hanium.rideornot.domain.SearchHistory
 import com.hanium.rideornot.domain.Station
 import com.hanium.rideornot.domain.StationDatabase
 import com.hanium.rideornot.ui.SearchViewModel
+import com.hanium.rideornot.ui.StationDetailFragment
+import com.hanium.rideornot.ui.home.HomeFragment
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
@@ -32,7 +35,8 @@ import kotlinx.coroutines.launch
 class SearchFragment : Fragment(),
     OnMapReadyCallback,
     ISearchHistoryRV,
-    ISearchResultRV {
+    ISearchResultRV,
+    SearchResultRVAdapter.OnItemClickListener {
 
     private lateinit var binding: FragmentSearchBinding
     private lateinit var searchHistoryRVAdapter: SearchHistoryRVAdapter
@@ -42,11 +46,11 @@ class SearchFragment : Fragment(),
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         binding = FragmentSearchBinding.inflate(inflater, container, false)
 
-        // TODO: 검색 버튼을 안 눌러도 실시간으로 검색결과가 뜨게 하고 싶은 경우, 이 메서드 사용
+        // 검색어 입력을 실시간으로 탐지하여 검색 결과에 반영
         binding.editTextSearch.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 val searchText = s?.toString() ?: ""
@@ -147,6 +151,10 @@ class SearchFragment : Fragment(),
         searchHistoryRVAdapter.notifyDataSetChanged()
     }
 
+    override fun onSearchResultItemClick(station: Station) {
+        switchToStationDetailFragment(station)
+    }
+
     override fun onSearchHistoryItemClick(position: Int) {
 
     }
@@ -177,11 +185,28 @@ class SearchFragment : Fragment(),
             val stationDao = StationDatabase.getInstance(requireContext())!!.stationDao()
             lifecycleScope.launch {
                 val searchResult = stationDao.findStationsByName(searchQuery).distinctBy { it.stationName }
-                searchResultRVAdapter = SearchResultRVAdapter(requireContext(), searchResult, searchViewModel, this@SearchFragment)
+                searchResultRVAdapter = SearchResultRVAdapter(
+                    requireContext(),
+                    searchResult,
+                    searchViewModel,
+                    this@SearchFragment,
+                    this@SearchFragment
+                )
                 binding.recyclerView.adapter = searchResultRVAdapter
             }
         }
     }
 
+    override fun onItemClick(position: Int) {
+    }
+
+    private fun switchToStationDetailFragment(station: Station) {
+        Log.d("SwitchToStationDetailFragment", "Succeeded, station: ${station.stationName}")
+        val stationDetailFragment = StationDetailFragment()
+        requireActivity().supportFragmentManager.beginTransaction()
+            .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+            .replace(R.id.frm_main, stationDetailFragment)
+            .commit()
+    }
 
 }

@@ -17,10 +17,13 @@
 
     <TextView
         android:id="@+id/tv_search_result"
+        android:textColor="@color/gray_900"
+        android:textSize="20sp"
+        android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="45dp"
         android:layout_marginStart="10dp"
-        android:textSize="26dp"
+        android:gravity="center_vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

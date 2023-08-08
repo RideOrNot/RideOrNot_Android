@@ -4,8 +4,10 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hanium.rideornot.R
 import com.hanium.rideornot.domain.*
 import com.hanium.rideornot.repository.SearchHistoryRepository
+import com.hanium.rideornot.ui.home.HomeFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -32,7 +34,7 @@ class SearchViewModel(context: Context) : ViewModel() {
         }
     }
 
-    suspend fun deleteSearchHistory(searchHistory: SearchHistory) {
+    fun deleteSearchHistory(searchHistory: SearchHistory) {
         viewModelScope.launch(Dispatchers.IO) {
             searchHistoryRepository.deleteSearchHistory(searchHistory)
         }
@@ -49,4 +51,5 @@ class SearchViewModel(context: Context) : ViewModel() {
             return@async lineDao.getLineNameById(lineId)
         }.await()
     }
+
 }
