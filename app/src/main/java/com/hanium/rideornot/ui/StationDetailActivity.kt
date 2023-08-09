@@ -28,6 +28,7 @@ class StationDetailActivity : AppCompatActivity() {
 
     private val viewModel: StationDetailViewModel by viewModels { ViewModelFactory(this) }
 
+    private var stationName = ""
     private val timerList = mutableListOf<CountDownTimer>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +39,7 @@ class StationDetailActivity : AppCompatActivity() {
         binding.rvLine.adapter = lineRVAdapter
 
         // 이전 화면에서 선택된 역 전달받기
-        val stationName = args.stationName
+        stationName = args.stationName
 
         viewModel.loadLineList(stationName)
         viewModel.lineList.observe(this) { lineList ->
@@ -224,8 +225,13 @@ class StationDetailActivity : AppCompatActivity() {
                 val currentTime = arrivalTime - ((10000 - millisUntilFinished) / 1000).toInt()
                 val formattedTime = formatArrivalTime(currentTime)
 
-                // UI에 도착 시간 표시
-                timeView.text = formattedTime
+                // 남은 시간이 0초 이하이면
+                if (currentTime <= 0) {
+                    onFinish()
+                } else {
+                    // UI에 도착 시간 표시
+                    timeView.text = formattedTime
+                }
             }
 
             override fun onFinish() {
@@ -236,7 +242,7 @@ class StationDetailActivity : AppCompatActivity() {
                 binding.btnRefresh.startAnimation(rotateAnimation)
 
                 viewModel.loadArrivalList(
-                    "양재",
+                    stationName,
                     lineRVAdapter.getItem(lineRVAdapter.selectedItemPosition).lineId
                 )
             }
