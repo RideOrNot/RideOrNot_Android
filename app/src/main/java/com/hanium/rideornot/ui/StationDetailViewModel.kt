@@ -33,7 +33,7 @@ class StationDetailViewModel(context: Context, private val arrivalRepository: Ar
 //        loadArrivalInfo(stationName)
 //    }
 
-    // 해당 역, 호선의 도착 정보 얻기_ArrivalResponse
+    // 해당 역, 호선의 도착 정보 얻기
     fun loadArrivalList(stationId: String, lineId: Int) {
         viewModelScope.launch {
             val arrivalList = arrivalRepository.getArrivalList(stationId, lineId)

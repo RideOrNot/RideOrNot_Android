@@ -4,27 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <item
-        android:id="@+id/homeFragment"
+        android:id="@+id/fragment_home"
         android:enabled="true"
         android:icon="@drawable/selector_bnv_home"
         android:title="@string/home"
-        app:showAsAction="always"
-        tools:ignore="AlwaysShowAction" />
+        app:showAsAction="always" />
 
     <item
-        android:id="@+id/searchFragment"
+        android:id="@+id/fragment_search"
         android:icon="@drawable/selector_bnv_search"
         android:title="@string/search"
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/favoriteFragment"
+        android:id="@+id/fragment_favorite"
         android:icon="@drawable/selector_bnv_favorite"
         android:title="@string/favorite"
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/settingFragment"
+        android:id="@+id/fragment_setting"
         android:icon="@drawable/selector_bnv_setting"
         android:title="@string/setting"
         app:showAsAction="always" />

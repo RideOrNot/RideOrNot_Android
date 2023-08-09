@@ -3,13 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
-
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-
 
     <application
         android:allowBackup="true"
@@ -22,6 +19,9 @@
         android:theme="@style/Theme.RideOrNot"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".ui.StationDetailActivity"
+            android:exported="false" />
 
         <receiver android:name=".GeofenceBroadcastReceiver" />
 
@@ -42,6 +42,7 @@
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="${NAVER_MAP}" />
+
         <receiver android:name=".notification.NotificationBroadcastReceiver" />
     </application>
 

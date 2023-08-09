@@ -3,20 +3,19 @@ package com.hanium.rideornot.ui.home
 import android.content.Context
 import android.content.res.ColorStateList
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.hanium.rideornot.R
 import com.hanium.rideornot.data.response.Arrival
 import com.hanium.rideornot.data.response.ArrivalResponse
 import com.hanium.rideornot.databinding.ItemNearbyNotificationBinding
-import com.hanium.rideornot.domain.LineDao
-import com.hanium.rideornot.domain.StationDao
-import com.hanium.rideornot.domain.StationDatabase
 
 class HomeNearbyNotificationRVAdapter(
     context: Context,
-    private var arrivalList: ArrayList<Arrival>
+    private var arrivalList: List<List<Arrival>>
 ) :
     RecyclerView.Adapter<HomeNearbyNotificationRVAdapter.ViewHolder>() {
 
@@ -29,7 +28,7 @@ class HomeNearbyNotificationRVAdapter(
         mItemClickListener = itemClickListener
     }
 
-    fun updateData(newArrivalList: ArrayList<Arrival>) {
+    fun updateData(newArrivalList: List<List<Arrival>>) {
         arrivalList = newArrivalList
         notifyDataSetChanged()
     }
@@ -58,22 +57,76 @@ class HomeNearbyNotificationRVAdapter(
 
     inner class ViewHolder(val binding: ItemNearbyNotificationBinding, val context: Context) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: Arrival) {
-            setLineCustom(item.lineId, binding, context)
+        fun bind(item: List<Arrival>) {
+            setLineCustom(item[0].lineId, binding, context)
 
-            binding.btnLineNumber.text = item.lineId
+            binding.btnLineNumber.text = item[0].lineId
+            binding.btnLineNumber.isSelected = true
+
+            // 상행과 하행 / 외선과 내선 방향으로 도착 정보 데이터를 나누기
+            val upDirectionList = item.filter { it.direction in listOf("상행", "외선") }
+            val downDirectionList = item.filter { it.direction in listOf("하행", "내선") }
+
+            // 각 방향별로 가장 빠른 2개의 도착 정보 선택 (arrivalTime이 0인 경우는 제외)
+            val fastestUpDirection = upDirectionList.filter { it.arrivalTime != 0 }
+                .sortedBy { it.arrivalTime }
+                .take(2)
+
+            val fastestDownDirection = downDirectionList.filter { it.arrivalTime != 0 }
+                .sortedBy { it.arrivalTime }
+                .take(2)
+
+            // 도착 정보에 따라 뷰 설정
+            updateVisibility(
+                fastestUpDirection,
+                binding.tvUpNoArrivalDataMessage,
+                binding.tvUpFirstArrivalStation, binding.tvUpFirstArrivalTime,
+                binding.tvUpSecondArrivalStation, binding.tvUpSecondArrivalTime
+            )
+
+            updateVisibility(
+                fastestDownDirection,
+                binding.tvDownNoArrivalDataMessage,
+                binding.tvDownFirstArrivalStation, binding.tvDownFirstArrivalTime,
+                binding.tvDownSecondArrivalStation, binding.tvDownSecondArrivalTime
+            )
+
+
 //            binding.tvUpDirection.text = item.destination
 //            binding.tvDownDirection.text = item.destination
 
-            binding.tvUpFirstArrivalStation.text = item.destination
-            binding.tvUpFirstArrivalTime.text = item.destination
+        }
+    }
 
-            binding.tvUpSecondArrivalStation.text = item.destination
-            binding.tvUpSecondArrivalTime.text = item.destination
+    /**
+     * 도착 정보에 따라 뷰의 visibility 및 텍스트 설정
+     * @param direction 해당 방향의 도착 정보 리스트
+     * @param noDataView 데이터 없을 때 보여줄 뷰
+     * @param arrivalViews 도착 정보를 보여줄 뷰들
+     */
+    fun updateVisibility(
+        direction: List<Arrival>,
+        noDataView: View,
+        vararg arrivalViews: View
+    ) {
+        noDataView.visibility = if (direction.isEmpty()) View.VISIBLE else View.INVISIBLE
 
-            (item.arrivalTime.toString() + "분").also { binding.tvUpFirstArrivalTime.text = it }
-            (item.arrivalTime.toString() + "분").also { binding.tvUpSecondArrivalTime.text = it }
+        val arrivalCount = direction.size.coerceAtMost(arrivalViews.size / 2)
+        for (index in 0 until arrivalCount) {
+            val (stationView, timeView) = arrivalViews[index * 2] as TextView to arrivalViews[index * 2 + 1] as TextView
+            val arrival = direction[index]
 
+            stationView.text = arrival.destination.substringBefore("행")
+            timeView.text = if (arrival.arrivalTime / 60 == 0) "곧 도착" else "${arrival.arrivalTime / 60}분"
+
+            stationView.visibility = View.VISIBLE
+            timeView.visibility = View.VISIBLE
+        }
+
+        for (index in arrivalCount until arrivalViews.size / 2) {
+            val (stationView, timeView) = arrivalViews[index * 2] as TextView to arrivalViews[index * 2 + 1] as TextView
+            stationView.visibility = View.INVISIBLE
+            timeView.visibility = View.INVISIBLE
         }
     }
 

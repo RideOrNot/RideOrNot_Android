@@ -22,6 +22,9 @@ class HomeViewModel(context: Context, private val arrivalRepository: ArrivalRepo
     private val _arrivalInfoList = MutableLiveData<List<Arrival>>()
     val arrivalInfoList: LiveData<List<Arrival>> = _arrivalInfoList
 
+    private val _lineList = MutableLiveData<List<Line>>()
+    val lineList: LiveData<List<Line>> = _lineList
+
     private val _nearestStation = MutableLiveData<String>()
     val nearestStation: LiveData<String> = _nearestStation
 
@@ -48,6 +51,15 @@ class HomeViewModel(context: Context, private val arrivalRepository: ArrivalRepo
                 }
             }
             _arrivalInfoList.value = updatedArrivalList
+        }
+    }
+
+    // 해당 역의 호선 목록 얻기
+    fun loadLineList(stationName: String) {
+        viewModelScope.launch {
+            val lineId = withContext(Dispatchers.IO) { stationDao.findLineByName(stationName) }
+            val lineList = withContext(Dispatchers.IO) { lineDao.getLinesByIds(lineId) as ArrayList<Line> }
+            _lineList.value = lineList
         }
     }
 
