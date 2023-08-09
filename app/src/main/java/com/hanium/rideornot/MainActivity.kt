@@ -6,10 +6,6 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.hanium.rideornot.databinding.ActivityMainBinding
 import com.hanium.rideornot.gps.GpsManager
-import com.hanium.rideornot.ui.FavoriteFragment
-import com.hanium.rideornot.ui.SearchFragment
-import com.hanium.rideornot.ui.home.HomeFragment
-import com.hanium.rideornot.ui.setting.SettingFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -37,40 +33,6 @@ class MainActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
 
         binding.bnvMain.setupWithNavController(navController)
-
-        binding.bnvMain.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.homeFragment -> {
-                    supportFragmentManager.beginTransaction()
-                        .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                        .replace(R.id.frm_main, HomeFragment())
-                        .commitAllowingStateLoss()
-                    return@setOnItemSelectedListener true
-                }
-                R.id.searchFragment -> {
-                    supportFragmentManager.beginTransaction()
-                        .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                        .replace(R.id.frm_main, SearchFragment())
-                        .commitAllowingStateLoss()
-                    return@setOnItemSelectedListener true
-                }
-                R.id.favoriteFragment -> {
-                    supportFragmentManager.beginTransaction()
-                        .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                        .replace(R.id.frm_main, FavoriteFragment())
-                        .commitAllowingStateLoss()
-                    return@setOnItemSelectedListener true
-                }
-                R.id.settingFragment -> {
-                    supportFragmentManager.beginTransaction()
-                        .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                        .replace(R.id.frm_main, SettingFragment())
-                        .commitAllowingStateLoss()
-                    return@setOnItemSelectedListener true
-                }
-            }
-            false
-        }
     }
 
 }

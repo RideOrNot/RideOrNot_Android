@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/station_detail_nav_graph"
+    android:id="@+id/nav_graph"
     app:startDestination="@id/fragment_home">
 
     <fragment
@@ -16,9 +16,7 @@
             app:enterAnim="@anim/fade_in"
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
-            app:popExitAnim="@anim/fade_out">
-
-        </action>
+            app:popExitAnim="@anim/fade_out" />
 
     </fragment>
 
