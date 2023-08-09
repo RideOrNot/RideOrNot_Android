@@ -1,6 +1,7 @@
 package com.hanium.rideornot.ui.search
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -12,6 +13,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.UiThread
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -22,8 +24,7 @@ import com.hanium.rideornot.domain.SearchHistory
 import com.hanium.rideornot.domain.Station
 import com.hanium.rideornot.domain.StationDatabase
 import com.hanium.rideornot.ui.SearchViewModel
-import com.hanium.rideornot.ui.StationDetailFragment
-import com.hanium.rideornot.ui.home.HomeFragment
+import com.hanium.rideornot.ui.StationDetailActivity
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
@@ -44,11 +45,26 @@ class SearchFragment : Fragment(),
     private lateinit var searchViewModel: SearchViewModel
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Main)
 
+    private lateinit var onBackPressedCallback: OnBackPressedCallback
+    private fun setBackBtnHandling() {
+        onBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                requireActivity().finish()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            onBackPressedCallback
+        )
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
         binding = FragmentSearchBinding.inflate(inflater, container, false)
+
+        setBackBtnHandling()
 
         // 검색어 입력을 실시간으로 탐지하여 검색 결과에 반영
         binding.editTextSearch.addTextChangedListener(object : TextWatcher {
@@ -201,11 +217,8 @@ class SearchFragment : Fragment(),
 
     private fun switchToStationDetailFragment(stationName: String) {
         Log.d("SwitchToStationDetailFragment", "Succeeded, station: $stationName")
-        val stationDetailFragment = StationDetailFragment()
-        requireActivity().supportFragmentManager.beginTransaction()
-            .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-            .replace(R.id.frm_main, stationDetailFragment)
-            .commit()
+        val intent = Intent(requireContext(), StationDetailActivity::class.java)
+        startActivity(intent)
     }
 
 }

@@ -33,7 +33,7 @@
 
     <fragment
         android:id="@+id/fragment_search"
-        android:name="com.hanium.rideornot.ui.SearchFragment"
+        android:name="com.hanium.rideornot.ui.search.SearchFragment"
         tools:layout="@layout/fragment_search" />
 
     <fragment
