@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.StationDetailFragment">
+    tools:context=".ui.StationDetailActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/tb_top"
@@ -54,7 +54,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="20dp"
-                android:text="양재역"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -96,7 +95,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
-                android:text="오전 09:08 기준"
                 android:textColor="@color/gray_600"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_arrival_info_title"
                 app:layout_constraintEnd_toStartOf="@+id/btn_refresh"

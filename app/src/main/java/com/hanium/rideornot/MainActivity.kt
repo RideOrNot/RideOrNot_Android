@@ -2,13 +2,11 @@ package com.hanium.rideornot
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.navigation.NavOptions
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import com.hanium.rideornot.databinding.ActivityMainBinding
 import com.hanium.rideornot.gps.GpsManager
-import com.hanium.rideornot.ui.FavoriteFragment
-import com.hanium.rideornot.ui.home.HomeFragment
-import com.hanium.rideornot.ui.search.SearchFragment
-import com.hanium.rideornot.ui.setting.SettingFragment
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -31,37 +29,32 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initBottomNavigation() {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.frm_main, HomeFragment())
-            .commitAllowingStateLoss()
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.frm_main) as NavHostFragment
+        val navController = navHostFragment.navController
+
+        binding.bnvMain.setupWithNavController(navController)
+
+        val navOptions = NavOptions.Builder()
+            .setEnterAnim(R.anim.fade_in)
+            .setExitAnim(R.anim.fade_out)
+            .build()
+
         binding.bnvMain.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.homeFragment -> {
-                    supportFragmentManager.beginTransaction()
-                        .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                        .replace(R.id.frm_main, HomeFragment())
-                        .commitAllowingStateLoss()
+                    navController.navigate(R.id.fragment_home, null, navOptions)
                     return@setOnItemSelectedListener true
                 }
                 R.id.searchFragment -> {
-                    supportFragmentManager.beginTransaction()
-                        .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                        .replace(R.id.frm_main, SearchFragment())
-                        .commitAllowingStateLoss()
+                    navController.navigate(R.id.fragment_search, null, navOptions)
                     return@setOnItemSelectedListener true
                 }
                 R.id.favoriteFragment -> {
-                    supportFragmentManager.beginTransaction()
-                        .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                        .replace(R.id.frm_main, FavoriteFragment())
-                        .commitAllowingStateLoss()
+                    navController.navigate(R.id.fragment_favorite, null, navOptions)
                     return@setOnItemSelectedListener true
                 }
                 R.id.settingFragment -> {
-                    supportFragmentManager.beginTransaction()
-                        .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                        .replace(R.id.frm_main, SettingFragment())
-                        .commitAllowingStateLoss()
+                    navController.navigate(R.id.fragment_setting, null, navOptions)
                     return@setOnItemSelectedListener true
                 }
             }

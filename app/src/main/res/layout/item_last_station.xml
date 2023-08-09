@@ -35,8 +35,7 @@
         android:text="양재역"
         android:layout_marginStart="6dp"
         android:textColor="@color/gray_900"
-        android:textSize="18sp"
-        android:textStyle="bold"
+        style="@style/Text.Title1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/iv_line_number"
         app:layout_constraintTop_toTopOf="parent" />

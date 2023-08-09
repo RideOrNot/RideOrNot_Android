@@ -73,7 +73,7 @@
         <View
             android:id="@+id/v_top"
             android:layout_width="match_parent"
-            android:layout_height="10dp"
+            android:layout_height="8dp"
             android:layout_marginTop="40dp"
             android:background="@color/gray_300"
             app:layout_constraintTop_toBottomOf="@+id/iv_logo" />
@@ -113,7 +113,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/gray_500" />
+                android:background="@color/gray_400" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_walking_speed_setting"
@@ -134,7 +134,7 @@
         <View
             android:id="@+id/v_first"
             android:layout_width="match_parent"
-            android:layout_height="10dp"
+            android:layout_height="8dp"
             android:background="@color/gray_300"
             app:layout_constraintTop_toBottomOf="@+id/ll_account_setting" />
 
@@ -185,7 +185,7 @@
         <View
             android:id="@+id/v_second"
             android:layout_width="match_parent"
-            android:layout_height="10dp"
+            android:layout_height="8dp"
             android:background="@color/gray_300"
             app:layout_constraintTop_toBottomOf="@+id/ll_notification_setting" />
 
@@ -224,7 +224,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/gray_500" />
+                android:background="@color/gray_400" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_unregister"
@@ -243,7 +243,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/gray_500" />
+                android:background="@color/gray_400" />
 
         </LinearLayout>
 

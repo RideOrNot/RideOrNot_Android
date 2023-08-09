@@ -29,7 +29,7 @@
                 app:srcCompat="@drawable/ic_app_logo_no_background" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                style="@style/Text.Header1"
+                style="@style/Text.Header2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/app_name_kr" />
@@ -99,7 +99,7 @@
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_notice_title"
-                        style="@style/Text.Header1"
+                        style="@style/Text.Header2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:backgroundTint="@color/pink_50"
@@ -128,7 +128,7 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_nearby_notification_title"
-                style="@style/Text.Header1"
+                style="@style/Text.Header2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="25dp"
@@ -154,19 +154,34 @@
                     style="@style/Text.Title1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="양재역"
                     android:textColor="@color/gray_950"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="10dp"
-                    android:background="@color/gray_400"
+<!--                <View-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="1dp"-->
+<!--                    android:layout_marginStart="10dp"-->
+<!--                    android:background="@color/gray_400"-->
+<!--                    app:layout_constraintBottom_toBottomOf="@+id/tv_nearby_notification_station_name"-->
+<!--                    app:layout_constraintEnd_toStartOf="@+id/btn_nearby_notification_more_info"-->
+<!--                    app:layout_constraintStart_toEndOf="@+id/tv_nearby_notification_station_name"-->
+<!--                    app:layout_constraintTop_toTopOf="@+id/tv_nearby_notification_station_name" />-->
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_nearby_notification_more_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:paddingEnd="2dp"
+                    style="@style/Text.Body2"
+                    android:minHeight="0dp"
+                    android:paddingStart="8dp"
+                    android:minWidth="0dp"
+                    android:drawableEnd="@drawable/ic_arrow_right_18"
+                    android:text="더보기"
                     app:layout_constraintBottom_toBottomOf="@+id/tv_nearby_notification_station_name"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/tv_nearby_notification_station_name"
                     app:layout_constraintTop_toTopOf="@+id/tv_nearby_notification_station_name" />
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -197,7 +212,7 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_last_station_title"
-                style="@style/Text.Header1"
+                style="@style/Text.Header2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="24dp"

@@ -2,60 +2,69 @@ package com.hanium.rideornot.ui
 
 import android.content.res.ColorStateList
 import android.graphics.drawable.GradientDrawable
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.navigation.navArgs
 import com.hanium.rideornot.R
 import com.hanium.rideornot.data.response.Arrival
 import com.hanium.rideornot.data.response.ArrivalResponse
-import com.hanium.rideornot.databinding.FragmentStationDetailBinding
+import com.hanium.rideornot.databinding.ActivityStationDetailBinding
 import com.hanium.rideornot.domain.Line
 import com.hanium.rideornot.ui.common.ViewModelFactory
 
-class StationDetailFragment : Fragment() {
+class StationDetailActivity : AppCompatActivity() {
 
-    private lateinit var binding: FragmentStationDetailBinding
+    private lateinit var binding: ActivityStationDetailBinding
+    private val args: StationDetailActivityArgs by navArgs()
 
     private var lineRVAdapter = LineRVAdapter(ArrayList())
 
-    private val viewModel: StationDetailViewModel by viewModels { ViewModelFactory(requireContext()) }
+    private val viewModel: StationDetailViewModel by viewModels { ViewModelFactory(this) }
 
     private val timerList = mutableListOf<CountDownTimer>()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentStationDetailBinding.inflate(inflater, container, false)
-
-        // TDL: 추후 이전 화면에서 선택된 역 전달받는 코드 추가 필요
-
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityStationDetailBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         binding.rvLine.adapter = lineRVAdapter
 
-        // 임시로 양재역 설정
-        val station = "양재"
-        viewModel.loadArrivalList(station, 1003)
-        viewModel.arrivalList.observe(viewLifecycleOwner) { arrivalList ->
+        // 이전 화면에서 선택된 역 전달받기
+        val stationName = args.stationName
+
+        viewModel.loadLineList(stationName)
+        viewModel.lineList.observe(this) { lineList ->
+            // lineList 데이터를 사용하여 UI 업데이트 등 필요한 작업 수행
+//            Log.d("[StationDetail] lineList", lineList.toString())
+
+            lineRVAdapter.updateData(lineList as ArrayList<Line>)
+
+            val lineId = lineList[0].lineId
+
+            // 도착 정보 로드
+            viewModel.loadArrivalList(stationName, lineId)
+
+            // 이전/이후 역 로드
+            viewModel.loadNeighboringStation(stationName, lineId)
+
+            setLineCustom(stationName, lineList[0].lineName)
+        }
+
+        // 도착 정보
+        viewModel.arrivalList.observe(this) { arrivalList ->
             initView(arrivalList)
         }
 
-        // 이전/이후 역 설정
-        viewModel.loadNeighboringStation(station, 1003)
-        viewModel.stationItem.observe(viewLifecycleOwner) { stationItem ->
+        // 이전/이후 역
+        viewModel.stationItem.observe(this) { stationItem ->
             binding.tvBeforeStationName.text = when {
                 stationItem.beforeStationId1 == 0 -> "종착"
                 stationItem.beforeStationId2 == 0 -> stationItem.beforeStation1
@@ -69,34 +78,29 @@ class StationDetailFragment : Fragment() {
             }
         }
 
-        viewModel.loadLineList(station)
-        viewModel.lineList.observe(viewLifecycleOwner) { lineList ->
-            // lineList 데이터를 사용하여 UI 업데이트 등 필요한 작업 수행
-            // 예: RecyclerView 어댑터에 데이터 설정, UI에 출력 등
-            Log.d("[StationDetail] lineList", lineList.toString())
-
-            lineRVAdapter.updateData(lineList as ArrayList<Line>)
-
-            setLineCustom(station, lineList[0].lineName)
-        }
-
+        // 호선 RecyclerView 아이템 클릭 시
         lineRVAdapter.setMyItemClickListener(object : LineRVAdapter.MyItemClickListener {
             override fun onItemClick(line: Line) {
-                setLineCustom(station, line.lineName)
-                viewModel.loadNeighboringStation(station, line.lineId)
-                viewModel.loadArrivalList(station, line.lineId)
+                setLineCustom(stationName, line.lineName)
+                viewModel.loadNeighboringStation(stationName, line.lineId)
+                viewModel.loadArrivalList(stationName, line.lineId)
             }
         })
 
         // 새로 고침
         binding.btnRefresh.setOnClickListener {
-            val rotateAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.rotate360)
+            val rotateAnimation = AnimationUtils.loadAnimation(this, R.anim.rotate360)
             binding.btnRefresh.startAnimation(rotateAnimation)
 
             viewModel.loadArrivalList(
-                station,
+                stationName,
                 lineRVAdapter.getItem(lineRVAdapter.selectedItemPosition).lineId
             )
+        }
+
+        // 뒤로 가기
+        binding.btnMoveBack.setOnClickListener {
+            finish()
         }
 
     }
@@ -108,13 +112,18 @@ class StationDetailFragment : Fragment() {
         timerList.clear()
     }
 
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(R.anim.none, R.anim.fade_out)
+    }
+
 
     private fun initView(arrivalResult: ArrivalResponse) {
         // 실행 중인 도착 시간 타이머 초기화
         timerList.forEach { it.cancel() }
         timerList.clear()
 
-        // 시간
+        // 호출 시간
         (formatRefreshTime(arrivalResult.currentTime) + " 기준").also { binding.tvTime.text = it }
 
         // 혼잡도
@@ -219,7 +228,7 @@ class StationDetailFragment : Fragment() {
                 // 타이머가 완료되었을 때 호출되는 콜백 메소드
                 // 도착 정보 API 호출
                 val rotateAnimation =
-                    AnimationUtils.loadAnimation(requireContext(), R.anim.rotate360)
+                    AnimationUtils.loadAnimation(this@StationDetailActivity, R.anim.rotate360)
                 binding.btnRefresh.startAnimation(rotateAnimation)
 
                 viewModel.loadArrivalList(
@@ -282,7 +291,7 @@ class StationDetailFragment : Fragment() {
             else -> R.color.gray_400
         }
 
-        val color = ContextCompat.getColor(requireContext(), lineColorResId)
+        val color = ContextCompat.getColor(this, lineColorResId)
         binding.ivLineBg.backgroundTintList = ColorStateList.valueOf(color)
 
         val backgroundDrawable = binding.btnLineNumber.background as? GradientDrawable
