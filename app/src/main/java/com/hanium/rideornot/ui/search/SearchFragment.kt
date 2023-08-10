@@ -17,6 +17,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.annotation.UiThread
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.hanium.rideornot.R
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hanium.rideornot.databinding.FragmentSearchBinding
@@ -25,6 +26,7 @@ import com.hanium.rideornot.domain.Station
 import com.hanium.rideornot.domain.StationDatabase
 import com.hanium.rideornot.ui.SearchViewModel
 import com.hanium.rideornot.ui.StationDetailActivity
+import com.hanium.rideornot.ui.home.HomeFragmentDirections
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
@@ -116,12 +118,12 @@ class SearchFragment : Fragment(),
             }
             false
         }
-        binding.fcvMap.setOnTouchListener { view, event ->
-            if (event.action == MotionEvent.ACTION_DOWN) {
-                hideKeyboard()
-            }
-            false
-        }
+//        binding.fcvMap.setOnTouchListener { view, event ->
+//            if (event.action == MotionEvent.ACTION_DOWN) {
+//                hideKeyboard()
+//            }
+//            false
+//        }
 
         initView()
 
@@ -129,14 +131,14 @@ class SearchFragment : Fragment(),
     }
 
     private fun initView() {
-        val fm = childFragmentManager
-        val mapFragment = fm.findFragmentById(R.id.fcv_map) as MapFragment?
-            ?: MapFragment.newInstance().also {
-                fm.beginTransaction().add(R.id.fcv_map, it).commit()
-            }
-
-        // 비동기로 NaverMap 객체 얻기
-        mapFragment.getMapAsync(this)
+//        val fm = childFragmentManager
+//        val mapFragment = fm.findFragmentById(R.id.fcv_map) as MapFragment?
+//            ?: MapFragment.newInstance().also {
+//                fm.beginTransaction().add(R.id.fcv_map, it).commit()
+//            }
+//
+//        // 비동기로 NaverMap 객체 얻기
+//        mapFragment.getMapAsync(this)
     }
 
     @UiThread
@@ -216,9 +218,8 @@ class SearchFragment : Fragment(),
     }
 
     private fun switchToStationDetailFragment(stationName: String) {
-        Log.d("SwitchToStationDetailFragment", "Succeeded, station: $stationName")
-        val intent = Intent(requireContext(), StationDetailActivity::class.java)
-        startActivity(intent)
+        findNavController().navigate(
+            SearchFragmentDirections.actionFragmentSearchToActivityStationDetail(stationName)
+        )
     }
-
 }

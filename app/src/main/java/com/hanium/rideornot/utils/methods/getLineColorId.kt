@@ -1,4 +1,4 @@
-package com.hanium.rideornot.utils
+package com.hanium.rideornot.utils.methods
 import com.hanium.rideornot.R
 
 fun getLineColorIdByLineName(lineName: String) : Int {

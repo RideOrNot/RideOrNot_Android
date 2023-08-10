@@ -3,7 +3,6 @@ package com.hanium.rideornot.ui.search
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.drawable.GradientDrawable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +16,7 @@ import com.hanium.rideornot.R
 import com.hanium.rideornot.domain.SearchHistory
 import com.hanium.rideornot.domain.Station
 import com.hanium.rideornot.ui.SearchViewModel
-import com.hanium.rideornot.utils.getLineColorIdByLineId
+import com.hanium.rideornot.utils.methods.getLineColorIdByLineId
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -48,13 +47,16 @@ class SearchResultRVAdapter(
         holder.bind(itemList[position])
     }
 
+    override fun onViewDetachedFromWindow(holder: ViewHolder) {
+        super.onViewDetachedFromWindow(holder)
+    }
 
     inner class ViewHolder(itemView: View) :
         RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
         private val stationNameTextView: TextView = itemView.findViewById(R.id.tv_search_result)
         private val constraintSearchItem: ConstraintLayout = itemView.findViewById(R.id.cl_search_item)
-        private val lineLinearLayout: LinearLayout = itemView.findViewById(R.id.ll_lines)
+        val lineLinearLayout: LinearLayout = itemView.findViewById(R.id.ll_lines)
 
         init {
             constraintSearchItem.setOnClickListener(this)
@@ -81,7 +83,6 @@ class SearchResultRVAdapter(
                 stationNameTextView.text = item.stationName
             }
         }
-
 
         override fun onClick(view: View?) {
             when (view) {

@@ -34,7 +34,15 @@
     <fragment
         android:id="@+id/fragment_search"
         android:name="com.hanium.rideornot.ui.search.SearchFragment"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search">
+        <action
+            android:id="@+id/action_fragment_search_to_activity_station_detail"
+            app:destination="@id/activity_station_detail"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+    </fragment>
 
     <fragment
         android:id="@+id/fragment_favorite"

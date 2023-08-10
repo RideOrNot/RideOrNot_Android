@@ -119,14 +119,14 @@
             tools:listitem="@layout/item_search_history_recycler_ex" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fcv_map"
-        android:name="com.naver.maps.map.MapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cl_recyclerView"
-        tools:layout="@layout/fragment_search" />
+<!--    <androidx.fragment.app.FragmentContainerView-->
+<!--        android:id="@+id/fcv_map"-->
+<!--        android:name="com.naver.maps.map.MapFragment"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="300dp"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/cl_recyclerView"-->
+<!--        tools:layout="@layout/fragment_search" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
