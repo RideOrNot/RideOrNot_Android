@@ -14,8 +14,8 @@ interface SearchHistoryDao {
     fun getAllData(): LiveData<List<SearchHistory>>
 
     @Insert
-    suspend fun insertData(searchHistory: SearchHistory)
+    fun insertData(searchHistory: SearchHistory)
 
     @Delete
-    suspend fun deleteData(searchHistory: SearchHistory)
+    fun deleteData(searchHistory: SearchHistory)
 }

@@ -8,6 +8,8 @@ import com.hanium.rideornot.R
 import com.hanium.rideornot.domain.*
 import com.hanium.rideornot.repository.SearchHistoryRepository
 import com.hanium.rideornot.ui.home.HomeFragment
+import com.hanium.rideornot.ui.search.SearchHistoryRVAdapter
+import com.hanium.rideornot.ui.search.SearchResultRVAdapter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
