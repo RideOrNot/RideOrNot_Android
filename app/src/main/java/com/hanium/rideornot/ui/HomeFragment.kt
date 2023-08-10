@@ -1,22 +1,30 @@
 package com.hanium.rideornot.ui
 
+import android.app.Activity.*
+import android.content.Intent
 import android.content.IntentSender
 import android.os.Bundle
-
 import android.util.Log
-import androidx.fragment.app.Fragment
-import com.hanium.rideornot.databinding.FragmentHomeBinding
 import android.view.*
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.Fragment
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
+import com.google.android.gms.auth.api.identity.SignInCredential
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.api.CommonStatusCodes
 import com.hanium.rideornot.BuildConfig
 import com.hanium.rideornot.data.ArrivalResponse
 import com.hanium.rideornot.data.ArrivalService
+import com.hanium.rideornot.databinding.FragmentHomeBinding
 import com.hanium.rideornot.notification.ContentType
 import com.hanium.rideornot.notification.NotificationManager
 import com.hanium.rideornot.notification.NotificationModel
+import com.hanium.rideornot.signIn.SignInActivity
 
 
 private const val REQ_ONE_TAP = 2
@@ -33,45 +41,6 @@ class HomeFragment : Fragment(), ArrivalView {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
-
-        val googleWebClientId = BuildConfig.GOOGLE_WEB_CLIENT_ID
-        oneTapClient = Identity.getSignInClient(requireActivity())
-        signInRequest = BeginSignInRequest.builder()
-            .setPasswordRequestOptions(
-                BeginSignInRequest.PasswordRequestOptions.builder()
-                    .setSupported(true)
-                    .build()
-            )
-            .setGoogleIdTokenRequestOptions(
-                BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
-                    .setSupported(true)
-                    // Your server's client ID, not your Android client ID.
-                    .setServerClientId(googleWebClientId)
-                    // Only show accounts previously used to sign in.
-                    // 첫 로그인 시 false로, 로그인 정보가 있을 땐 true로 설정
-                    .setFilterByAuthorizedAccounts(false)
-                    .build()
-            )
-            // Automatically sign in when exactly one credential is retrieved.
-            .setAutoSelectEnabled(true)
-            .build()
-
-        oneTapClient.beginSignIn(signInRequest)
-            .addOnSuccessListener(requireActivity()) { result ->
-                try {
-                    startIntentSenderForResult(
-                        result.pendingIntent.intentSender, REQ_ONE_TAP,
-                        null, 0, 0, 0, null
-                    )
-                } catch (e: IntentSender.SendIntentException) {
-                    Log.e("oneTapUiFailure", "Couldn't start One Tap UI: ${e.localizedMessage}")
-                }
-            }
-            .addOnFailureListener(requireActivity()) { e ->
-                // No saved credentials found. Launch the One Tap sign-up flow, or
-                // do nothing and continue presenting the signed-out UI.
-                Log.d("beginSignInFailure", e.localizedMessage)
-            }
 
         // getArrivalInfo()
 
@@ -90,31 +59,10 @@ class HomeFragment : Fragment(), ArrivalView {
     var tempGeofenceIndex = 1
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-//        val addGeofenceButton: Button? = view.findViewById(R.id.addGeofenceButton)
-//        addGeofenceButton?.setOnClickListener {
-//            var tempGeofenceId = "test-$tempGeofenceIndex"
-//            GpsManager.addGeofence(
-//                tempGeofenceId.toString(),
-//                GpsManager.lastLocation!!.latitude,
-//                GpsManager.lastLocation!!.longitude,
-//                1000f,
-//                100000
-//            )
-//            tempGeofenceIndex++
+//        if (true) {
+//            val signInIntent = Intent(requireActivity(), SignInActivity::class.java)
+//            startActivity(signInIntent)
 //        }
-//
-//        val startLocationUpdateButton: Button? = view.findViewById(R.id.startLocationUpdateButton)
-//        startLocationUpdateButton?.setOnClickListener {
-//            GpsManager.startLocationUpdates()
-//        }
-//
-//        val stopLocationUpdateButton: Button? = view.findViewById(R.id.stopLocationUpdateButton)
-//        stopLocationUpdateButton?.setOnClickListener {
-//            GpsManager.stopLocationUpdates()
-//
-//        }
-
     }
 
     // 열차 도착 정보 조회
