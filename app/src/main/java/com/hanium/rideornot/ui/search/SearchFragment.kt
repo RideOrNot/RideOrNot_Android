@@ -1,11 +1,9 @@
 package com.hanium.rideornot.ui.search
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -18,22 +16,16 @@ import androidx.annotation.UiThread
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.hanium.rideornot.R
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.internal.ViewUtils.hideKeyboard
 import com.hanium.rideornot.databinding.FragmentSearchBinding
 import com.hanium.rideornot.domain.SearchHistory
 import com.hanium.rideornot.domain.Station
 import com.hanium.rideornot.domain.StationDatabase
 import com.hanium.rideornot.ui.SearchViewModel
-import com.hanium.rideornot.ui.StationDetailActivity
-import com.hanium.rideornot.ui.home.HomeFragmentDirections
-import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class SearchFragment : Fragment(),
     OnMapReadyCallback,
@@ -68,23 +60,6 @@ class SearchFragment : Fragment(),
 
         setBackBtnHandling()
 
-        // 검색어 입력을 실시간으로 탐지하여 검색 결과에 반영
-        binding.editTextSearch.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                val searchText = s?.toString() ?: ""
-                if (searchText.isNotEmpty()) {
-                    handleSearch()
-                } else {
-                    binding.recyclerView.adapter = searchHistoryRVAdapter
-                }
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
-        })
         searchViewModel = SearchViewModel(requireContext())
         binding.recyclerView.layoutManager =
             LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
@@ -151,21 +126,46 @@ class SearchFragment : Fragment(),
         coroutineScope.cancel()
     }
 
+    override fun onPause() {
+        super.onPause()
+//        // Fragment 전환 시 입력했던 텍스트가 사라지는 기능
+//        binding.editTextSearch.text.clear()
 
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         searchViewModel.searchHistoryList.observe(this, Observer {
-            initSearchHistoryRecycler()
+            initSearchHistoryRecycler(searchViewModel.searchHistoryList.value!!)
             binding.recyclerView.adapter = searchHistoryRVAdapter
             searchHistoryRVAdapter.notifyDataSetChanged()
         })
+
+        // 검색어 입력을 실시간으로 탐지하여 검색 결과에 반영
+        binding.editTextSearch.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                val searchText = s?.toString() ?: ""
+                if (searchText.isNotEmpty()) {
+                    handleSearch()
+                } else {
+                    searchViewModel.searchHistoryList.observe(viewLifecycleOwner, Observer {
+                        initSearchHistoryRecycler(it)
+                        binding.recyclerView.adapter = searchHistoryRVAdapter
+                    })
+                }
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+        })
     }
 
-    private fun initSearchHistoryRecycler() {
-        binding.recyclerView.layoutManager =
-            LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
+    private fun initSearchHistoryRecycler(searchHistoryList: List<SearchHistory>) {
+        val emptyList = listOf<SearchHistory>()
         searchHistoryRVAdapter =
-            SearchHistoryRVAdapter(searchViewModel.searchHistoryList.value!!, this)
+            SearchHistoryRVAdapter(searchHistoryList, this)
         searchHistoryRVAdapter.notifyDataSetChanged()
     }
 
@@ -181,7 +181,6 @@ class SearchFragment : Fragment(),
         coroutineScope.launch {
             val searchHistoryToDelete = searchHistoryRVAdapter.itemList[position]
             searchViewModel.deleteSearchHistory(searchHistoryToDelete)
-            searchHistoryRVAdapter.notifyDataSetChanged()
         }
     }
 

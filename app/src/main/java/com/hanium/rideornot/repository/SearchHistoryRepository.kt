@@ -3,6 +3,8 @@ package com.hanium.rideornot.repository
 import androidx.lifecycle.LiveData
 import com.hanium.rideornot.domain.SearchHistory
 import com.hanium.rideornot.domain.SearchHistoryDao
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 
 
 class SearchHistoryRepository(private val searchHistoryDao: SearchHistoryDao) {
