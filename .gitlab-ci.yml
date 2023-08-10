@@ -1,9 +1,6 @@
 stages:
   - build
 
-before_script:
-  - docker-compose up -d
-
 build:
   stage: build
   image: cje172/ride-or-not:hanium
