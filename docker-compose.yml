@@ -1,0 +1,12 @@
+version: '3'
+services:
+  my-app:
+    image: cje172/ride-or-not:hanium
+    environment:
+      BASE_URL: ${BASE_URL}
+      NAVER_MAP: ${NAVER_MAP}
+    ports:
+      - "80:80"
+    volumes:
+      - ./local.properties:/app/local.properties
+    restart: always
