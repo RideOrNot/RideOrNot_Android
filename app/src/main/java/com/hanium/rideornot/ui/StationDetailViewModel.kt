@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hanium.rideornot.data.response.Arrival
 import com.hanium.rideornot.data.response.ArrivalResponse
 import com.hanium.rideornot.domain.*
 import com.hanium.rideornot.repository.ArrivalRepository

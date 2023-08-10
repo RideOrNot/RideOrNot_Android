@@ -47,7 +47,7 @@ class HomeFragment : Fragment() {
         homeNearbyNotificationRVAdapter =
             HomeNearbyNotificationRVAdapter(requireContext(), ArrayList())
 
-        var station = "양재" // 추후 삭제
+//        var station = "양재" // 추후 삭제
 
         // 주변 알림 - 근처 역, 도착 정보 조회
         viewModel.showNearestStationName(fusedLocationClient)
@@ -91,7 +91,7 @@ class HomeFragment : Fragment() {
         // 주변 알림 - 더보기
         binding.btnNearbyNotificationMoreInfo.setOnClickListener {
             val stationName =
-                binding.tvNearbyNotificationStationName.text.toString().replace("역", "")
+                binding.tvNearbyNotificationStationName.text.toString().dropLast(1)
             viewModel.loadLineList(stationName)
 
             // 역 상세정보 화면으로 이동

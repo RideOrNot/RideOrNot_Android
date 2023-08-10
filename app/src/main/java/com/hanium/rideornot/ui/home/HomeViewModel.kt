@@ -9,6 +9,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.Priority
 import com.hanium.rideornot.data.response.Arrival
 import com.hanium.rideornot.domain.*
 import com.hanium.rideornot.repository.ArrivalRepository
@@ -58,7 +62,8 @@ class HomeViewModel(context: Context, private val arrivalRepository: ArrivalRepo
     fun loadLineList(stationName: String) {
         viewModelScope.launch {
             val lineId = withContext(Dispatchers.IO) { stationDao.findLineByName(stationName) }
-            val lineList = withContext(Dispatchers.IO) { lineDao.getLinesByIds(lineId) as ArrayList<Line> }
+            val lineList =
+                withContext(Dispatchers.IO) { lineDao.getLinesByIds(lineId) as ArrayList<Line> }
             _lineList.value = lineList
         }
     }
@@ -67,8 +72,13 @@ class HomeViewModel(context: Context, private val arrivalRepository: ArrivalRepo
     // 현재 위치에서 가장 가까운 지하철 역의 이름 얻기
     @SuppressLint("MissingPermission")
     fun showNearestStationName(fusedLocationClient: FusedLocationProviderClient) {
-        fusedLocationClient.lastLocation
-            .addOnSuccessListener { location: Location? ->
+        val locationRequest =
+            LocationRequest.Builder(5 * 1000).setPriority(Priority.PRIORITY_HIGH_ACCURACY).build()
+
+
+        val locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult) {
+                val location = locationResult.lastLocation
                 if (location != null) {
                     val currentLocation = Location("Station").apply {
                         latitude = location.latitude
@@ -83,7 +93,7 @@ class HomeViewModel(context: Context, private val arrivalRepository: ArrivalRepo
                         val nearestStationName = nearestStation.stationName
                         _nearestStation.value = nearestStationName
 
-                        Log.e("[Home] nearestStationName", nearestStationName)
+//                        Log.e("[Home] nearestStationName", nearestStationName)
 
                         loadArrivalInfo(nearestStationName)
                     }
@@ -92,7 +102,39 @@ class HomeViewModel(context: Context, private val arrivalRepository: ArrivalRepo
                     Log.e("[Home] nearestStationName", "현재 위치 정보를 얻지 못했습니다.")
                 }
             }
+        }
+
+        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null)
     }
+
+//    @SuppressLint("MissingPermission")
+//    fun showNearestStationName(fusedLocationClient: FusedLocationProviderClient) {
+//        fusedLocationClient.lastLocation
+//            .addOnSuccessListener { location: Location? ->
+//                if (location != null) {
+//                    val currentLocation = Location("Station").apply {
+//                        latitude = location.latitude
+//                        longitude = location.longitude
+//                    }
+//
+//                    // 가장 가까운 지하철 역 찾기
+//                    viewModelScope.launch {
+//                        val subwayStations = withContext(Dispatchers.IO) { stationDao.getAll() }
+//
+//                        val nearestStation = findNearestStation(subwayStations, currentLocation)
+//                        val nearestStationName = nearestStation.stationName
+//                        _nearestStation.value = nearestStationName
+//
+//                        Log.e("[Home] nearestStationName", nearestStationName)
+//
+//                        loadArrivalInfo(nearestStationName)
+//                    }
+//                } else {
+//                    // 현재 위치 정보를 얻지 못한 경우
+//                    Log.e("[Home] nearestStationName", "현재 위치 정보를 얻지 못했습니다.")
+//                }
+//            }
+//    }
 
 
     private fun findNearestStation(stations: List<Station>, currentLocation: Location): Station {
