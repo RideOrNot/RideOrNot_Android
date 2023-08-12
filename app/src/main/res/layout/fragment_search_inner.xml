@@ -5,7 +5,7 @@
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.search.SearchFragment">
+    tools:context=".ui.search.SearchInnerFragment">
 
     <!--        <androidx.appcompat.widget.AppCompatTextView-->
     <!--            android:layout_width="wrap_content"-->
@@ -25,19 +25,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="25dp"
         android:background="@android:drawable/editbox_background"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_prev"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:scrollbarTrackVertical="@drawable/ic_arrow_small_prev_transp50"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            android:tint="@color/gray"
             app:srcCompat="@drawable/ic_arrow_small_prev_transp50" />
 
         <EditText
@@ -50,7 +51,7 @@
             android:maxLines="1"
             android:privateImeOptions="defaultInputmode=korean"
             android:background="@color/transparent"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="30dp"
             app:layout_constraintStart_toEndOf="@+id/iv_prev"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -119,14 +120,5 @@
             tools:listitem="@layout/item_search_history_recycler_ex" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-<!--    <androidx.fragment.app.FragmentContainerView-->
-<!--        android:id="@+id/fcv_map"-->
-<!--        android:name="com.naver.maps.map.MapFragment"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="300dp"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/cl_recyclerView"-->
-<!--        tools:layout="@layout/fragment_search" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
