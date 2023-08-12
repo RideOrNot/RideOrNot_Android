@@ -12,12 +12,12 @@ fun getLineColorIdByLineName(lineName: String) : Int {
         "7호선" -> R.color.line_7
         "8호선" -> R.color.line_8
         "9호선" -> R.color.line_9
-        "분당선" -> R.color.line_bundang
-        "신분당선" -> R.color.line_sinbundang
-        "우이신설선" -> R.color.line_ui_sinseol
         "경의중앙선" -> R.color.line_gyeongui_jungang
         "공항철도" -> R.color.line_airport_rail_link
         "경춘선" -> R.color.line_gyeongchun
+        "분당선" -> R.color.line_bundang
+        "신분당선" -> R.color.line_sinbundang
+        "우이신설선" -> R.color.line_ui_sinseol
         else -> R.color.gray_400
     }
     return lineColorResId
@@ -34,12 +34,12 @@ fun getLineColorIdByLineId(lineId: Int) : Int {
         1007 -> R.color.line_7
         1008 -> R.color.line_8
         1009 -> R.color.line_9
-        1063 -> R.color.line_bundang
-        1065 -> R.color.line_sinbundang
-        1067 -> R.color.line_ui_sinseol
-        1075 -> R.color.line_gyeongui_jungang
-        1077 -> R.color.line_airport_rail_link
-        1092 -> R.color.line_gyeongchun
+        1063 -> R.color.line_gyeongui_jungang
+        1065 -> R.color.line_airport_rail_link
+        1067 -> R.color.line_gyeongchun
+        1075 -> R.color.line_bundang
+        1077 -> R.color.line_sinbundang
+        1092 -> R.color.line_ui_sinseol
         else -> R.color.gray_400
     }
     return lineColorResId

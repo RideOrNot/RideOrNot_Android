@@ -49,25 +49,19 @@ object GpsManager {
                 activity,
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
-            ||
-            ActivityCompat.checkSelfPermission(
-                activity,
-                Manifest.permission.ACCESS_BACKGROUND_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
         ) {
             ActivityCompat.requestPermissions(
                 activity,
                 arrayOf(
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.ACCESS_BACKGROUND_LOCATION
                 ),
-                // TODO: 백그라운드 위치 권한 허용-수동 설정 안내 메시지 출력
+                // 백그라운드 위치정보 접근권한 요청 삭제함
                 // TODO: request codes 관리 방법 모색
                 LOCATION_REQUEST_PERMISSION_REQUEST_CODE
             )
         }
-        // 초기화
+        // 초기화ㅏ
         mainActivity = activity
         cancellationTokenSource = CancellationTokenSource()
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(activity)
