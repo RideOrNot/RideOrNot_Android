@@ -154,7 +154,7 @@ class InnerSearchFragment : Fragment(),
 
     private fun initSearchHistoryRecycler(searchHistoryList: List<SearchHistory>) {
         searchHistoryRVAdapter =
-            SearchHistoryRVAdapter(searchHistoryList, this)
+            SearchHistoryRVAdapter(requireContext(), searchHistoryList, this, searchViewModel)
         searchHistoryRVAdapter.notifyDataSetChanged()
     }
 
