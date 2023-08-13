@@ -32,19 +32,12 @@ class SearchViewModel(context: Context) : ViewModel() {
 
     fun insertSearchHistory(searchHistory: SearchHistory) {
         viewModelScope.launch(Dispatchers.IO) {
-            val existingHistory = searchHistoryRepository.getSearchHistory(searchHistory.stationName)
-            if (existingHistory != null) {
-                // 이미 존재하는 검색어가 있다면, 해당 검색어를 리스트의 첫 번째로 옮깁니다.
-                searchHistoryRepository.deleteSearchHistory(existingHistory)
-                searchHistoryRepository.insertSearchHistory(searchHistory)
-            } else {
-                searchHistoryRepository.insertSearchHistory(searchHistory)
-            }
+            searchHistoryRepository.insertSearchHistory(searchHistory)
         }
     }
 
     fun deleteSearchHistory(searchHistory: SearchHistory) {
-        viewModelScope.async(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.IO) {
             searchHistoryRepository.deleteSearchHistory(searchHistory)
         }
     }

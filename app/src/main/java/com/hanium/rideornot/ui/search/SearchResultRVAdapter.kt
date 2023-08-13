@@ -22,10 +22,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class SearchResultRVAdapter(
-    private val context: Context,
-    private val itemList: List<Station>,
-    private val searchViewModel: SearchViewModel,
-    private val searchRecyclerViewInterface: ISearchResultRV,
+    private var context: Context,
+    private var itemList: List<Station>,
+    private var searchViewModel: SearchViewModel,
+    private var searchRecyclerViewInterface: ISearchResultRV,
 ) :
     RecyclerView.Adapter<SearchResultRVAdapter.ViewHolder>() {
 
@@ -54,20 +54,20 @@ class SearchResultRVAdapter(
     inner class ViewHolder(itemView: View) :
         RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
-        private val tvSearchResult: TextView = itemView.findViewById(R.id.tv_search_result)
-        private val clSearchItem: ConstraintLayout = itemView.findViewById(R.id.cl_search_item)
-        private val llLines: LinearLayout = itemView.findViewById(R.id.ll_lines)
+        private val stationNameTextView: TextView = itemView.findViewById(R.id.tv_search_result)
+        private val constraintSearchItem: ConstraintLayout = itemView.findViewById(R.id.cl_search_item)
+        val lineLinearLayout: LinearLayout = itemView.findViewById(R.id.ll_lines)
 
         init {
-            clSearchItem.setOnClickListener(this)
+            constraintSearchItem.setOnClickListener(this)
         }
 
         fun bind(item: Station) {
             CoroutineScope(Dispatchers.Main).launch {
-                llLines.removeAllViews()
+                lineLinearLayout.removeAllViews()
                 val lineIdList = searchViewModel.findLinesByStationName(item.stationName)
                 for (lineId in lineIdList) {
-                    val lineItemView = LayoutInflater.from(context).inflate(R.layout.item_line, llLines, false)
+                    val lineItemView = LayoutInflater.from(context).inflate(R.layout.item_line, lineLinearLayout, false)
                     lineItemView.id = View.generateViewId()
                     val lineBtn = lineItemView.findViewById<AppCompatButton>(R.id.btn_line)
                     lineBtn.text = searchViewModel.getLineNameByLineId(lineId).firstOrNull().toString()
@@ -80,13 +80,13 @@ class SearchResultRVAdapter(
                     val parentLayout = itemView.findViewById<LinearLayout>(R.id.ll_lines)
                     parentLayout.addView(lineItemView)
                 }
-                tvSearchResult.text = item.stationName
+                stationNameTextView.text = item.stationName
             }
         }
 
         override fun onClick(view: View?) {
             when (view) {
-                clSearchItem -> {
+                constraintSearchItem -> {
                     val position = adapterPosition
                     if (position != RecyclerView.NO_POSITION) {
                         val clickedItem = itemList[position]

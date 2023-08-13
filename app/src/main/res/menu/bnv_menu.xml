@@ -11,7 +11,7 @@
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/fragment_outer_search"
+        android:id="@+id/fragment_search"
         android:icon="@drawable/selector_bnv_search"
         android:title="@string/search"
         app:showAsAction="always" />
