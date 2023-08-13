@@ -138,9 +138,14 @@ class InnerSearchFragment : Fragment(),
                     val searchText = s?.toString() ?: ""
                     if (searchText.isNotEmpty()) {
                         handleSwitchToSearchResult()
-                        //handleSearch()
+                        binding.ivClear.setImageResource(R.drawable.ic_delete)
+                        binding.ivClear.setOnClickListener {
+                            binding.editTextSearch.text.clear()
+                        }
                     } else {
                         handleSwitchToSearchHistory(searchViewModel.searchHistoryList.value!!)
+                        binding.ivClear.setImageResource(R.drawable.ic_search)
+                        binding.ivClear.setOnClickListener(null)
                     }
                 }
 
