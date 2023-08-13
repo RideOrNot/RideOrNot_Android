@@ -33,7 +33,7 @@
 
     <fragment
         android:id="@+id/fragment_outer_search"
-        android:name="com.hanium.rideornot.ui.search.SearchOuterFragment">
+        android:name="com.hanium.rideornot.ui.search.OuterSearchFragment">
         <action
             android:id="@+id/action_fragment_outer_search_to_fragment_inner_search"
             app:destination="@id/fragment_inner_search" />
@@ -50,7 +50,7 @@
         tools:layout="@layout/fragment_setting" />
     <fragment
         android:id="@+id/fragment_inner_search"
-        android:name="com.hanium.rideornot.ui.search.SearchInnerFragment"
+        android:name="com.hanium.rideornot.ui.search.InnerSearchFragment"
         tools:layout="@layout/fragment_search_inner" >
         <action
             android:id="@+id/action_fragment_inner_search_to_activity_station_detail"

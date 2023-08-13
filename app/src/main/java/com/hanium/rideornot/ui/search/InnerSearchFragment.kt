@@ -7,7 +7,6 @@ import android.text.TextWatcher
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.OnBackPressedCallback
-import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -20,17 +19,13 @@ import com.hanium.rideornot.domain.SearchHistory
 import com.hanium.rideornot.domain.Station
 import com.hanium.rideornot.domain.StationDatabase
 import com.hanium.rideornot.ui.SearchViewModel
-import com.naver.maps.map.NaverMap
-import com.naver.maps.map.OnMapReadyCallback
 import kotlinx.coroutines.*
 
 
-class SearchInnerFragment : Fragment(),
-    OnMapReadyCallback,
+class InnerSearchFragment : Fragment(),
     ISearchHistoryRV,
     ISearchResultRV,
     SearchResultRVAdapter.OnItemClickListener {
-
     private lateinit var binding: FragmentSearchInnerBinding
     private lateinit var searchHistoryRVAdapter: SearchHistoryRVAdapter
     private lateinit var searchResultRVAdapter: SearchResultRVAdapter
@@ -68,7 +63,7 @@ class SearchInnerFragment : Fragment(),
         binding.recyclerView.setHasFixedSize(true)
 
         binding.ivPrev.setOnClickListener {
-            switchToSearchOuterFragment()
+            switchToOuterSearchFragment()
         }
 
         showKeyboard(binding.editTextSearch)
@@ -85,40 +80,15 @@ class SearchInnerFragment : Fragment(),
                 false
             }
         }
-        // TODO: 검색창 바깥부분 터치 시 키보드 내려가는 기능 동작 안하는 문제 수정
+        // TODO: 검색창 바깥부분 터치 시 키보드 내려가는 기능 완성하기
         binding.constraintLayout.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
                 hideKeyboard()
             }
             false
         }
-//        binding.fcvMap.setOnTouchListener { view, event ->
-//            if (event.action == MotionEvent.ACTION_DOWN) {
-//                hideKeyboard()
-//            }
-//            false
-//        }
-
-
-        initView()
 
         return binding.root
-    }
-
-    private fun initView() {
-//        val fm = childFragmentManager
-//        val mapFragment = fm.findFragmentById(R.id.fcv_map) as MapFragment?
-//            ?: MapFragment.newInstance().also {
-//                fm.beginTransaction().add(R.id.fcv_map, it).commit()
-//            }
-//
-//        // 비동기로 NaverMap 객체 얻기
-//        mapFragment.getMapAsync(this)
-    }
-
-    @UiThread
-    override fun onMapReady(naverMap: NaverMap) {
-        // ...
     }
 
     override fun onDestroyView() {
@@ -126,12 +96,11 @@ class SearchInnerFragment : Fragment(),
         coroutineScope.cancel()
     }
 
-    override fun onPause() {
-        super.onPause()
+//    override fun onPause() {`
+//        super.onPause()
 //        // Fragment 전환 시 입력했던 텍스트가 사라지는 기능
 //        binding.editTextSearch.text.clear()
-
-    }
+//    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -164,7 +133,6 @@ class SearchInnerFragment : Fragment(),
     }
 
     private fun initSearchHistoryRecycler(searchHistoryList: List<SearchHistory>) {
-        val emptyList = listOf<SearchHistory>()
         searchHistoryRVAdapter =
             SearchHistoryRVAdapter(searchHistoryList, this)
         searchHistoryRVAdapter.notifyDataSetChanged()
@@ -184,7 +152,6 @@ class SearchInnerFragment : Fragment(),
             searchViewModel.deleteSearchHistory(searchHistoryToDelete)
         }
     }
-
 
     private fun hideKeyboard() {
         if (activity != null && requireActivity().currentFocus != null) {
@@ -220,7 +187,7 @@ class SearchInnerFragment : Fragment(),
                     requireContext(),
                     searchResult,
                     searchViewModel,
-                    this@SearchInnerFragment
+                    this@InnerSearchFragment
                 )
                 binding.recyclerView.adapter = searchResultRVAdapter
             }
@@ -232,13 +199,13 @@ class SearchInnerFragment : Fragment(),
 
     private fun switchToStationDetailFragment(stationName: String) {
         findNavController().navigate(
-            SearchInnerFragmentDirections.actionFragmentInnerSearchToActivityStationDetail(stationName)
+            InnerSearchFragmentDirections.actionFragmentInnerSearchToActivityStationDetail(stationName)
         )
     }
 
-    private fun switchToSearchOuterFragment() {
+    private fun switchToOuterSearchFragment() {
         findNavController().navigate(
-            SearchInnerFragmentDirections.actionFragmentInnerSearchToFragmentOuterSearch()
+            InnerSearchFragmentDirections.actionFragmentInnerSearchToFragmentOuterSearch()
         )
     }
 }

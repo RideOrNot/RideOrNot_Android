@@ -4,13 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.hanium.rideornot.R
 import com.hanium.rideornot.databinding.FragmentSearchOuterBinding
+import com.naver.maps.map.MapFragment
+import com.naver.maps.map.NaverMap
+import com.naver.maps.map.OnMapReadyCallback
 
-class SearchOuterFragment : Fragment() {
+class OuterSearchFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var binding: FragmentSearchOuterBinding
 
@@ -27,14 +31,30 @@ class SearchOuterFragment : Fragment() {
             handleTextViewClick()
         }
 
+        initView()
         return binding.root
     }
 
     private fun handleTextViewClick() {
         findNavController().navigate(
-            SearchOuterFragmentDirections.actionFragmentOuterSearchToFragmentInnerSearch()
+            OuterSearchFragmentDirections.actionFragmentOuterSearchToFragmentInnerSearch()
         )
     }
 
+    private fun initView() {
+        val fm = childFragmentManager
+        val mapFragment = fm.findFragmentById(R.id.fcv_map) as MapFragment?
+            ?: MapFragment.newInstance().also {
+                fm.beginTransaction().add(R.id.fcv_map, it).commit()
+            }
+
+        // 비동기로 NaverMap 객체 얻기
+        mapFragment.getMapAsync(this)
+    }
+
+    @UiThread
+    override fun onMapReady(naverMap: NaverMap) {
+        // ...
+    }
 
 }
