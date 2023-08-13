@@ -44,7 +44,7 @@ class SearchViewModel(context: Context) : ViewModel() {
     }
 
     fun deleteSearchHistory(searchHistory: SearchHistory) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.async(Dispatchers.IO) {
             searchHistoryRepository.deleteSearchHistory(searchHistory)
         }
     }

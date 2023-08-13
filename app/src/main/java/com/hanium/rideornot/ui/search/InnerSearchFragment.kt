@@ -4,15 +4,20 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.OnBackPressedCallback
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.internal.ViewUtils.hideKeyboard
+import com.google.android.material.internal.ViewUtils.showKeyboard
 import com.hanium.rideornot.R
 import com.hanium.rideornot.databinding.FragmentSearchInnerBinding
 import com.hanium.rideornot.domain.SearchHistory
@@ -45,6 +50,17 @@ class InnerSearchFragment : Fragment(),
         )
     }
 
+    private fun handleSwitchToSearchHistory(searchHistoryList: List<SearchHistory>) {
+        initSearchHistoryRecycler(searchHistoryList)
+        binding.recyclerView.adapter = searchHistoryRVAdapter
+        binding.tvRecentSearch.text = "최근 검색"
+    }
+
+    private fun handleSwitchToSearchResult() {
+        handleSearch()
+        binding.tvRecentSearch.text = "검색 결과"
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -62,10 +78,12 @@ class InnerSearchFragment : Fragment(),
             LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
         binding.recyclerView.setHasFixedSize(true)
 
+        // editText에 부착되어 있는 뒤로가기 버튼 클릭 시 동작
         binding.ivPrev.setOnClickListener {
             switchToOuterSearchFragment()
         }
 
+        // 키보드가 자동으로 올라가게 설정
         showKeyboard(binding.editTextSearch)
         binding.editTextSearch.setOnKeyListener { _, keyCode, event ->
             if ((event.action == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
@@ -105,31 +123,33 @@ class InnerSearchFragment : Fragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         searchViewModel.searchHistoryList.observe(this, Observer {
-            initSearchHistoryRecycler(searchViewModel.searchHistoryList.value!!)
-            binding.recyclerView.adapter = searchHistoryRVAdapter
-            searchHistoryRVAdapter.notifyDataSetChanged()
+            // searchResult 아이템 클릭 시 serachHistory 리사이클러뷰로 교체되어 버려서, 검색어가 입력된 상태면 리사이클러뷰를 교체하지 않도록 설정
+            if (binding.editTextSearch.text.isEmpty()) {
+                handleSwitchToSearchHistory(it)
+            } else {
+                initSearchHistoryRecycler(it)
+            }
         })
 
         // 검색어 입력을 실시간으로 탐지하여 검색 결과에 반영
-        binding.editTextSearch.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                val searchText = s?.toString() ?: ""
-                if (searchText.isNotEmpty()) {
-                    handleSearch()
-                } else {
-                    searchViewModel.searchHistoryList.observe(viewLifecycleOwner, Observer {
-                        initSearchHistoryRecycler(it)
-                        binding.recyclerView.adapter = searchHistoryRVAdapter
-                    })
+        binding.editTextSearch.addTextChangedListener(
+            object : TextWatcher {
+                override fun afterTextChanged(s: Editable?) {
+                    val searchText = s?.toString() ?: ""
+                    if (searchText.isNotEmpty()) {
+                        handleSwitchToSearchResult()
+                        //handleSearch()
+                    } else {
+                        handleSwitchToSearchHistory(searchViewModel.searchHistoryList.value!!)
+                    }
                 }
-            }
 
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
-        })
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                }
+            })
     }
 
     private fun initSearchHistoryRecycler(searchHistoryList: List<SearchHistory>) {
