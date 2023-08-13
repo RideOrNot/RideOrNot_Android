@@ -4,15 +4,11 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.KeyEvent
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.MotionEvent
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.UiThread
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -27,6 +23,7 @@ import com.hanium.rideornot.ui.SearchViewModel
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
 import kotlinx.coroutines.*
+
 
 class SearchInnerFragment : Fragment(),
     OnMapReadyCallback,
@@ -73,19 +70,15 @@ class SearchInnerFragment : Fragment(),
         binding.ivPrev.setOnClickListener {
             switchToSearchOuterFragment()
         }
+
+        showKeyboard(binding.editTextSearch)
         binding.editTextSearch.setOnKeyListener { _, keyCode, event ->
             if ((event.action == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
                 // 엔터가 눌릴 때 동작
                 coroutineScope.launch {
-                    searchViewModel.insertSearchHistory(
-                        SearchHistory(
-                            stationId = -1,
-                            stationName = binding.editTextSearch.text.toString()
-                        )
-                    ) // TODO: ID값 수정\
                     hideKeyboard()
                     handleSearch()
-                    binding.editTextSearch.text.clear()
+                    //binding.editTextSearch.text.clear()
                 }
                 true
             } else {
@@ -105,6 +98,7 @@ class SearchInnerFragment : Fragment(),
 //            }
 //            false
 //        }
+
 
         initView()
 
@@ -200,6 +194,19 @@ class SearchInnerFragment : Fragment(),
                 requireActivity().currentFocus!!.windowToken,
                 InputMethodManager.HIDE_NOT_ALWAYS
             )
+        }
+    }
+
+    private fun showKeyboard(focusing: View) {
+        if (activity != null) {
+            focusing.requestFocus()
+            val inputManager =
+                requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            // requestFocus(), showSoftInput() 사이에 살짝의 딜레이를 주어야 키보드 팝업 기능이 제대로 작동함
+            focusing.postDelayed(java.lang.Runnable {
+                focusing.requestFocus()
+                inputManager.showSoftInput(focusing, 0)
+            }, 100)
         }
     }
 
