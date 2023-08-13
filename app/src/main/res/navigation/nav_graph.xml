@@ -32,16 +32,11 @@
     </activity>
 
     <fragment
-        android:id="@+id/fragment_search"
-        android:name="com.hanium.rideornot.ui.search.SearchFragment"
-        tools:layout="@layout/fragment_search">
+        android:id="@+id/fragment_outer_search"
+        android:name="com.hanium.rideornot.ui.search.OuterSearchFragment">
         <action
-            android:id="@+id/action_fragment_search_to_activity_station_detail"
-            app:destination="@id/activity_station_detail"
-            app:enterAnim="@anim/fade_in"
-            app:exitAnim="@anim/fade_out"
-            app:popEnterAnim="@anim/fade_in"
-            app:popExitAnim="@anim/fade_out" />
+            android:id="@+id/action_fragment_outer_search_to_fragment_inner_search"
+            app:destination="@id/fragment_inner_search" />
     </fragment>
 
     <fragment
@@ -53,5 +48,16 @@
         android:id="@+id/fragment_setting"
         android:name="com.hanium.rideornot.ui.setting.SettingFragment"
         tools:layout="@layout/fragment_setting" />
+    <fragment
+        android:id="@+id/fragment_inner_search"
+        android:name="com.hanium.rideornot.ui.search.InnerSearchFragment"
+        tools:layout="@layout/fragment_search_inner" >
+        <action
+            android:id="@+id/action_fragment_inner_search_to_activity_station_detail"
+            app:destination="@id/activity_station_detail" />
+        <action
+            android:id="@+id/action_fragment_inner_search_to_fragment_outer_search"
+            app:destination="@id/fragment_outer_search" />
+    </fragment>
 
 </navigation>
