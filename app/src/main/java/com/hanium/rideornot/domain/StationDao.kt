@@ -9,10 +9,14 @@ interface StationDao {
     @Query("SELECT * FROM station")
     suspend fun getAll(): List<Station>
 
+    @Query("SELECT * FROM station WHERE station_id LIKE :stationId")
+    suspend fun findStationById(stationId: Int): Station
 
-    /** 해당 호선의 line_id 목록을 가져옴 */
     @Query("SELECT line_id FROM station WHERE statn_name LIKE :stationName")
     suspend fun findLineByName(stationName: String): List<Int>
+
+    @Query("SELECT * FROM station WHERE statn_name LIKE :stationName")
+    suspend fun findStationByName(stationName: String): Station
 
     @Query("SELECT * FROM station WHERE statn_name LIKE '%' || :searchQuery || '%'")
     suspend fun findStationsByName(searchQuery: String): List<Station>

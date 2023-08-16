@@ -1,4 +1,4 @@
-package com.hanium.rideornot
+package com.hanium.rideornot.gps
 
 import android.content.BroadcastReceiver
 import android.content.Context

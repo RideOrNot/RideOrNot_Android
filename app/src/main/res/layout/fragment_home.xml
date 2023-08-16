@@ -158,27 +158,27 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-<!--                <View-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="1dp"-->
-<!--                    android:layout_marginStart="10dp"-->
-<!--                    android:background="@color/gray_400"-->
-<!--                    app:layout_constraintBottom_toBottomOf="@+id/tv_nearby_notification_station_name"-->
-<!--                    app:layout_constraintEnd_toStartOf="@+id/btn_nearby_notification_more_info"-->
-<!--                    app:layout_constraintStart_toEndOf="@+id/tv_nearby_notification_station_name"-->
-<!--                    app:layout_constraintTop_toTopOf="@+id/tv_nearby_notification_station_name" />-->
+                <!--                <View-->
+                <!--                    android:layout_width="0dp"-->
+                <!--                    android:layout_height="1dp"-->
+                <!--                    android:layout_marginStart="10dp"-->
+                <!--                    android:background="@color/gray_400"-->
+                <!--                    app:layout_constraintBottom_toBottomOf="@+id/tv_nearby_notification_station_name"-->
+                <!--                    app:layout_constraintEnd_toStartOf="@+id/btn_nearby_notification_more_info"-->
+                <!--                    app:layout_constraintStart_toEndOf="@+id/tv_nearby_notification_station_name"-->
+                <!--                    app:layout_constraintTop_toTopOf="@+id/tv_nearby_notification_station_name" />-->
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_nearby_notification_more_info"
+                    style="@style/Text.Body2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@null"
-                    android:paddingEnd="2dp"
-                    style="@style/Text.Body2"
+                    android:drawableEnd="@drawable/ic_arrow_right_18"
+                    android:minWidth="0dp"
                     android:minHeight="0dp"
                     android:paddingStart="8dp"
-                    android:minWidth="0dp"
-                    android:drawableEnd="@drawable/ic_arrow_right_18"
+                    android:paddingEnd="2dp"
                     android:text="더보기"
                     app:layout_constraintBottom_toBottomOf="@+id/tv_nearby_notification_station_name"
                     app:layout_constraintEnd_toEndOf="parent"
