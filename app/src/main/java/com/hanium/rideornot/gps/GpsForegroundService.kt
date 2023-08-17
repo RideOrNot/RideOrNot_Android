@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.location.LocationManager
 import android.os.IBinder
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.hanium.rideornot.App
@@ -38,11 +37,6 @@ class GpsForegroundService : Service() {
                     isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
                     isNetworkEnabled =
                         locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-
-                    Log.d(
-                        "LocationProviderChanged",
-                        "Location Providers changed, is GPS Enabled: $isGpsEnabled"
-                    )
 
                     // 위치 제공자가 비활성화되면
                     if (!isGpsEnabled || !isNetworkEnabled) {
@@ -138,7 +132,6 @@ class GpsForegroundService : Service() {
     override fun onDestroy() {
         super.onDestroy()
 
-        Log.e("dddestroy", "deeestory")
         NotificationManagerCompat.from(this).cancel(FOREGROUND_NOTIFICATION_ID)
         // BroadcastReceiver 등록 해제
         unregisterReceiver(locationProviderReceiver)
