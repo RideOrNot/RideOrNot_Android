@@ -117,7 +117,7 @@ object GpsManager {
                 Log.e("[GpsManager] lastLocation", lastLocation.toString())
                 applicationScope.launch {
                     // 새로운 위치 정보가 업데이트될 때마다 가까운 역 찾기 및 Geofence 추가
-                    val geofenceRadius = 1000f
+                    val geofenceRadius = 100f //
                     val nearestStationExit = findNearestStationExit(lastLocation)
                     if (nearestStationExit != null) {
 //                        addGeofence(
@@ -127,13 +127,13 @@ object GpsManager {
 //                            geofenceRadius,
 //                            1000000
 //                        )
-                        addGeofence(
-                            "myStation-$tempGeofenceIndex",
-                            nearestStationExit.stationLatitude,
-                            nearestStationExit.stationLongitude,
-                            geofenceRadius,
-                            1000000
-                        )
+//                        addGeofence(
+//                            "myStation-$tempGeofenceIndex",
+//                            nearestStationExit.stationLatitude,
+//                            nearestStationExit.stationLongitude,
+//                            geofenceRadius,
+//                            1000000
+//                        )
                         tempGeofenceIndex++
 
                         Log.e("[GpsManager] nearestStationExit", nearestStationExit.toString())

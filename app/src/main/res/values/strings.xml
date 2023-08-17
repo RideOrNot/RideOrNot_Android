@@ -8,6 +8,7 @@
     <string name="favorite">즐겨찾기</string>
     <string name="setting">설정</string>
     <string name="station_detail">역 상세정보</string>
+    <string name="location">위치</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -15,6 +16,13 @@
     <!-- 탈래말래 승차 알림 -->
     <string name="ride_or_not_notification_channel_name">승차 알림</string>
     <string name="ride_or_not_notification_channel_description">승차 알림을 표시합니다.</string>
+
+    <!-- 권한 안내 -->
+    <string name="permission_info">앱 접근 권한 안내</string>
+    <string name="permission_info_caption">탈래말래 서비스 이용을 위해\n아래의 권한이 필요합니다.</string>
+    <string name="permission_info_essential">필수 접근 권한</string>
+    <string name="permission_info_essential_content_detail">내 위치에서 가까운 지하철 도착 정보 조회, 실시간 지하철 승차 알림</string>
+    <string name="permission_info_notice"><ul><li>접근 권한을 거부할 경우 해당 기능이 정상적으로 작동하지 않습니다.</li>\n<li>설정 > 탈래말래 > 권한 에서 권한 변경이 가능합니다.</li></ul></string>
 
     <!-- Home -->
     <string name="nearby_notification">주변 알림</string>

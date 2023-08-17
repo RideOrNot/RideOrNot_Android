@@ -3,6 +3,7 @@ package com.hanium.rideornot
 import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.core.content.ContextCompat
@@ -13,10 +14,14 @@ import com.hanium.rideornot.databinding.ActivityMainBinding
 import com.hanium.rideornot.gps.GpsForegroundService
 import com.hanium.rideornot.gps.GpsManager
 import com.hanium.rideornot.gps.LOCATION_REQUEST_PERMISSION_REQUEST_CODE
+import com.hanium.rideornot.ui.dialog.PermissionInfoDialog
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
+    private val PREFS_NAME = "MyPrefs"
+    private val FIRST_RUN_KEY = "firstRun"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +30,22 @@ class MainActivity : AppCompatActivity() {
 
         initBottomNavigation()
 
-        GpsManager.initGpsManager(this)
+        val preferences: SharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+        val isFirstRun = preferences.getBoolean(FIRST_RUN_KEY, true)
+
+        if (isFirstRun) {
+            // 최초 실행인 경우, 접근 권한 안내 창을 표시
+            showPermissionInfoDialog()
+
+            // 최초 실행 여부 업데이트
+            val editor: SharedPreferences.Editor = preferences.edit()
+            editor.putBoolean(FIRST_RUN_KEY, false)
+            editor.apply()
+        } else {
+            // 최초 실행이 아닌 경우
+            GpsManager.initGpsManager(this)
+        }
+
 
         if (GpsManager.arePermissionsGranted(this) && !isServiceRunning(GpsForegroundService::class.java)) {
             // 포그라운드 서비스 시작
@@ -59,6 +79,17 @@ class MainActivity : AppCompatActivity() {
         binding.bnvMain.setupWithNavController(navController)
     }
 
+    private fun showPermissionInfoDialog() {
+        // 접근 권한 안내 Dialog 표시
+        val dialog = PermissionInfoDialog(this)
+
+        dialog.btnClickListener {
+            // 권한 요청 수행
+            GpsManager.initGpsManager(this)
+        }
+        dialog.show()
+    }
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -79,7 +110,11 @@ class MainActivity : AppCompatActivity() {
                     stopService(serviceIntent)
                 }
                 // 스낵바 표시
-                Snackbar.make(binding.root, "위치 권한을 항상 허용해야 승차 알림 서비스를 사용할 수 있습니다.", Snackbar.LENGTH_LONG).show()
+                Snackbar.make(
+                    binding.root,
+                    "위치 권한을 항상 허용해야 승차 알림 서비스를 사용할 수 있습니다.",
+                    Snackbar.LENGTH_LONG
+                ).show()
             }
         }
     }

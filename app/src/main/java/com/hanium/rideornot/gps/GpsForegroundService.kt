@@ -94,8 +94,8 @@ class GpsForegroundService : Service() {
         )
 
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("Foreground Service")
-            .setContentText("Running")
+            .setContentTitle("탈래말래 Foreground Service")
+            .setContentText("주변 지하철 역을 탐색 중입니다")
             .setSmallIcon(R.drawable.ic_app_logo_round)
             .setContentIntent(pendingIntent)
             .addAction(R.drawable.ic_app_logo_round, "서비스 종료", stopPendingIntent)
