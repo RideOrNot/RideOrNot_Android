@@ -55,9 +55,8 @@ object GpsManager {
     private var gpsForegroundService: GpsForegroundService? = null
 
     init {
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(
-            getApplicationContext()
-        )
+        fusedLocationProviderClient =
+            LocationServices.getFusedLocationProviderClient(getApplicationContext())
         geofencingClient = LocationServices.getGeofencingClient(getApplicationContext())
     }
 
@@ -117,7 +116,7 @@ object GpsManager {
                 Log.e("[GpsManager] lastLocation", lastLocation.toString())
                 applicationScope.launch {
                     // 새로운 위치 정보가 업데이트될 때마다 가까운 역 찾기 및 Geofence 추가
-                    val geofenceRadius = 100f //
+                    val geofenceRadius = 1000f
                     val nearestStationExit = findNearestStationExit(lastLocation)
                     if (nearestStationExit != null) {
 //                        addGeofence(
@@ -127,13 +126,13 @@ object GpsManager {
 //                            geofenceRadius,
 //                            1000000
 //                        )
-//                        addGeofence(
-//                            "myStation-$tempGeofenceIndex",
-//                            nearestStationExit.stationLatitude,
-//                            nearestStationExit.stationLongitude,
-//                            geofenceRadius,
-//                            1000000
-//                        )
+                        addGeofence(
+                            "myStation-$tempGeofenceIndex",
+                            nearestStationExit.stationLatitude,
+                            nearestStationExit.stationLongitude,
+                            geofenceRadius,
+                            1000000
+                        )
                         tempGeofenceIndex++
 
                         Log.e("[GpsManager] nearestStationExit", nearestStationExit.toString())
@@ -159,8 +158,12 @@ object GpsManager {
     private fun handleLocationPermissionChange() {
         // 위치 권한 변경되었다면 포그라운드 서비스 종료 및 알림 제거
         if (!arePermissionsGranted(getApplicationContext())) {
-            getApplicationContext().stopService(Intent(getApplicationContext(), GpsForegroundService::class.java))
-            Log.e("what", "the hell")
+            getApplicationContext().stopService(
+                Intent(
+                    getApplicationContext(),
+                    GpsForegroundService::class.java
+                )
+            )
         }
     }
 
