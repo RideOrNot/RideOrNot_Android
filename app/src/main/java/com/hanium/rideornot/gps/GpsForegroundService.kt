@@ -9,6 +9,7 @@ import android.location.LocationManager
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import com.hanium.rideornot.App
 import com.hanium.rideornot.MainActivity
 import com.hanium.rideornot.R
@@ -91,6 +92,7 @@ class GpsForegroundService : Service() {
             .setContentTitle("탈래말래 Foreground Service")
             .setContentText("주변 지하철 역을 탐색 중입니다")
             .setSmallIcon(R.drawable.ic_app_logo_round)
+            .setColor(ContextCompat.getColor(this, R.color.blue))
             .setContentIntent(pendingIntent)
             .addAction(R.drawable.ic_app_logo_round, "서비스 종료", stopPendingIntent)
             .setOngoing(true)
@@ -105,7 +107,7 @@ class GpsForegroundService : Service() {
     private fun createNotificationChannel() {
         val channel = NotificationChannel(
             CHANNEL_ID,
-            "꺼진 화면에서 승차 알림(포그라운드 서비스)",
+            "포그라운드 서비스",
             NotificationManager.IMPORTANCE_DEFAULT
         )
         val manager = getSystemService(NotificationManager::class.java)

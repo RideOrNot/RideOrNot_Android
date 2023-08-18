@@ -22,7 +22,7 @@ import com.hanium.rideornot.domain.StationExit
 import com.hanium.rideornot.repository.StationExitRepository
 import kotlinx.coroutines.launch
 
-const val LOCATION_REQUEST_PERMISSION_REQUEST_CODE: Int = 1
+const val LOCATION_PERMISSION_REQUEST_CODE: Int = 1
 private const val PRIORITY_LOCATION: @Priority Int = Priority.PRIORITY_HIGH_ACCURACY
 private const val MAX_LOCATION_UPDATE_THREAD_COUNT = 1 // startLocationUpdate 를 동시에 호출할 수 있는 최대 스레드 수
 private const val GEOFENCE_LIST_SIZE = 200
@@ -80,10 +80,8 @@ object GpsManager {
             ActivityCompat.requestPermissions(
                 activity,
                 locationPermissions,
-                // TODO: 백그라운드 위치 권한 허용-수동 설정 안내 메시지 출력
                 // Geofence 떄문에 백그라운드 위치정보 접근권한 요청 다시 추가함
-                // TODO: request codes 관리 방법 모색
-                LOCATION_REQUEST_PERMISSION_REQUEST_CODE
+                LOCATION_PERMISSION_REQUEST_CODE
             )
         }
         // 초기화

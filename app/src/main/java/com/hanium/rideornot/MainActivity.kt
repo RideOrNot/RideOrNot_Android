@@ -1,19 +1,22 @@
 package com.hanium.rideornot
 
 import android.app.ActivityManager
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Settings
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.snackbar.Snackbar
 import com.hanium.rideornot.databinding.ActivityMainBinding
 import com.hanium.rideornot.gps.GpsForegroundService
 import com.hanium.rideornot.gps.GpsManager
-import com.hanium.rideornot.gps.LOCATION_REQUEST_PERMISSION_REQUEST_CODE
+import com.hanium.rideornot.gps.LOCATION_PERMISSION_REQUEST_CODE
 import com.hanium.rideornot.ui.dialog.PermissionInfoDialog
 
 private const val PREFS_NAME = "mainActivity"
@@ -22,6 +25,7 @@ private const val FIRST_RUN_KEY = "firstRun"
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var permissionDialog: PermissionInfoDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +42,7 @@ class MainActivity : AppCompatActivity() {
             showPermissionInfoDialog()
 
             // 최초 실행 여부 업데이트
-            val editor: SharedPreferences.Editor = preferences.edit()
+            val editor = preferences.edit()
             editor.putBoolean(FIRST_RUN_KEY, false)
             editor.apply()
         } else {
@@ -57,7 +61,6 @@ class MainActivity : AppCompatActivity() {
         //GpsManager.startLocationUpdates()
         // 지오펜스 생성 예시
         //GpsManager.addGeofence("myStation", 37.540455,126.9700533 ,1000f, 1000000)
-
     }
 
     override fun onResume() {
@@ -81,13 +84,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun showPermissionInfoDialog() {
         // 접근 권한 안내 Dialog 표시
-        val dialog = PermissionInfoDialog(this)
+        permissionDialog = PermissionInfoDialog(this)
 
-        dialog.btnClickListener {
+        permissionDialog.btnClickListener {
             // 권한 요청 수행
             GpsManager.initGpsManager(this)
         }
-        dialog.show()
+        permissionDialog.show()
     }
 
     override fun onRequestPermissionsResult(
@@ -96,7 +99,7 @@ class MainActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == LOCATION_REQUEST_PERMISSION_REQUEST_CODE) {
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             if (GpsManager.arePermissionsGranted(this)) {
                 // 권한이 허용된 경우
                 // 포그라운드 서비스 시작
@@ -109,15 +112,37 @@ class MainActivity : AppCompatActivity() {
                     val serviceIntent = Intent(this, GpsForegroundService::class.java)
                     stopService(serviceIntent)
                 }
-                // 스낵바 표시
-                Snackbar.make(
-                    binding.root,
-                    "위치 권한을 항상 허용해야 승차 알림 서비스를 사용할 수 있습니다.",
-                    Snackbar.LENGTH_LONG
-                ).show()
+
+                val builder = AlertDialog.Builder(this)
+                builder.setTitle("서비스 이용 알림").setCancelable(false)
+                builder.setMessage("앱을 사용하기 위해서는 위치 권한이 필요합니다. 설정으로 이동하여 권한을 항상 허용해주세요.")
+                builder.setPositiveButton("설정으로 이동") { _, _ ->
+                    moveAppSettings()
+                }
+                builder.show()
             }
         }
     }
+
+    // 설정 화면으로 이동
+    private fun moveAppSettings() {
+        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+        val uri = Uri.fromParts("package", packageName, null)
+        intent.data = uri
+        moveSettingsLauncher.launch(intent)
+    }
+
+    private val moveSettingsLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            // 설정 화면에서 돌아왔을 때의 처리
+            GpsManager.initGpsManager(this)
+
+            if (GpsManager.arePermissionsGranted(this) && !isServiceRunning(GpsForegroundService::class.java)) {
+                // 포그라운드 서비스 시작
+                val serviceIntent = Intent(this, GpsForegroundService::class.java)
+                ContextCompat.startForegroundService(this, serviceIntent)
+            }
+        }
 
 
     // 서비스 클래스가 실행 중인지 여부 확인
@@ -135,6 +160,5 @@ class MainActivity : AppCompatActivity() {
         }
         return false  // 실행 중이 아닌 경우 false 반환
     }
-
 
 }
