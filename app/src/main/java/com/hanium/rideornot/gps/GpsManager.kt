@@ -125,14 +125,17 @@ object GpsManager {
 //                            geofenceRadius,
 //                            1000000
 //                        )
-                        addGeofence(
-                            "myStation-$tempGeofenceIndex",
-                            nearestStationExit!!.stationLatitude,
-                            nearestStationExit!!.stationLongitude,
-                            geofenceRadius,
-                            1000000
-                        )
-                        tempGeofenceIndex++
+                        // 이미 같은 좌표에 대한 Geofence가 있는지 확인 후, 없으면 Geofence 생성
+                        if (!isDuplicateGeofence(nearestStationExit!!.stationLatitude, nearestStationExit!!.stationLongitude)) {
+                            addGeofence(
+                                "myStation-$tempGeofenceIndex",
+                                nearestStationExit!!.stationLatitude,
+                                nearestStationExit!!.stationLongitude,
+                                geofenceRadius,
+                                1000000
+                            )
+                            tempGeofenceIndex++
+                        }
 
                         Log.e("[GpsManager] nearestStationExit", nearestStationExit.toString())
                         logGeofenceList()
@@ -185,12 +188,6 @@ object GpsManager {
         radius: Float,
         duration: Long,
     ) {
-        // 이미 같은 좌표에 대한 Geofence가 있는지 확인
-        if (isDuplicateGeofence(latitude, longitude)) {
-            Log.e("GeofenceDuplicate", "Geofence already exists for this location")
-            return
-        }
-
         // 지오펜스 개수가 최대 개수보다 크면 오래된 지오펜스를 삭제
         if (geofenceList.size >= MAX_GEOFENCE_COUNT) {
             // 최근에 생성된 지오펜스 5개를 제외한 나머지 지오펜스를 가져와서 제거

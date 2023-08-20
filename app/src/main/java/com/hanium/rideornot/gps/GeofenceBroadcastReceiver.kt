@@ -80,16 +80,16 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                 val serviceIntent = Intent(context, NotificationService::class.java)
                 context.stopService(serviceIntent)
 
-                NotificationManager.createNotification(
-                    context,
-                    NotificationModel(
-                        1,
-                        ContentType.RIDE,
-                        1,
-                        "지오펜싱 테스트 알림",
-                        "지오펜스에서 빠져나왔습니다, requestId: "
-                    )
-                )
+//                NotificationManager.createNotification(
+//                    context,
+//                    NotificationModel(
+//                        1,
+//                        ContentType.RIDE,
+//                        1,
+//                        "지오펜싱 테스트 알림",
+//                        "지오펜스에서 빠져나왔습니다, requestId: " + intent.getIntExtra("nearestStationExit", -1)
+//                    )
+//                )
             }
             else -> {
                 // 트리거된 지오펜싱 트리거가 Enter || Exit 이 아닐 경우 (이 또한 정상적인 경우는 아님)
