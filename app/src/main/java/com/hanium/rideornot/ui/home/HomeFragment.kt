@@ -11,7 +11,6 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.hanium.rideornot.R
-import com.hanium.rideornot.data.response.ArrivalResponse
 import com.hanium.rideornot.domain.Station
 import com.hanium.rideornot.ui.common.ViewModelFactory
 
@@ -41,13 +40,10 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
-    var tempGeofenceIndex = 1
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         homeNearbyNotificationRVAdapter =
             HomeNearbyNotificationRVAdapter(requireContext(), ArrayList())
-
-//        var station = "양재" // 추후 삭제
 
         // 주변 알림 - 근처 역, 도착 정보 조회
         viewModel.showNearestStationName(fusedLocationClient)
@@ -67,7 +63,7 @@ class HomeFragment : Fragment() {
         viewModel.arrivalInfoList.observe(viewLifecycleOwner) { arrivalInfoList ->
             (station + "역").also { binding.tvNearbyNotificationStationName.text = it }
 
-            // 같은 lineId를 같는 도착 정보끼리 리스트로 묶어 RecyclerView에 전달
+            // 같은 lineId를 갖는 도착 정보끼리 리스트로 묶어 RecyclerView에 전달
             val groupedArrivalInfoMap = arrivalInfoList.groupBy { it.lineId }
             val groupedArrivalInfoList = groupedArrivalInfoMap.values.toList()
             homeNearbyNotificationRVAdapter.updateData(groupedArrivalInfoList)
@@ -99,31 +95,6 @@ class HomeFragment : Fragment() {
                 HomeFragmentDirections.actionFragmentHomeToActivityStationDetail(stationName)
             )
         }
-
-//        val addGeofenceButton: Button? = view.findViewById(R.id.addGeofenceButton)
-//        addGeofenceButton?.setOnClickListener {
-//            var tempGeofenceId = "test-$tempGeofenceIndex"
-//            GpsManager.addGeofence(
-//                tempGeofenceId.toString(),
-//                GpsManager.lastLocation!!.latitude,
-//                GpsManager.lastLocation!!.longitude,
-//                1000f,
-//                100000
-//            )
-//            tempGeofenceIndex++
-//        }
-//
-//        val startLocationUpdateButton: Button? = view.findViewById(R.id.startLocationUpdateButton)
-//        startLocationUpdateButton?.setOnClickListener {
-//            GpsManager.startLocationUpdates()
-//        }
-//
-//        val stopLocationUpdateButton: Button? = view.findViewById(R.id.stopLocationUpdateButton)
-//        stopLocationUpdateButton?.setOnClickListener {
-//            GpsManager.stopLocationUpdates()
-//
-//        }
-
     }
 
     override fun onResume() {
@@ -137,26 +108,5 @@ class HomeFragment : Fragment() {
             station = nearestStation
         }
     }
-
-    fun onArrivalSuccess(result: ArrivalResponse) {
-        // 승차 알림 테스트
-        // 지금 위치로부터 지하철역까지 걸어가는 시간은 추가 안 한 상태.
-        // "지금 10초 뛰면, 서울역(1호선)에서 광운대행 - 시청방면 열차를 탈 수 있어요"
-//        val notificationContent =
-//            "지금 " + result[0].arrivalTime + "초 뛰면, " + "서울역" + "(" +
-//                    result[0].lineName + "호선)에서 " + result[0].destination + " 열차를 탈 수 있어요"
-//
-//        val notificationManager = NotificationManager
-//        notificationManager.createNotification(
-//            requireContext(), NotificationModel(
-//                1,
-//                ContentType.RIDE,
-//                1,
-//                "승차 알림",
-//                notificationContent
-//            )
-//        )
-    }
-
 
 }

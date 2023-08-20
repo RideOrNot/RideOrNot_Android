@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "station_exit", indices = [Index("exit_id")])
+@Entity(tableName = "stationExit", indices = [Index("exit_id")])
 data class StationExit(
     @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "exit_id")
