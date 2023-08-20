@@ -14,4 +14,10 @@ class StationExitRepository (private val stationExitDao: StationExitDao) {
         }
     }
 
+    suspend fun findStationExitById(exitId: Int) : StationExit {
+        return withContext(CoroutineScope(Dispatchers.IO).coroutineContext) {
+            stationExitDao.findStationExitById(exitId)
+        }
+    }
+
 }

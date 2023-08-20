@@ -9,5 +9,9 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
         // 알림을 종료하는 동작을 수행
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
         notificationManager.cancel(NotificationManager.index)
+
+        // NotificationService 종료
+        val stopIntent = Intent(context, NotificationService::class.java)
+        context.stopService(stopIntent)
     }
 }

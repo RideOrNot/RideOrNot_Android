@@ -1,6 +1,5 @@
 package com.hanium.rideornot.ui.home
 
-import android.content.Intent
 import android.os.Bundle
 
 import androidx.fragment.app.Fragment
@@ -12,9 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.hanium.rideornot.R
-import com.hanium.rideornot.data.response.ArrivalResponse
 import com.hanium.rideornot.domain.Station
-import com.hanium.rideornot.gps.GpsForegroundService
 import com.hanium.rideornot.ui.common.ViewModelFactory
 
 class HomeFragment : Fragment() {
@@ -98,31 +95,6 @@ class HomeFragment : Fragment() {
                 HomeFragmentDirections.actionFragmentHomeToActivityStationDetail(stationName)
             )
         }
-
-//        val addGeofenceButton: Button? = view.findViewById(R.id.addGeofenceButton)
-//        addGeofenceButton?.setOnClickListener {
-//            var tempGeofenceId = "test-$tempGeofenceIndex"
-//            GpsManager.addGeofence(
-//                tempGeofenceId.toString(),
-//                GpsManager.lastLocation!!.latitude,
-//                GpsManager.lastLocation!!.longitude,
-//                1000f,
-//                100000
-//            )
-//            tempGeofenceIndex++
-//        }
-//
-//        val startLocationUpdateButton: Button? = view.findViewById(R.id.startLocationUpdateButton)
-//        startLocationUpdateButton?.setOnClickListener {
-//            GpsManager.startLocationUpdates()
-//        }
-//
-//        val stopLocationUpdateButton: Button? = view.findViewById(R.id.stopLocationUpdateButton)
-//        stopLocationUpdateButton?.setOnClickListener {
-//            GpsManager.stopLocationUpdates()
-//
-//        }
-
     }
 
     override fun onResume() {

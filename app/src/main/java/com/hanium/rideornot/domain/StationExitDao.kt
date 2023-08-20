@@ -8,4 +8,7 @@ interface StationExitDao {
 
     @Query("SELECT * FROM stationExit")
     suspend fun getAll(): List<StationExit>
+
+    @Query("SELECT * FROM stationExit WHERE exit_id = :exitId")
+    suspend fun findStationExitById(exitId: Int): StationExit
 }

@@ -7,19 +7,20 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
+import android.os.Build
 import android.os.Looper
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.*
 import com.google.android.gms.tasks.CancellationToken
 import com.google.android.gms.tasks.CancellationTokenSource
-import com.hanium.rideornot.App
 import com.hanium.rideornot.App.Companion.applicationScope
 import com.hanium.rideornot.App.Companion.getApplicationContext
+import com.hanium.rideornot.App.Companion.stationExitRepository
 import com.hanium.rideornot.MainActivity
 import com.hanium.rideornot.domain.StationExit
-import com.hanium.rideornot.repository.StationExitRepository
 import kotlinx.coroutines.launch
 
 const val LOCATION_PERMISSION_REQUEST_CODE: Int = 1
@@ -30,6 +31,7 @@ private const val SUFFIX_GEOFENCE_ID_ENTER = "-enter"
 private const val SUFFIX_GEOFENCE_ID_EXIT = "-exit"
 private const val MAX_GEOFENCE_COUNT = 20
 
+@RequiresApi(Build.VERSION_CODES.S)
 object GpsManager {
 
     var lastLocation: Location? = null
@@ -45,14 +47,13 @@ object GpsManager {
 
     private var geofencingClient: GeofencingClient
 
-    private var stationExitRepository: StationExitRepository = App.stationExitRepository
-
     private val locationPermissions = arrayOf(
         Manifest.permission.ACCESS_FINE_LOCATION,
         Manifest.permission.ACCESS_COARSE_LOCATION,
         Manifest.permission.ACCESS_BACKGROUND_LOCATION
     )
     private var gpsForegroundService: GpsForegroundService? = null
+    var nearestStationExit: StationExit? = null
 
     init {
         fusedLocationProviderClient =
@@ -115,19 +116,19 @@ object GpsManager {
                 applicationScope.launch {
                     // 새로운 위치 정보가 업데이트될 때마다 가까운 역 찾기 및 Geofence 추가
                     val geofenceRadius = 1000f
-                    val nearestStationExit = findNearestStationExit(lastLocation)
+                    nearestStationExit = findNearestStationExit(lastLocation)
                     if (nearestStationExit != null) {
 //                        addGeofence(
 //                            "myStation",
-//                            36.348853916,
-//                            127.33261265,
+//                            36.348853916,  //36.348853916  // lastLocation!!.latitude
+//                            127.33261265,  //127.33261265  // lastLocation!!.longitude
 //                            geofenceRadius,
 //                            1000000
 //                        )
                         addGeofence(
                             "myStation-$tempGeofenceIndex",
-                            nearestStationExit.stationLatitude,
-                            nearestStationExit.stationLongitude,
+                            nearestStationExit!!.stationLatitude,
+                            nearestStationExit!!.stationLongitude,
                             geofenceRadius,
                             1000000
                         )
@@ -264,12 +265,15 @@ object GpsManager {
 
     private val geofencePendingIntent: PendingIntent by lazy {
         val intent = Intent(mainActivity, GeofenceBroadcastReceiver::class.java)
+        intent.putExtra("nearestStationExit", nearestStationExit?.exitId)
         // "We use FLAG_UPDATE_CURRENT so that we get the same pending intent back when calling
         // addGeofences() and removeGeofences()."
         // 라고 공식 문서에 쓰여 있었으나, 안드로이드 버전업 후 FLAG_IMMUTABLE 혹은 FLAG_MUTABLE 를 요구
         // FLAG_IMMUTABLE을 선택할 경우 intent가 GeofenceEvent 정보를 담을 수 없게 되어 문제가 생겼었음
         // https://stackoverflow.com/questions/74174663/geofencingevent-fromintentintent-returns-null
-        PendingIntent.getBroadcast(mainActivity, 0, intent, PendingIntent.FLAG_MUTABLE)
+
+        // API 버전에 따라 동작하는 flag가 달라짐 (intent에 putExtra를 해줬으므로 31 이상에서는 FLAG_MUTABLE, 그 아래는 FLAG_CANCEL_CURRENT 로 작동)
+        PendingIntent.getBroadcast(mainActivity, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_MUTABLE)
     }
 
     // 위치 권한 허용 여부를 확인
@@ -318,7 +322,5 @@ object GpsManager {
         }
 
         return nearestStationExit
-
-//            loadArrivalInfo(nearestStationName)
     }
 }
