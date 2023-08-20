@@ -130,7 +130,7 @@ class StationDetailActivity : AppCompatActivity() {
         (formatRefreshTime(arrivalResult.currentTime) + " 기준").also { binding.tvTime.text = it }
 
         // 혼잡도
-        binding.tvStationCongestionContent.text = arrivalResult.congestion.toString()
+        binding.tvStationCongestionContent.text = arrivalResult.congestion
 
         // 도착 정보
         // 상행과 하행 / 외선과 내선 방향으로 데이터를 나누기
