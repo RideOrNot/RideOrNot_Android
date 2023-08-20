@@ -8,10 +8,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.hanium.rideornot.R
 import com.hanium.rideornot.data.response.Arrival
 import com.hanium.rideornot.data.response.ArrivalResponse
 import com.hanium.rideornot.databinding.ItemNearbyNotificationBinding
+import com.hanium.rideornot.utils.methods.getLineColorIdByLineName
 
 class HomeNearbyNotificationRVAdapter(
     context: Context,
@@ -146,24 +146,7 @@ class HomeNearbyNotificationRVAdapter(
         binding: ItemNearbyNotificationBinding,
         context: Context
     ) {
-        val lineColorResId = when (lineName) {
-            "1호선" -> R.color.line_1
-            "2호선" -> R.color.line_2
-            "3호선" -> R.color.line_3
-            "4호선" -> R.color.line_4
-            "5호선" -> R.color.line_5
-            "6호선" -> R.color.line_6
-            "7호선" -> R.color.line_7
-            "8호선" -> R.color.line_8
-            "9호선" -> R.color.line_9
-            "분당선" -> R.color.line_bundang
-            "신분당선" -> R.color.line_sinbundang
-            "우이신설선" -> R.color.line_ui_sinseol
-            "경의중앙선" -> R.color.line_gyeongui_jungang
-            "공항철도" -> R.color.line_airport_rail_link
-            "경춘선" -> R.color.line_gyeongchun
-            else -> R.color.gray_400
-        }
+        val lineColorResId = getLineColorIdByLineName(lineName)
 
         val color = ContextCompat.getColor(context, lineColorResId)
         binding.btnLineNumber.backgroundTintList = ColorStateList.valueOf(color)

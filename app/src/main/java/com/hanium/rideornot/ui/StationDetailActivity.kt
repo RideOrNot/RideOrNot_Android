@@ -5,7 +5,6 @@ import android.graphics.drawable.GradientDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.TextView
@@ -18,6 +17,7 @@ import com.hanium.rideornot.data.response.ArrivalResponse
 import com.hanium.rideornot.databinding.ActivityStationDetailBinding
 import com.hanium.rideornot.domain.Line
 import com.hanium.rideornot.ui.common.ViewModelFactory
+import com.hanium.rideornot.utils.methods.getLineColorIdByLineName
 
 class StationDetailActivity : AppCompatActivity() {
 
@@ -282,24 +282,7 @@ class StationDetailActivity : AppCompatActivity() {
         (stationName + "역").also { binding.tvStationName.text = it }
         binding.btnLineNumber.text = stationName
 
-        val lineColorResId = when (lineName) {
-            "1호선" -> R.color.line_1
-            "2호선" -> R.color.line_2
-            "3호선" -> R.color.line_3
-            "4호선" -> R.color.line_4
-            "5호선" -> R.color.line_5
-            "6호선" -> R.color.line_6
-            "7호선" -> R.color.line_7
-            "8호선" -> R.color.line_8
-            "9호선" -> R.color.line_9
-            "분당선" -> R.color.line_bundang
-            "신분당선" -> R.color.line_sinbundang
-            "우이신설선" -> R.color.line_ui_sinseol
-            "경의중앙선" -> R.color.line_gyeongui_jungang
-            "공항철도" -> R.color.line_airport_rail_link
-            "경춘선" -> R.color.line_gyeongchun
-            else -> R.color.gray_400
-        }
+        val lineColorResId = getLineColorIdByLineName(lineName)
 
         val color = ContextCompat.getColor(this, lineColorResId)
         binding.ivLineBg.backgroundTintList = ColorStateList.valueOf(color)
