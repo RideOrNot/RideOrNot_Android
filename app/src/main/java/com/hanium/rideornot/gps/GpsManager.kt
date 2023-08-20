@@ -21,6 +21,7 @@ import com.hanium.rideornot.App.Companion.getApplicationContext
 import com.hanium.rideornot.App.Companion.stationExitRepository
 import com.hanium.rideornot.MainActivity
 import com.hanium.rideornot.domain.StationExit
+import com.hanium.rideornot.notification.NotificationManager
 import kotlinx.coroutines.launch
 
 const val LOCATION_PERMISSION_REQUEST_CODE: Int = 1
@@ -31,7 +32,6 @@ private const val SUFFIX_GEOFENCE_ID_ENTER = "-enter"
 private const val SUFFIX_GEOFENCE_ID_EXIT = "-exit"
 private const val MAX_GEOFENCE_COUNT = 20
 
-@RequiresApi(Build.VERSION_CODES.S)
 object GpsManager {
 
     var lastLocation: Location? = null
@@ -84,6 +84,8 @@ object GpsManager {
                 // Geofence 떄문에 백그라운드 위치정보 접근권한 요청 다시 추가함
                 LOCATION_PERMISSION_REQUEST_CODE
             )
+        } else {
+            NotificationManager.initNotificationManager(activity)
         }
         // 초기화
         mainActivity = activity

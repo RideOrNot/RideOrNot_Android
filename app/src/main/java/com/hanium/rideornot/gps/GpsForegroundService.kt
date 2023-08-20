@@ -10,15 +10,10 @@ import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
-import com.hanium.rideornot.App
 import com.hanium.rideornot.MainActivity
 import com.hanium.rideornot.R
-import com.hanium.rideornot.domain.StationDatabase
-import com.hanium.rideornot.repository.StationRepository
 
 class GpsForegroundService : Service() {
-
-    private lateinit var stationRepository: StationRepository
 
     companion object {
         private const val CHANNEL_ID = "ride_or_not_foreground_service_channel"
@@ -56,9 +51,6 @@ class GpsForegroundService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-
-        val stationDao = StationDatabase.getInstance(App.getApplicationContext())!!.stationDao()
-        stationRepository = StationRepository(stationDao)
 
         GpsManager.setGpsForegroundService(this)
 
