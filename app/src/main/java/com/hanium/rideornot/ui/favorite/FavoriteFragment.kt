@@ -1,14 +1,19 @@
-package com.hanium.rideornot.ui
+package com.hanium.rideornot.ui.favorite
 
 import android.os.Bundle
 import android.view.*
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.hanium.rideornot.databinding.FragmentFavoriteBinding
+import com.hanium.rideornot.domain.Favorite
+import io.reactivex.Observer
 
 class FavoriteFragment : Fragment() {
     private lateinit var binding: FragmentFavoriteBinding
     private lateinit var onBackPressedCallback: OnBackPressedCallback
+    private lateinit var favoriteRVAdapter: FavoriteRVAdapter
+    private lateinit var favoriteViewModel: FavoriteViewModel
 
     private fun setBackBtnHandling() {
         onBackPressedCallback = object : OnBackPressedCallback(true) {
@@ -34,12 +39,15 @@ class FavoriteFragment : Fragment() {
 
         setBackBtnHandling()
 
-//        binding.editTextSearch.addTextChangedListener(object : TextWatcher {
-//            override fun afterTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-//
-//            }
-//        })
+        favoriteViewModel = FavoriteViewModel(requireContext())
 
+        binding.rvFavorite.layoutManager = LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
+        binding.rvFavorite.setHasFixedSize(true)
+        favoriteViewModel.favoriteList.observe(this) {
+            favoriteRVAdapter = FavoriteRVAdapter(requireContext(), favoriteViewModel.favoriteList.value!!, favoriteViewModel)
+            binding.rvFavorite.adapter = favoriteRVAdapter
+            favoriteRVAdapter.notifyDataSetChanged()
+        }
 
         return binding.root
     }
@@ -48,6 +56,12 @@ class FavoriteFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
     }
 
-    
+//    fun handleFavoriteAddition(favorite: Favorite) {
+//        favoriteViewModel.insertFavorite(favorite)
+//    }
+//
+//    fun handleFavoriteDeletion(favorite: Favorite) {
+//        favoriteViewModel.deleteFavorite(favorite)
+//    }
 
 }

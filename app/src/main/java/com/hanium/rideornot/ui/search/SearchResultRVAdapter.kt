@@ -35,7 +35,7 @@ class SearchResultRVAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_search_result_recycler_ex, parent, false)
+            .inflate(R.layout.item_search_result, parent, false)
         return ViewHolder(view)
     }
 

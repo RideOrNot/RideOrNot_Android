@@ -52,7 +52,7 @@ class InnerSearchFragment : Fragment(),
 
     private fun handleSwitchToSearchHistory(searchHistoryList: List<SearchHistory>) {
         initSearchHistoryRecycler(searchHistoryList)
-        binding.recyclerView.adapter = searchHistoryRVAdapter
+        binding.rvSearch.adapter = searchHistoryRVAdapter
         binding.tvRecentSearch.text = "최근 검색"
     }
 
@@ -74,9 +74,9 @@ class InnerSearchFragment : Fragment(),
 
         searchViewModel = SearchViewModel(requireContext())
 
-        binding.recyclerView.layoutManager =
+        binding.rvSearch.layoutManager =
             LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
-        binding.recyclerView.setHasFixedSize(true)
+        binding.rvSearch.setHasFixedSize(true)
 
         // editText에 부착되어 있는 뒤로가기 버튼 클릭 시 동작
         binding.ivPrev.setOnClickListener {
@@ -122,14 +122,14 @@ class InnerSearchFragment : Fragment(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        searchViewModel.searchHistoryList.observe(this, Observer {
+        searchViewModel.searchHistoryList.observe(this) {
             // searchResult 아이템 클릭 시 serachHistory 리사이클러뷰로 교체되어 버려서, 검색어가 입력된 상태면 리사이클러뷰를 교체하지 않도록 설정
             if (binding.editTextSearch.text.isEmpty()) {
                 handleSwitchToSearchHistory(it)
             } else {
                 initSearchHistoryRecycler(it)
             }
-        })
+        }
 
         // 검색어 입력을 실시간으로 탐지하여 검색 결과에 반영
         binding.editTextSearch.addTextChangedListener(
@@ -214,7 +214,7 @@ class InnerSearchFragment : Fragment(),
                     searchViewModel,
                     this@InnerSearchFragment
                 )
-                binding.recyclerView.adapter = searchResultRVAdapter
+                binding.rvSearch.adapter = searchResultRVAdapter
             }
         }
     }

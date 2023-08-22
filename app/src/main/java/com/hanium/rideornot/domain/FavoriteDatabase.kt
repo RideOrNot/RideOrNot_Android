@@ -5,25 +5,24 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [SearchHistory::class], version = 1)
-abstract class SearchHistoryDatabase : RoomDatabase() {
-    abstract fun searchHistoryDao(): SearchHistoryDao
+@Database(entities = [Favorite::class], version = 1)
+abstract class FavoriteDatabase : RoomDatabase() {
+    abstract fun favoriteDao(): FavoriteDao
 
     companion object {
-        private var instance: SearchHistoryDatabase? = null
+        private var instance: FavoriteDatabase? = null
 
         @Synchronized
-        fun getInstance(context: Context): SearchHistoryDatabase? {
+        fun getInstance(context: Context): FavoriteDatabase? {
             if (instance == null) {
                 synchronized(SearchHistoryDatabase::class) {
                     instance = Room.databaseBuilder(
                         context.applicationContext,
-                        SearchHistoryDatabase::class.java,
-                        "search-history-database"
+                        FavoriteDatabase::class.java,
+                        "favorite-database"
                     ).build()
                 }
             }
-
             return instance
         }
     }

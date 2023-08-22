@@ -61,7 +61,7 @@ object GpsManager {
                 LOCATION_REQUEST_PERMISSION_REQUEST_CODE
             )
         }
-        // 초기화ㅏ
+        // 초기화
         mainActivity = activity
         cancellationTokenSource = CancellationTokenSource()
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(activity)

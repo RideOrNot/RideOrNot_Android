@@ -86,26 +86,26 @@
             android:text="@string/tv_recent_search"
             android:textColor="@color/gray_950" />
 
+        <!--        <FrameLayout-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginEnd="20dp">-->
 
-<!--        <FrameLayout-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginEnd="20dp">-->
+        <!--            <ImageButton-->
+        <!--                android:id="@+id/imageBtn_edit"-->
+        <!--                android:layout_width="57dp"-->
+        <!--                android:layout_height="48dp"-->
+        <!--                android:background="#FFFFFF"-->
+        <!--                android:src="@drawable/btn_white_border2_gray400_radius30" />-->
 
-<!--            <ImageButton-->
-<!--                android:id="@+id/imageBtn_edit"-->
-<!--                android:layout_width="57dp"-->
-<!--                android:layout_height="48dp"-->
-<!--                android:background="#FFFFFF"-->
-<!--                android:src="@drawable/btn_white_border2_gray400_radius30" />-->
+        <!--            <TextView-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_gravity="center"-->
+        <!--                android:text="@string/search_tv_edit"-->
+        <!--                android:textSize="20sp" />-->
+        <!--        </FrameLayout>-->
 
-<!--            <TextView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_gravity="center"-->
-<!--                android:text="@string/search_tv_edit"-->
-<!--                android:textSize="20sp" />-->
-<!--        </FrameLayout>-->
     </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -118,12 +118,12 @@
         app:layout_constraintTop_toBottomOf="@+id/ll_recent_search">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
+            android:id="@+id/rv_search"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:listitem="@layout/item_search_history_recycler_ex" />
+            tools:listitem="@layout/item_search_history" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

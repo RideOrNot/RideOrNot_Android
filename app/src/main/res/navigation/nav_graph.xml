@@ -41,7 +41,7 @@
 
     <fragment
         android:id="@+id/fragment_favorite"
-        android:name="com.hanium.rideornot.ui.FavoriteFragment"
+        android:name="com.hanium.rideornot.ui.favorite.FavoriteFragment"
         tools:layout="@layout/fragment_favorite" />
 
     <fragment
