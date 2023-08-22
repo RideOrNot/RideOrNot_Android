@@ -52,7 +52,7 @@ class NotificationService : Service() {
     private suspend fun loadRideNotification(exitId: Int): String {
         // 푸시 알림 API 호출
         val stationExit = stationExitRepository.findStationExitById(exitId)
-        val station = stationRepository.getStation(stationExit.stationId)
+        val station = stationRepository.findStationById(stationExit.stationId)
         Log.e(
             "[NotificationService] loadRideNotification",
             exitId.toString() + " / " + station.stationName
