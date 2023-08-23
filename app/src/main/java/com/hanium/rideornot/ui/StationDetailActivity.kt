@@ -15,9 +15,14 @@ import com.hanium.rideornot.R
 import com.hanium.rideornot.data.response.Arrival
 import com.hanium.rideornot.data.response.ArrivalResponse
 import com.hanium.rideornot.databinding.ActivityStationDetailBinding
+import com.hanium.rideornot.domain.Favorite
 import com.hanium.rideornot.domain.Line
 import com.hanium.rideornot.ui.common.ViewModelFactory
 import com.hanium.rideornot.utils.methods.getLineColorIdByLineName
+import com.hanium.rideornot.ui.favorite.FavoriteViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class StationDetailActivity : AppCompatActivity() {
 
@@ -31,6 +36,8 @@ class StationDetailActivity : AppCompatActivity() {
     private var stationName = ""
     private val timerList = mutableListOf<CountDownTimer>()
 
+    private lateinit var favoriteViewModel: FavoriteViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityStationDetailBinding.inflate(layoutInflater)
@@ -40,6 +47,29 @@ class StationDetailActivity : AppCompatActivity() {
 
         // 이전 화면에서 선택된 역 전달받기
         stationName = args.stationName
+
+        favoriteViewModel = FavoriteViewModel(this)
+
+        CoroutineScope(Dispatchers.Main).launch {
+            val existingFavorite = favoriteViewModel.getFavorite(args.stationName)
+            if (existingFavorite != null ) {
+                binding.btnToggleFavorite.setImageResource(R.drawable.ic_favorite_on)
+            } else {
+                binding.btnToggleFavorite.setImageResource(R.drawable.ic_favorite)
+            }
+        }
+        binding.btnToggleFavorite.setOnClickListener {
+            CoroutineScope(Dispatchers.Main).launch {
+                val existingFavorite = favoriteViewModel.getFavorite(args.stationName)
+                if (existingFavorite != null ) {
+                    binding.btnToggleFavorite.setImageResource(R.drawable.ic_favorite)
+                    favoriteViewModel.deleteFavorite(existingFavorite)
+                } else {
+                    binding.btnToggleFavorite.setImageResource(R.drawable.ic_favorite_on)
+                    favoriteViewModel.insertFavorite(Favorite(stationName = args.stationName))
+                }
+            }
+        }
 
         viewModel.loadLineList(stationName)
         viewModel.lineList.observe(this) { lineList ->

@@ -26,6 +26,8 @@ class FavoriteViewModel(context: Context) : ViewModel() {
         favoriteList = favoriteRepository.getAllData
     }
 
+
+
     fun insertFavorite(favorite: Favorite) {
         viewModelScope.launch(Dispatchers.IO) {
             val existingFavorite = favoriteRepository.getFavorite(favorite.stationName)
@@ -42,6 +44,10 @@ class FavoriteViewModel(context: Context) : ViewModel() {
         viewModelScope.async(Dispatchers.IO) {
             favoriteRepository.deleteSearchHistory(favorite)
         }
+    }
+
+    suspend fun getFavorite(stationName: String): Favorite? {
+        return favoriteRepository.getFavorite(stationName)
     }
 
     suspend fun findLinesByStationName(stationName: String) : List<Int> {

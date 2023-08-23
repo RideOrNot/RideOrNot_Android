@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hanium.rideornot.databinding.FragmentFavoriteBinding
 import com.hanium.rideornot.domain.Favorite
+import com.hanium.rideornot.ui.SearchViewModel
 import io.reactivex.Observer
 
 class FavoriteFragment : Fragment() {
@@ -14,6 +15,7 @@ class FavoriteFragment : Fragment() {
     private lateinit var onBackPressedCallback: OnBackPressedCallback
     private lateinit var favoriteRVAdapter: FavoriteRVAdapter
     private lateinit var favoriteViewModel: FavoriteViewModel
+    private lateinit var searchViewModel: SearchViewModel
 
     private fun setBackBtnHandling() {
         onBackPressedCallback = object : OnBackPressedCallback(true) {
@@ -40,11 +42,12 @@ class FavoriteFragment : Fragment() {
         setBackBtnHandling()
 
         favoriteViewModel = FavoriteViewModel(requireContext())
+        searchViewModel = SearchViewModel(requireContext())
 
         binding.rvFavorite.layoutManager = LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
         binding.rvFavorite.setHasFixedSize(true)
         favoriteViewModel.favoriteList.observe(this) {
-            favoriteRVAdapter = FavoriteRVAdapter(requireContext(), favoriteViewModel.favoriteList.value!!, favoriteViewModel)
+            favoriteRVAdapter = FavoriteRVAdapter(requireContext(), favoriteViewModel.favoriteList.value!!, favoriteViewModel, searchViewModel)
             binding.rvFavorite.adapter = favoriteRVAdapter
             favoriteRVAdapter.notifyDataSetChanged()
         }

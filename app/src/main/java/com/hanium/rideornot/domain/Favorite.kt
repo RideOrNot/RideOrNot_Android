@@ -11,15 +11,12 @@ data class Favorite(
     @ColumnInfo(name = "favorite_id")
     val favoriteId: Long = 0,
 
-    @ColumnInfo(name = "station_id")
-    val stationId: Int,
-
     @ColumnInfo(name = "station_name")
     val stationName: String,
-
-    @ColumnInfo(name = "is_expanded")
-    val isExpanded: Boolean,
-
-    @ColumnInfo(name = "current_line_index")
-    val currentLineIndex: Int
+//
+//    @ColumnInfo(name = "is_expanded")
+//    val isExpanded: Boolean,
+//
+//    @ColumnInfo(name = "current_line_index")
+//    val currentLineIndex: Int
 )

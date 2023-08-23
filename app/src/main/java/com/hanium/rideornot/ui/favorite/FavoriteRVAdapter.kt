@@ -39,7 +39,7 @@ class FavoriteRVAdapter(
         mItemClickListener = itemClickListener
     }
 
-        override fun onCreateViewHolder(
+    override fun onCreateViewHolder(
         viewGroup: ViewGroup,
         viewType: Int
     ): ViewHolder {
@@ -109,4 +109,5 @@ class FavoriteRVAdapter(
 //        }
 //    }
 
+    }
 }
