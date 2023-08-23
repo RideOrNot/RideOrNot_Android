@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hanium.rideornot.App.Companion.lineRepository
+import com.hanium.rideornot.App.Companion.stationRepository
 import com.hanium.rideornot.data.response.ArrivalResponse
 import com.hanium.rideornot.domain.*
 import com.hanium.rideornot.repository.ArrivalRepository
@@ -23,14 +25,6 @@ class StationDetailViewModel(context: Context, private val arrivalRepository: Ar
     private val _stationItem = MutableLiveData<Station>()
     val stationItem: LiveData<Station> = _stationItem
 
-    private val database = StationDatabase.getInstance(context)
-    private var stationDao: StationDao = database!!.stationDao()
-    private var lineDao: LineDao = database!!.lineDao()
-
-
-//    init {
-//        loadArrivalInfo(stationName)
-//    }
 
     // 해당 역, 호선의 도착 정보 얻기
     fun loadArrivalList(stationId: String, lineId: Int) {
@@ -43,8 +37,8 @@ class StationDetailViewModel(context: Context, private val arrivalRepository: Ar
     // 해당 역의 호선 목록 얻기
     fun loadLineList(stationName: String) {
         viewModelScope.launch {
-            val lineId = withContext(Dispatchers.IO) { stationDao.findLineByName(stationName) }
-            val lineList = withContext(Dispatchers.IO) { lineDao.getLinesByIds(lineId) as ArrayList<Line> }
+            val lineId = withContext(Dispatchers.IO) { stationRepository.findLineByName(stationName) }
+            val lineList = withContext(Dispatchers.IO) { lineRepository.getLinesByIds(lineId) as ArrayList<Line> }
             _lineList.value = lineList
         }
     }
@@ -52,7 +46,7 @@ class StationDetailViewModel(context: Context, private val arrivalRepository: Ar
     // 해당 역, 호선의 양옆 역 얻기
     fun loadNeighboringStation(stationName: String, lineId: Int) {
         viewModelScope.launch {
-            val stationItem = withContext(Dispatchers.IO) { stationDao.findNeighboringStation(stationName, lineId) }
+            val stationItem = withContext(Dispatchers.IO) { stationRepository.findNeighboringStation(stationName, lineId) }
             _stationItem.value = stationItem
         }
     }

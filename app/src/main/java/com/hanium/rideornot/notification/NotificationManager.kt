@@ -1,20 +1,64 @@
 package com.hanium.rideornot.notification
 
-import android.app.Notification
-import android.app.NotificationChannel
+import android.Manifest
+import android.app.*
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.hanium.rideornot.MainActivity
+import com.hanium.rideornot.MainActivity.Companion.moveAppSettings
 import com.hanium.rideornot.R
+import com.hanium.rideornot.gps.GpsManager
+import com.hanium.rideornot.gps.LOCATION_PERMISSION_REQUEST_CODE
+
+const val NOTIFICATION_PERMISSION_REQUEST_CODE: Int = 2
 
 object NotificationManager {
 
     private const val CHANNEL_ID = "ride_or_not_notification_push_channel"
     var index = 1
+
+    fun initNotificationManager(activity: MainActivity) {
+        // 알림 권한 확인
+        if (ActivityCompat.checkSelfPermission(
+                activity,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // Android 13(SDK 33) 이상은 알림 권한 요청 필요
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                ActivityCompat.requestPermissions(
+                    activity,
+                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                    NOTIFICATION_PERMISSION_REQUEST_CODE
+                )
+            } else {
+                if (GpsManager.arePermissionsGranted(activity)) {
+                    val builder = AlertDialog.Builder(activity)
+                    builder.setTitle("서비스 이용 알림").setCancelable(false)
+                    builder.setMessage("앱을 사용하기 위해서는 알림 권한이 필요합니다. 설정으로 이동하여 권한을 허용해주세요.")
+                    builder.setPositiveButton("설정으로 이동") { _, _ ->
+                        moveAppSettings(activity, NOTIFICATION_PERMISSION_REQUEST_CODE)
+                    }
+                    builder.show()
+                } else {
+                    val builder = AlertDialog.Builder(activity)
+                    builder.setTitle("서비스 이용 알림").setCancelable(false)
+                    builder.setMessage("앱을 사용하기 위해서는 위치, 알림 권한이 필요합니다. 설정으로 이동하여 권한을 항상 허용해주세요.")
+                    builder.setPositiveButton("설정으로 이동") { _, _ ->
+                        moveAppSettings(activity, LOCATION_PERMISSION_REQUEST_CODE)
+                    }
+                    builder.show()
+                }
+            }
+        }
+
+    }
 
     fun createNotification(context: Context, notificationData: NotificationModel) {
         val notificationManager: NotificationManager =
@@ -78,6 +122,18 @@ object NotificationManager {
             .addAction(R.drawable.ic_app_logo_round, "확인", pendingIntent)
             .setAutoCancel(true)
             .build()
+    }
+
+    // 알림 권한 허용 여부를 확인
+    fun isPermissionGranted(context: Context): Boolean {
+        if (ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return false
+        }
+        return true
     }
 
 }
