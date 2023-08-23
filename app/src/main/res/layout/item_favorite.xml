@@ -7,15 +7,38 @@
     android:background="@drawable/rect_white_border1_gray500_radius20"
     android:paddingVertical="12dp">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/iv_favorite_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <FrameLayout
+        android:id="@+id/fl_location_on"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_marginStart="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_favorite_on" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!--            app:tint="#71b3ff"-->
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:tint="#909090"
+            app:srcCompat="@drawable/circle_size14" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="2dp"
+            app:srcCompat="@drawable/ic_location_on_24" />
+    </FrameLayout>
+<!--    <androidx.appcompat.widget.AppCompatImageView-->
+<!--        android:id="@+id/btn_toggle_favorite"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="10dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:srcCompat="@drawable/ic_favorite_on" />-->
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_station_name"
@@ -27,7 +50,7 @@
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/iv_favorite_icon"
+        app:layout_constraintStart_toEndOf="@id/fl_location_on"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="6dp" />
 

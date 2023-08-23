@@ -29,8 +29,7 @@ import kotlinx.coroutines.*
 
 class InnerSearchFragment : Fragment(),
     ISearchHistoryRV,
-    ISearchResultRV,
-    SearchResultRVAdapter.OnItemClickListener {
+    ISearchResultRV {
     private lateinit var binding: FragmentSearchInnerBinding
     private lateinit var searchHistoryRVAdapter: SearchHistoryRVAdapter
     private lateinit var searchResultRVAdapter: SearchResultRVAdapter
@@ -219,8 +218,6 @@ class InnerSearchFragment : Fragment(),
         }
     }
 
-    override fun onItemClick(position: Int) {
-    }
 
     private fun switchToStationDetailFragment(stationName: String) {
         findNavController().navigate(

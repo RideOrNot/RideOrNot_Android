@@ -6,6 +6,7 @@ import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hanium.rideornot.R
 import com.hanium.rideornot.databinding.ItemFavoriteBinding
 import com.hanium.rideornot.domain.Favorite
+import com.hanium.rideornot.domain.SearchHistory
 import com.hanium.rideornot.ui.SearchViewModel
 import com.hanium.rideornot.utils.methods.getLineColorIdByLineId
 import kotlinx.coroutines.CoroutineScope
@@ -25,19 +27,10 @@ class FavoriteRVAdapter(
     private val context: Context,
     var itemList: List<Favorite>,
     private val favoriteViewModel: FavoriteViewModel,
-    private val searchViewModel: SearchViewModel
-
+    private val searchViewModel: SearchViewModel,
+    private val favoriteRVInterface: IFavoriteRV
 ) :
     RecyclerView.Adapter<FavoriteRVAdapter.ViewHolder>() {
-
-    interface MyItemClickListener {
-        fun onItemClick()
-    }
-
-    private lateinit var mItemClickListener: MyItemClickListener
-    fun setMyItemClickListener(itemClickListener: MyItemClickListener) {
-        mItemClickListener = itemClickListener
-    }
 
     override fun onCreateViewHolder(
         viewGroup: ViewGroup,
@@ -97,17 +90,16 @@ class FavoriteRVAdapter(
 
         override fun onClick(view: View?) {
             when (view) {
-
+                clFavorite -> {
+                    val position = adapterPosition
+                    if (position != RecyclerView.NO_POSITION) {
+                        val clickedItem = itemList[position]
+                        favoriteRVInterface.onFavoriteItemClick(clickedItem)
+                    }
+                }
             }
         }
 
-//    inner class ViewHolder(val binding: ItemFavoriteBinding) :
-//        RecyclerView.ViewHolder(binding.root) {
-//
-//        fun bind(item: Favorite) {
-//            binding.tvStationName.text = item.stationName.toString()
-//        }
-//    }
 
     }
 }

@@ -20,11 +20,13 @@ import com.hanium.rideornot.domain.Line
 import com.hanium.rideornot.ui.common.ViewModelFactory
 import com.hanium.rideornot.utils.methods.getLineColorIdByLineName
 import com.hanium.rideornot.ui.favorite.FavoriteViewModel
+import com.hanium.rideornot.ui.favorite.IFavoriteRV
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class StationDetailActivity : AppCompatActivity() {
+class StationDetailActivity : AppCompatActivity(),
+    IFavoriteRV {
 
     private lateinit var binding: ActivityStationDetailBinding
     private val args: StationDetailActivityArgs by navArgs()
@@ -50,18 +52,20 @@ class StationDetailActivity : AppCompatActivity() {
 
         favoriteViewModel = FavoriteViewModel(this)
 
+        // 즐겨찾기 버튼 색상 초기설정
         CoroutineScope(Dispatchers.Main).launch {
             val existingFavorite = favoriteViewModel.getFavorite(args.stationName)
-            if (existingFavorite != null ) {
+            if (existingFavorite != null) {
                 binding.btnToggleFavorite.setImageResource(R.drawable.ic_favorite_on)
             } else {
                 binding.btnToggleFavorite.setImageResource(R.drawable.ic_favorite)
             }
         }
+        // 즐겨찾기 버튼 클릭 시 동작
         binding.btnToggleFavorite.setOnClickListener {
             CoroutineScope(Dispatchers.Main).launch {
                 val existingFavorite = favoriteViewModel.getFavorite(args.stationName)
-                if (existingFavorite != null ) {
+                if (existingFavorite != null) {
                     binding.btnToggleFavorite.setImageResource(R.drawable.ic_favorite)
                     favoriteViewModel.deleteFavorite(existingFavorite)
                 } else {
@@ -320,6 +324,10 @@ class StationDetailActivity : AppCompatActivity() {
         val backgroundDrawable = binding.btnLineNumber.background as? GradientDrawable
         backgroundDrawable?.setStroke(4, color)
         binding.btnLineNumber.background = backgroundDrawable
+    }
+
+    override fun onFavoriteItemClick(favorite: Favorite) {
+
     }
 
 }

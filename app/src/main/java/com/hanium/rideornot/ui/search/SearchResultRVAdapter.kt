@@ -25,13 +25,9 @@ class SearchResultRVAdapter(
     private val context: Context,
     private val itemList: List<Station>,
     private val searchViewModel: SearchViewModel,
-    private val searchRecyclerViewInterface: ISearchResultRV,
+    private val searchResultRVInterface: ISearchResultRV,
 ) :
     RecyclerView.Adapter<SearchResultRVAdapter.ViewHolder>() {
-
-    interface OnItemClickListener {
-        fun onItemClick(position: Int)
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -90,7 +86,7 @@ class SearchResultRVAdapter(
                     val position = adapterPosition
                     if (position != RecyclerView.NO_POSITION) {
                         val clickedItem = itemList[position]
-                        searchRecyclerViewInterface.onSearchResultItemClick(clickedItem)
+                        searchResultRVInterface.onSearchResultItemClick(clickedItem)
                         searchViewModel.insertSearchHistory(
                             SearchHistory(
                                 stationId = clickedItem.stationId,

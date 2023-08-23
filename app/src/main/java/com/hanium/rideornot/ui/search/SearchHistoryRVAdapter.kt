@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 class SearchHistoryRVAdapter(
     private val context: Context,
     var itemList: List<SearchHistory>,
-    private val searchRecyclerViewInterface: ISearchHistoryRV,
+    private val searchHistoryRVInterface: ISearchHistoryRV,
     private val searchViewModel: SearchViewModel
 ) :
     RecyclerView.Adapter<SearchHistoryRVAdapter.ViewHolder>() {
@@ -63,7 +63,7 @@ class SearchHistoryRVAdapter(
         fun bind(item: SearchHistory) {
             tvSearchHistory.text = item.stationName
             clSearchItem.setOnClickListener {
-                searchRecyclerViewInterface.onSearchHistoryItemClick(item.stationName)
+                searchHistoryRVInterface.onSearchHistoryItemClick(item.stationName)
             }
             CoroutineScope(Dispatchers.Main).launch {
                 llLines.removeAllViews()
@@ -88,7 +88,7 @@ class SearchHistoryRVAdapter(
         override fun onClick(view: View?) {
             when (view) {
                 ivDeleteSearchBtn -> {
-                    searchRecyclerViewInterface.onSearchHistoryItemDeleteClick(adapterPosition)
+                    searchHistoryRVInterface.onSearchHistoryItemDeleteClick(adapterPosition)
                 }
             }
         }

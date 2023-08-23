@@ -8,7 +8,7 @@
     android:paddingVertical="12dp">
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/iv_favorite_icon"
+        android:id="@+id/btn_toggle_favorite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
@@ -27,7 +27,7 @@
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/iv_favorite_icon"
+        app:layout_constraintStart_toEndOf="@id/btn_toggle_favorite"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="6dp" />
 

@@ -42,7 +42,11 @@
     <fragment
         android:id="@+id/fragment_favorite"
         android:name="com.hanium.rideornot.ui.favorite.FavoriteFragment"
-        tools:layout="@layout/fragment_favorite" />
+        tools:layout="@layout/fragment_favorite" >
+        <action
+            android:id="@+id/action_fragment_favorite_to_activity_station_detail"
+            app:destination="@id/activity_station_detail" />
+    </fragment>
 
     <fragment
         android:id="@+id/fragment_setting"

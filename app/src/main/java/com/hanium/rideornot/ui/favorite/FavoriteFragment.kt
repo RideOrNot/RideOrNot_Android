@@ -4,13 +4,19 @@ import android.os.Bundle
 import android.view.*
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.hanium.rideornot.R
 import com.hanium.rideornot.databinding.FragmentFavoriteBinding
 import com.hanium.rideornot.domain.Favorite
 import com.hanium.rideornot.ui.SearchViewModel
+import com.hanium.rideornot.ui.search.InnerSearchFragmentDirections
 import io.reactivex.Observer
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-class FavoriteFragment : Fragment() {
+class FavoriteFragment : Fragment(), IFavoriteRV {
     private lateinit var binding: FragmentFavoriteBinding
     private lateinit var onBackPressedCallback: OnBackPressedCallback
     private lateinit var favoriteRVAdapter: FavoriteRVAdapter
@@ -47,7 +53,13 @@ class FavoriteFragment : Fragment() {
         binding.rvFavorite.layoutManager = LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
         binding.rvFavorite.setHasFixedSize(true)
         favoriteViewModel.favoriteList.observe(this) {
-            favoriteRVAdapter = FavoriteRVAdapter(requireContext(), favoriteViewModel.favoriteList.value!!, favoriteViewModel, searchViewModel)
+            favoriteRVAdapter = FavoriteRVAdapter(
+                requireContext(),
+                favoriteViewModel.favoriteList.value!!,
+                favoriteViewModel,
+                searchViewModel,
+                this
+            )
             binding.rvFavorite.adapter = favoriteRVAdapter
             favoriteRVAdapter.notifyDataSetChanged()
         }
@@ -66,5 +78,15 @@ class FavoriteFragment : Fragment() {
 //    fun handleFavoriteDeletion(favorite: Favorite) {
 //        favoriteViewModel.deleteFavorite(favorite)
 //    }
+
+    override fun onFavoriteItemClick(favorite: Favorite) {
+        switchToStationDetailFragment(favorite.stationName)
+    }
+
+    private fun switchToStationDetailFragment(stationName: String) {
+        findNavController().navigate(
+            FavoriteFragmentDirections.actionFragmentFavoriteToActivityStationDetail(stationName)
+        )
+    }
 
 }
