@@ -93,7 +93,6 @@ class SearchResultRVAdapter(
                         searchRecyclerViewInterface.onSearchResultItemClick(clickedItem)
                         searchViewModel.insertSearchHistory(
                             SearchHistory(
-                                stationId = clickedItem.stationId,
                                 stationName = clickedItem.stationName
                             )
                         )

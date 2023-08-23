@@ -10,9 +10,6 @@ data class SearchHistory(
     @ColumnInfo(name = "search_history_id")
     val searchHistoryId: Long = 0,
 
-    @ColumnInfo(name = "station_id")
-    val stationId: Int,
-
     @ColumnInfo(name = "station_name")
     val stationName: String
 )
