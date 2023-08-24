@@ -1,10 +1,14 @@
 package com.hanium.rideornot.ui
 
 import android.content.res.ColorStateList
+import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.TextView
@@ -163,6 +167,15 @@ class StationDetailActivity : AppCompatActivity() {
             binding.tvDownSecondArrivalTime
         )
 
+        // 방면
+        if (upDirectionList.isNotEmpty())
+            binding.tvUpDirection.text =
+                upDirectionList[0].destination.split(" - ")[1].split(" ")[0]
+        if (downDirectionList.isNotEmpty())
+            binding.tvDownDirection.text =
+                downDirectionList[0].destination.split(" - ")[1].split(" ")[0]
+
+
         // 상행, 하행 데이터가 비어있는 경우 메시지 표시
         binding.tvUpNoArrivalDataMessage.visibility =
             if (upDirectionList.isEmpty()) View.VISIBLE else View.INVISIBLE
@@ -186,8 +199,28 @@ class StationDetailActivity : AppCompatActivity() {
             stationView.visibility = View.VISIBLE
             timeView.visibility = View.VISIBLE
             val firstArrival = directionList[0]
-            stationView.text = firstArrival.destination.substringBefore("행")
 
+            // 목적지
+//            stationView.text = firstArrival.destination.substringBefore("행")
+
+            // 목적지
+            val destination = firstArrival.destination
+            stationView.text = if ("(급행)" in destination) {
+                val modifiedDestination = "(급)${destination.substringBefore("행")}"
+                val spannable = SpannableString(modifiedDestination)
+                val startIndex = modifiedDestination.indexOf("(급)")
+                spannable.setSpan(
+                    ForegroundColorSpan(Color.RED),
+                    startIndex,
+                    startIndex + 3,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+                spannable
+            } else {
+                destination.substringBefore("행")
+            }
+
+            // 도착 시간
             if (firstArrival.arrivalTime != 0) {
                 updateArrivalTimeWithTimer(firstArrival.arrivalTime, timeView)
             } else {

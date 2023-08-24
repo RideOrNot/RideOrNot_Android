@@ -19,6 +19,7 @@ class GpsForegroundService : Service() {
         private const val CHANNEL_ID = "ride_or_not_foreground_service_channel"
         const val FOREGROUND_NOTIFICATION_ID = 123
         const val ACTION_STOP_FOREGROUND_SERVICE = "stop"
+        var isServiceRunning = false  // 서비스 진행 여부
     }
 
     private val locationProviderReceiver = object : BroadcastReceiver() {
@@ -107,6 +108,8 @@ class GpsForegroundService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        isServiceRunning = true
+
         // 실시간 위치 업데이트 시작
         GpsManager.startLocationUpdates()
 
@@ -126,6 +129,7 @@ class GpsForegroundService : Service() {
     override fun onDestroy() {
         super.onDestroy()
 
+        isServiceRunning = false
         NotificationManagerCompat.from(this).cancel(FOREGROUND_NOTIFICATION_ID)
         // BroadcastReceiver 등록 해제
         unregisterReceiver(locationProviderReceiver)
