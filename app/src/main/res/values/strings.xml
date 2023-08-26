@@ -28,6 +28,8 @@
     <string name="permission_info_notice"><ul><li>접근 권한을 거부할 경우 해당 기능이 정상적으로 작동하지 않습니다.</li>\n<li>설정 > 탈래말래 > 권한 에서 권한 변경이 가능합니다.</li></ul></string>
 
     <!-- Home -->
+    <string name="info_notification">정보 알림</string>
+    <string name="info_notification_caption">지하철 지연, 사고 정보를 확인하세요</string>
     <string name="nearby_notification">주변 알림</string>
     <string name="last_station">최근 역</string>
     <string name="congestion">혼잡도</string>
