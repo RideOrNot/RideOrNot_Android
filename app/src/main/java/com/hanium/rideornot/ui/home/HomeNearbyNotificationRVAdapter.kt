@@ -67,13 +67,11 @@ class HomeNearbyNotificationRVAdapter(
             val upDirectionList = item.filter { it.direction in listOf("상행", "외선") }
             val downDirectionList = item.filter { it.direction in listOf("하행", "내선") }
 
-            // 각 방향별로 가장 빠른 2개의 도착 정보 선택 (arrivalTime이 0인 경우는 제외)
-            val fastestUpDirection = upDirectionList.filter { it.arrivalTime != 0 }
-                .sortedBy { it.arrivalTime }
+            // 각 방향별로 가장 빠른 2개의 도착 정보 선택 (arrivalTime이 0인 경우도 포함)
+            val fastestUpDirection = upDirectionList.sortedBy { it.arrivalTime }
                 .take(2)
 
-            val fastestDownDirection = downDirectionList.filter { it.arrivalTime != 0 }
-                .sortedBy { it.arrivalTime }
+            val fastestDownDirection = downDirectionList.sortedBy { it.arrivalTime }
                 .take(2)
 
             // 도착 정보에 따라 뷰 설정
@@ -91,10 +89,13 @@ class HomeNearbyNotificationRVAdapter(
                 binding.tvDownSecondArrivalStation, binding.tvDownSecondArrivalTime
             )
 
-
-//            binding.tvUpDirection.text = item.destination
-//            binding.tvDownDirection.text = item.destination
-
+            // 방면
+            if (fastestUpDirection.isNotEmpty())
+                binding.tvUpDirection.text =
+                    fastestUpDirection[0].destination.split(" - ")[1].split(" ")[0]
+            if (fastestDownDirection.isNotEmpty())
+                binding.tvDownDirection.text =
+                    fastestDownDirection[0].destination.split(" - ")[1].split(" ")[0]
         }
     }
 
@@ -117,7 +118,7 @@ class HomeNearbyNotificationRVAdapter(
             val arrival = direction[index]
 
             stationView.text = arrival.destination.substringBefore("행")
-            timeView.text = if (arrival.arrivalTime / 60 == 0) "곧 도착" else "${arrival.arrivalTime / 60}분"
+            "${arrival.arrivalTime / 60}분 ${arrival.arrivalTime % 60}초".also { timeView.text = it }
 
             stationView.visibility = View.VISIBLE
             timeView.visibility = View.VISIBLE

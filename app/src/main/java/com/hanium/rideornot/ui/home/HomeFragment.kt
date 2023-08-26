@@ -17,11 +17,10 @@ import com.hanium.rideornot.ui.common.ViewModelFactory
 class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
+    private val viewModel: HomeViewModel by viewModels { ViewModelFactory(requireContext()) }
 
     private lateinit var homeNearbyNotificationRVAdapter: HomeNearbyNotificationRVAdapter
     private var homeLastStationRVAdapter = HomeLastStationRVAdapter(ArrayList())
-
-    private val viewModel: HomeViewModel by viewModels { ViewModelFactory(requireContext()) }
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var station: String = ""
@@ -42,16 +41,19 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
+
         homeNearbyNotificationRVAdapter =
             HomeNearbyNotificationRVAdapter(requireContext(), ArrayList())
+        binding.rvNearbyNotification.adapter = homeNearbyNotificationRVAdapter
+        binding.rvLastStation.adapter = homeLastStationRVAdapter
 
         // 주변 알림 - 근처 역, 도착 정보 조회
         viewModel.showNearestStationName(fusedLocationClient)
-        viewModel.nearestStation.observe(viewLifecycleOwner) { nearestStation ->
-            station = nearestStation
+        viewModel.nearestStation.observe(viewLifecycleOwner) {
+            station = it
         }
-        binding.rvNearbyNotification.adapter = homeNearbyNotificationRVAdapter
-        binding.rvLastStation.adapter = homeLastStationRVAdapter
 
         // 최근 역 - 더미 데이터
         val stations = Station(100, 37.948605, 127.061003, "소요산", 1001)
@@ -61,8 +63,6 @@ class HomeFragment : Fragment() {
 
 
         viewModel.arrivalInfoList.observe(viewLifecycleOwner) { arrivalInfoList ->
-            (station + "역").also { binding.tvNearbyNotificationStationName.text = it }
-
             // 같은 lineId를 갖는 도착 정보끼리 리스트로 묶어 RecyclerView에 전달
             val groupedArrivalInfoMap = arrivalInfoList.groupBy { it.lineId }
             val groupedArrivalInfoList = groupedArrivalInfoMap.values.toList()
@@ -86,14 +86,15 @@ class HomeFragment : Fragment() {
 
         // 주변 알림 - 더보기
         binding.btnNearbyNotificationMoreInfo.setOnClickListener {
-            val stationName =
-                binding.tvNearbyNotificationStationName.text.toString().dropLast(1)
-            viewModel.loadLineList(stationName)
+            val stationName = viewModel.nearestStation.value
+            stationName?.let {
+                viewModel.loadLineList(stationName)
 
-            // 역 상세정보 화면으로 이동
-            findNavController().navigate(
-                HomeFragmentDirections.actionFragmentHomeToActivityStationDetail(stationName)
-            )
+                // 역 상세정보 화면으로 이동
+                findNavController().navigate(
+                    HomeFragmentDirections.actionFragmentHomeToActivityStationDetail(stationName)
+                )
+            }
         }
     }
 
@@ -104,8 +105,8 @@ class HomeFragment : Fragment() {
 
         // 주변 알림 - 도착 정보 재조회
         viewModel.showNearestStationName(fusedLocationClient)
-        viewModel.nearestStation.observe(viewLifecycleOwner) { nearestStation ->
-            station = nearestStation
+        viewModel.nearestStation.observe(viewLifecycleOwner) {
+            station = it
         }
     }
 

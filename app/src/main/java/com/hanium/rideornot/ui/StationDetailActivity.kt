@@ -1,5 +1,6 @@
 package com.hanium.rideornot.ui
 
+import android.app.AlertDialog
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
@@ -27,10 +28,9 @@ class StationDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityStationDetailBinding
     private val args: StationDetailActivityArgs by navArgs()
+    private val viewModel: StationDetailViewModel by viewModels { ViewModelFactory(this) }
 
     private var lineRVAdapter = LineRVAdapter(ArrayList())
-
-    private val viewModel: StationDetailViewModel by viewModels { ViewModelFactory(this) }
 
     private var stationName = ""
     private val timerList = mutableListOf<CountDownTimer>()
@@ -39,6 +39,9 @@ class StationDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityStationDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
 
         binding.rvLine.adapter = lineRVAdapter
 
@@ -57,12 +60,12 @@ class StationDetailActivity : AppCompatActivity() {
             // 도착 정보 로드
             viewModel.loadArrivalList(stationName, lineId)
 
-            // 이전/이후 역 로드
-            viewModel.loadNeighboringStation(stationName, lineId)
-            binding.tvBeforeStationName.isSelected = true
+            // 역 정보 로드
+            viewModel.loadStation(stationName, lineId)
+            binding.tvPrevStationName.isSelected = true
             binding.tvNextStationName.isSelected = true
 
-            setLineCustom(stationName, lineList[0].lineName)
+            setLineCustom(lineList[0].lineName)
         }
 
         // 도착 정보
@@ -72,27 +75,71 @@ class StationDetailActivity : AppCompatActivity() {
 
         // 이전/이후 역
         viewModel.stationItem.observe(this) { stationItem ->
-            binding.tvBeforeStationName.text = when {
-                stationItem.beforeStationId1 == 0 -> "종착"
-                stationItem.beforeStationId2 == 0 -> stationItem.beforeStation1
-                else -> "${stationItem.beforeStation1}/${stationItem.beforeStation2}"
-            }
-
-            binding.tvNextStationName.text = when {
-                stationItem.nextStationId1 == 0 -> "종착"
-                stationItem.nextStationId2 == 0 -> stationItem.nextStation1
-                else -> "${stationItem.nextStation1}/${stationItem.nextStation2}"
-            }
+            viewModel.updateNeighboringStationView(stationItem)
         }
 
         // 호선 RecyclerView 아이템 클릭 시
         lineRVAdapter.setMyItemClickListener(object : LineRVAdapter.MyItemClickListener {
             override fun onItemClick(line: Line) {
-                setLineCustom(stationName, line.lineName)
-                viewModel.loadNeighboringStation(stationName, line.lineId)
+                setLineCustom(line.lineName)
+                viewModel.loadStation(stationName, line.lineId)
                 viewModel.loadArrivalList(stationName, line.lineId)
             }
         })
+
+        // 이전/이후 역 클릭 시
+        binding.ivLineBgPrev.setOnClickListener {
+            if (binding.tvPrevStationName.text == "종착") {
+                // 클릭 불가능하게 설정
+                binding.ivLineBgPrev.isEnabled = false
+            } else if (binding.tvPrevStationName.text.contains("/")) {
+                val dialog = AlertDialog.Builder(this)
+                    .setTitle("이동할 역 선택")
+                    .setCancelable(true)
+                    .setItems(
+                        arrayOf(
+                            binding.tvPrevStationName.text.split("/")[0],
+                            binding.tvPrevStationName.text.split("/")[1]
+                        )
+                    ) { dialog, which ->
+                        // 사용자가 역을 선택한 경우의 동작
+                        when (which) {
+                            0 -> {
+//                                val line = lineRVAdapter.getItem(lineRVAdapter.selectedItemPosition)
+//                                val previousStationId =
+//                                    viewModel.stationItem.value?.beforeStationId1 ?: 0
+//                                if (previousStationId != 0) {
+//                                    viewModel.loadArrivalList(
+//                                        previousStationId.toString(),
+//                                        line.lineId
+//                                    )
+//                                    // 역명 설정
+//                                    binding.tvStationName.text =
+//                                        viewModel.stationItem.value?.beforeStation1
+//                                }
+                            }
+                            1 -> {
+                                //
+                            }
+                        }
+                        dialog.dismiss()
+                    }
+                    .create()
+                dialog.show()
+            } else {
+                // 이전 역에 대한 도착 정보와 이름 설정 작업 수행
+                val line = lineRVAdapter.getItem(lineRVAdapter.selectedItemPosition)
+                val previousStationId = viewModel.stationItem.value?.beforeStationId1 ?: 0
+                if (previousStationId != 0) {
+                    viewModel.loadArrivalList(previousStationId.toString(), line.lineId)
+                    // 이전 역의 이름을 설정
+                    binding.tvStationName.text = viewModel.stationItem.value?.beforeStation1
+                }
+            }
+        }
+        binding.ivLineBgNext.setOnClickListener {
+
+        }
 
         // 새로 고침
         binding.btnRefresh.setOnClickListener {
@@ -135,6 +182,13 @@ class StationDetailActivity : AppCompatActivity() {
 
         // 혼잡도
         binding.tvStationCongestionContent.text = arrivalResult.congestion
+        val colorResId = when {
+            "혼잡" in arrivalResult.congestion && "혼잡도" !in arrivalResult.congestion -> R.color.red
+            "혼잡도" in arrivalResult.congestion -> R.color.black
+            else -> R.color.green
+        }
+        val color = ContextCompat.getColor(binding.root.context, colorResId)
+        binding.ivStationCongestion.setColorFilter(color)
 
         // 도착 정보
         // 상행과 하행 / 외선과 내선 방향으로 데이터를 나누기
@@ -199,9 +253,6 @@ class StationDetailActivity : AppCompatActivity() {
             stationView.visibility = View.VISIBLE
             timeView.visibility = View.VISIBLE
             val firstArrival = directionList[0]
-
-            // 목적지
-//            stationView.text = firstArrival.destination.substringBefore("행")
 
             // 목적지
             val destination = firstArrival.destination
@@ -308,16 +359,14 @@ class StationDetailActivity : AppCompatActivity() {
 
     /**
      * 호선별 커스텀 설정
-     * @param stationName 역 이름
      * @param lineName 호선 이름
      */
-    private fun setLineCustom(stationName: String, lineName: String) {
-        (stationName + "역").also { binding.tvStationName.text = it }
-        binding.btnLineNumber.text = stationName
-
+    private fun setLineCustom(lineName: String) {
         val lineColorResId = getLineColorIdByLineName(lineName)
 
         val color = ContextCompat.getColor(this, lineColorResId)
+        binding.ivLineBgPrev.backgroundTintList = ColorStateList.valueOf(color)
+        binding.ivLineBgNext.backgroundTintList = ColorStateList.valueOf(color)
         binding.ivLineBg.backgroundTintList = ColorStateList.valueOf(color)
 
         val backgroundDrawable = binding.btnLineNumber.background as? GradientDrawable
