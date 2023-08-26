@@ -14,7 +14,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class StationDetailViewModel(context: Context, private val arrivalRepository: ArrivalRepository) : ViewModel() {
+class StationDetailViewModel(context: Context, private val arrivalRepository: ArrivalRepository) :
+    ViewModel() {
 
     private val _arrivalList = MutableLiveData<ArrivalResponse>()
     val arrivalList: LiveData<ArrivalResponse> = _arrivalList
@@ -25,11 +26,15 @@ class StationDetailViewModel(context: Context, private val arrivalRepository: Ar
     private val _stationItem = MutableLiveData<Station>()
     val stationItem: LiveData<Station> = _stationItem
 
+    val prevStationName = MutableLiveData<String>()
+    val nextStationName = MutableLiveData<String>()
 
     // 해당 역, 호선의 도착 정보 얻기
     fun loadArrivalList(stationId: String, lineId: Int) {
         viewModelScope.launch {
-            val arrivalList = arrivalRepository.getArrivalList(stationId, lineId)
+            val arrivalList = withContext(Dispatchers.IO) {
+                arrivalRepository.getArrivalList(stationId, lineId)
+            }
             _arrivalList.value = arrivalList
         }
     }
@@ -37,17 +42,32 @@ class StationDetailViewModel(context: Context, private val arrivalRepository: Ar
     // 해당 역의 호선 목록 얻기
     fun loadLineList(stationName: String) {
         viewModelScope.launch {
-            val lineId = withContext(Dispatchers.IO) { stationRepository.findLineByName(stationName) }
-            val lineList = withContext(Dispatchers.IO) { lineRepository.getLinesByIds(lineId) as ArrayList<Line> }
+            val lineId = stationRepository.findLineByName(stationName)
+            val lineList = lineRepository.getLinesByIds(lineId) as ArrayList<Line>
             _lineList.value = lineList
         }
     }
 
     // 해당 역, 호선의 양옆 역 얻기
-    fun loadNeighboringStation(stationName: String, lineId: Int) {
+    fun loadStation(stationName: String, lineId: Int) {
         viewModelScope.launch {
-            val stationItem = withContext(Dispatchers.IO) { stationRepository.findNeighboringStation(stationName, lineId) }
+            val stationItem = stationRepository.findStationByNameAndLineId(stationName, lineId)
             _stationItem.value = stationItem
+        }
+    }
+
+    // 이전/이후 역 뷰 업데이트
+    fun updateNeighboringStationView(station: Station) {
+        prevStationName.value = when {
+            station.beforeStationId1 == 0 -> "종착"
+            station.beforeStationId2 == 0 -> station.beforeStation1
+            else -> "${station.beforeStation1}/${station.beforeStation2}"
+        }
+
+        nextStationName.value = when {
+            station.nextStationId1 == 0 -> "종착"
+            station.nextStationId2 == 0 -> station.nextStation1
+            else -> "${station.nextStation1}/${station.nextStation2}"
         }
     }
 }

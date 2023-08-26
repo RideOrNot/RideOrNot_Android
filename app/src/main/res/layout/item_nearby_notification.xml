@@ -19,7 +19,7 @@
         android:minWidth="0dp"
         android:minHeight="0dp"
         android:singleLine="true"
-        android:text="3"
+        android:text="3호선"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/cl_up_nearby_notification"
@@ -30,7 +30,7 @@
         android:id="@+id/cl_up_nearby_notification"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="40dp"
+        android:layout_marginHorizontal="20dp"
         app:layout_constraintEnd_toStartOf="@+id/cl_down_nearby_notification"
         app:layout_constraintStart_toEndOf="@+id/btn_line_number"
         app:layout_constraintTop_toTopOf="parent">
@@ -72,7 +72,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_up_first_arrival_station"
-            style="@style/Text.Body2"
+            style="@style/Text.Body3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="6dp"
@@ -84,11 +84,12 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_up_first_arrival_time"
-            style="@style/Text.Body2"
+            style="@style/Text.Body3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/pretendard_bold"
-            android:text="4분"
+            android:fontFamily="@font/pretendard_semi_bold"
+            android:text="4분 50초"
+            android:textAlignment="textEnd"
             android:textColor="@color/blue"
             app:layout_constraintBottom_toBottomOf="@+id/tv_up_first_arrival_station"
             app:layout_constraintEnd_toEndOf="parent"
@@ -96,7 +97,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_up_second_arrival_station"
-            style="@style/Text.Body2"
+            style="@style/Text.Body3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
@@ -109,11 +110,12 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_up_second_arrival_time"
-            style="@style/Text.Body2"
+            style="@style/Text.Body3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/pretendard_bold"
-            android:text="5분"
+            android:fontFamily="@font/pretendard_semi_bold"
+            android:text="5분 2초"
+            android:textAlignment="textEnd"
             android:textColor="@color/blue"
             app:layout_constraintBottom_toBottomOf="@+id/tv_up_second_arrival_station"
             app:layout_constraintEnd_toEndOf="parent"
@@ -210,7 +212,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_down_first_arrival_station"
-            style="@style/Text.Body2"
+            style="@style/Text.Body3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="6dp"
@@ -222,11 +224,12 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_down_first_arrival_time"
-            style="@style/Text.Body2"
+            style="@style/Text.Body3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/pretendard_bold"
-            android:text="4분"
+            android:fontFamily="@font/pretendard_semi_bold"
+            android:text="2분 34초"
+            android:textAlignment="textEnd"
             android:textColor="@color/blue"
             app:layout_constraintBottom_toBottomOf="@+id/tv_down_first_arrival_station"
             app:layout_constraintEnd_toEndOf="parent"
@@ -234,7 +237,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_down_second_arrival_station"
-            style="@style/Text.Body2"
+            style="@style/Text.Body3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
@@ -247,11 +250,12 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_down_second_arrival_time"
-            style="@style/Text.Body2"
+            style="@style/Text.Body3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/pretendard_bold"
-            android:text="8분"
+            android:fontFamily="@font/pretendard_semi_bold"
+            android:text="8분 31초"
+            android:textAlignment="textEnd"
             android:textColor="@color/blue"
             app:layout_constraintBottom_toBottomOf="@+id/tv_down_second_arrival_station"
             app:layout_constraintEnd_toEndOf="parent"

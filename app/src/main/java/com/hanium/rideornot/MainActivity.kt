@@ -1,8 +1,6 @@
 package com.hanium.rideornot
 
-import android.app.ActivityManager
 import android.app.AlertDialog
-import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
@@ -67,7 +65,7 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        if (GpsManager.arePermissionsGranted(this) && NotificationManager.isPermissionGranted(this) && !isServiceRunning(GpsForegroundService::class.java)) {
+        if (GpsManager.arePermissionsGranted(this) && NotificationManager.isPermissionGranted(this) && !GpsForegroundService.isServiceRunning) {
             // 포그라운드 서비스 시작
             val serviceIntent = Intent(this, GpsForegroundService::class.java)
             ContextCompat.startForegroundService(this, serviceIntent)
@@ -129,7 +127,7 @@ class MainActivity : AppCompatActivity() {
             } else {
                 // 권한이 거부된 경우
                 // 포그라운드 서비스가 진행 중이면 종료
-                if (isServiceRunning(GpsForegroundService::class.java)) {
+                if (GpsForegroundService.isServiceRunning) {
                     val serviceIntent = Intent(this, GpsForegroundService::class.java)
                     stopService(serviceIntent)
                 }
@@ -165,7 +163,7 @@ class MainActivity : AppCompatActivity() {
             } else {
                 // 권한이 거부된 경우
                 // 포그라운드 서비스가 진행 중이면 종료
-                if (isServiceRunning(GpsForegroundService::class.java)) {
+                if (GpsForegroundService.isServiceRunning) {
                     val serviceIntent = Intent(this, GpsForegroundService::class.java)
                     stopService(serviceIntent)
                 }
@@ -196,7 +194,7 @@ class MainActivity : AppCompatActivity() {
             // 설정 화면에서 돌아왔을 때의 처리
             GpsManager.initGpsManager(this)
 
-            if (GpsManager.arePermissionsGranted(this) && NotificationManager.isPermissionGranted(this) && !isServiceRunning(GpsForegroundService::class.java)) {
+            if (GpsManager.arePermissionsGranted(this) && NotificationManager.isPermissionGranted(this) && !GpsForegroundService.isServiceRunning) {
                 // 포그라운드 서비스 시작
                 val serviceIntent = Intent(this, GpsForegroundService::class.java)
                 ContextCompat.startForegroundService(this, serviceIntent)
@@ -208,29 +206,12 @@ class MainActivity : AppCompatActivity() {
             // 설정 화면에서 돌아왔을 때의 처리
             NotificationManager.initNotificationManager(this)
 
-            if (GpsManager.arePermissionsGranted(this) && NotificationManager.isPermissionGranted(this) && !isServiceRunning(GpsForegroundService::class.java)) {
+            if (GpsManager.arePermissionsGranted(this) && NotificationManager.isPermissionGranted(this) && !GpsForegroundService.isServiceRunning) {
                 // 포그라운드 서비스 재시작
                 val serviceIntent = Intent(this, GpsForegroundService::class.java)
                 stopService(serviceIntent)
                 ContextCompat.startForegroundService(this, serviceIntent)
             }
         }
-
-
-    // 서비스 클래스가 실행 중인지 여부 확인
-    private fun isServiceRunning(serviceClass: Class<*>): Boolean {
-        val manager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-        val runningServices = manager.runningAppProcesses
-
-        if (runningServices != null) {
-            for (processInfo in runningServices) {
-                // 현재 프로세스 이름과 원하는 서비스 클래스 이름이 일치하는지 확인
-                if (processInfo.processName == serviceClass.name) {
-                    return true  // 실행 중인 경우 true 반환
-                }
-            }
-        }
-        return false  // 실행 중이 아닌 경우 false 반환
-    }
 
 }

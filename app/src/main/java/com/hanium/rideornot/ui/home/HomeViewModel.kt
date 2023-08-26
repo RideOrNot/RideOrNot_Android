@@ -37,32 +37,29 @@ class HomeViewModel(context: Context, private val arrivalRepository: ArrivalRepo
 
     // 해당 역의 모든 도착 정보 얻기
     fun loadArrivalInfo(stationId: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val arrivalInfoList = arrivalRepository.getArrivalListByStationId(stationId).arrivalList
-            updateLineIdsInArrivalList(arrivalInfoList)
+            val updatedArrivalList = updateLineIdsInArrivalList(arrivalInfoList)
+
+            withContext(Dispatchers.Main) {
+                _arrivalInfoList.value = updatedArrivalList
+            }
         }
     }
 
-    // 해당 도착 정보의 line_Id 리스트를 호선 이름(예: 3호선)으로 변경하여 도착 정보 업데이트
-    private fun updateLineIdsInArrivalList(arrivalList: List<Arrival>) {
-        viewModelScope.launch {
-            val updatedArrivalList = withContext(Dispatchers.IO) {
-                arrivalList.map { arrival ->
-                    val newLineId = lineRepository.getLineNameById(arrival.lineId.toInt())
-
-                    arrival.copy(lineId = newLineId)
-                }
-            }
-            _arrivalInfoList.value = updatedArrivalList
+    // 해당 도착 정보의 line_Id 리스트를 호선 이름(예: 3호선)으로 변경하여 도착 정보 반환
+    private suspend fun updateLineIdsInArrivalList(arrivalList: List<Arrival>): List<Arrival> {
+        return arrivalList.map { arrival ->
+            val newLineId = lineRepository.getLineNameById(arrival.lineId.toInt())
+            arrival.copy(lineId = newLineId)
         }
     }
 
     // 해당 역의 호선 목록 얻기
     fun loadLineList(stationName: String) {
         viewModelScope.launch {
-            val lineId = withContext(Dispatchers.IO) { stationRepository.findLineByName(stationName) }
-            val lineList =
-                withContext(Dispatchers.IO) { lineRepository.getLinesByIds(lineId) as ArrayList<Line> }
+            val lineId = stationRepository.findLineByName(stationName)
+            val lineList = lineRepository.getLinesByIds(lineId) as ArrayList<Line>
             _lineList.value = lineList
         }
     }
@@ -72,7 +69,7 @@ class HomeViewModel(context: Context, private val arrivalRepository: ArrivalRepo
     @SuppressLint("MissingPermission")
     fun showNearestStationName(fusedLocationClient: FusedLocationProviderClient) {
         val locationRequest =
-            LocationRequest.Builder( 1000).setPriority(Priority.PRIORITY_HIGH_ACCURACY).build()
+            LocationRequest.Builder(1000).setPriority(Priority.PRIORITY_HIGH_ACCURACY).build()
 
         val locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
@@ -85,13 +82,10 @@ class HomeViewModel(context: Context, private val arrivalRepository: ArrivalRepo
 
                     // 가장 가까운 지하철 역 찾기
                     viewModelScope.launch {
-                        val subwayStations = withContext(Dispatchers.IO) { stationRepository.getAll() }
+                        val nearestStation = findNearestStation(currentLocation)
+                        _nearestStation.value = nearestStation.stationName
 
-                        val nearestStation = findNearestStation(subwayStations, currentLocation)
-                        val nearestStationName = nearestStation.stationName
-                        _nearestStation.value = nearestStationName
-
-                        loadArrivalInfo(nearestStationName)
+                        loadArrivalInfo(nearestStation.stationName)
                     }
                 } else {
                     // 현재 위치 정보를 얻지 못한 경우
@@ -104,14 +98,17 @@ class HomeViewModel(context: Context, private val arrivalRepository: ArrivalRepo
     }
 
 
-    private fun findNearestStation(stations: List<Station>, currentLocation: Location): Station {
+    suspend fun findNearestStation(currentLocation: Location): Station {
+        val subwayStations = stationRepository.getAll()
+
         var nearestStation: Station? = null
         var minDistance = Float.MAX_VALUE
 
-        for (station in stations) {
-            val stationLocation = Location("Station")
-            stationLocation.latitude = station.stationLatitude
-            stationLocation.longitude = station.stationLongitude
+        for (station in subwayStations) {
+            val stationLocation = Location("Station").apply {
+                latitude = station.stationLatitude
+                longitude = station.stationLongitude
+            }
 
             val distance = currentLocation.distanceTo(stationLocation)
             if (distance < minDistance) {

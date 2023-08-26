@@ -22,6 +22,6 @@ interface StationDao {
     suspend fun findStationsByName(searchQuery: String): List<Station>
 
     @Query("SELECT * FROM station WHERE statn_name = :stationName AND line_id = :lineId")
-    suspend fun findNeighboringStation(stationName: String, lineId: Int): Station
+    suspend fun findStationByNameAndLineId(stationName: String, lineId: Int): Station
 
 }
