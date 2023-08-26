@@ -33,6 +33,8 @@ class StationDetailActivity : AppCompatActivity() {
     private var lineRVAdapter = LineRVAdapter(ArrayList())
 
     private var stationName = ""
+    private var lineId = -1
+    private var selectedLinePosition = -1
     private val timerList = mutableListOf<CountDownTimer>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,11 +53,10 @@ class StationDetailActivity : AppCompatActivity() {
         viewModel.loadLineList(stationName)
         viewModel.lineList.observe(this) { lineList ->
             // lineList 데이터를 사용하여 UI 업데이트 등 필요한 작업 수행
-//            Log.d("[StationDetail] lineList", lineList.toString())
-
             lineRVAdapter.updateData(lineList as ArrayList<Line>)
 
-            val lineId = lineList[0].lineId
+            if (selectedLinePosition == -1)
+                lineId = lineList[0].lineId
 
             // 도착 정보 로드
             viewModel.loadArrivalList(stationName, lineId)
@@ -65,7 +66,15 @@ class StationDetailActivity : AppCompatActivity() {
             binding.tvPrevStationName.isSelected = true
             binding.tvNextStationName.isSelected = true
 
-            setLineCustom(lineList[0].lineName)
+            if (selectedLinePosition == -1) {
+                setLineCustom(lineList[0].lineName)
+            } else {
+                val targetLine = lineList.find { it.lineId == lineId }
+                val targetPosition = lineRVAdapter.lineList.indexOf(targetLine)
+                lineRVAdapter.selectedItemPosition = targetPosition
+
+                setLineCustom(lineList[targetPosition].lineName)
+            }
         }
 
         // 도착 정보
@@ -89,56 +98,26 @@ class StationDetailActivity : AppCompatActivity() {
 
         // 이전/이후 역 클릭 시
         binding.ivLineBgPrev.setOnClickListener {
-            if (binding.tvPrevStationName.text == "종착") {
-                // 클릭 불가능하게 설정
-                binding.ivLineBgPrev.isEnabled = false
-            } else if (binding.tvPrevStationName.text.contains("/")) {
-                val dialog = AlertDialog.Builder(this)
-                    .setTitle("이동할 역 선택")
-                    .setCancelable(true)
-                    .setItems(
-                        arrayOf(
-                            binding.tvPrevStationName.text.split("/")[0],
-                            binding.tvPrevStationName.text.split("/")[1]
-                        )
-                    ) { dialog, which ->
-                        // 사용자가 역을 선택한 경우의 동작
-                        when (which) {
-                            0 -> {
-//                                val line = lineRVAdapter.getItem(lineRVAdapter.selectedItemPosition)
-//                                val previousStationId =
-//                                    viewModel.stationItem.value?.beforeStationId1 ?: 0
-//                                if (previousStationId != 0) {
-//                                    viewModel.loadArrivalList(
-//                                        previousStationId.toString(),
-//                                        line.lineId
-//                                    )
-//                                    // 역명 설정
-//                                    binding.tvStationName.text =
-//                                        viewModel.stationItem.value?.beforeStation1
-//                                }
-                            }
-                            1 -> {
-                                //
-                            }
-                        }
-                        dialog.dismiss()
-                    }
-                    .create()
-                dialog.show()
-            } else {
-                // 이전 역에 대한 도착 정보와 이름 설정 작업 수행
-                val line = lineRVAdapter.getItem(lineRVAdapter.selectedItemPosition)
-                val previousStationId = viewModel.stationItem.value?.beforeStationId1 ?: 0
-                if (previousStationId != 0) {
-                    viewModel.loadArrivalList(previousStationId.toString(), line.lineId)
-                    // 이전 역의 이름을 설정
-                    binding.tvStationName.text = viewModel.stationItem.value?.beforeStation1
-                }
+            val prevStationName = binding.tvPrevStationName.text.toString()
+            if (binding.tvPrevStationName.text.contains("/")) {
+                // 역 선택 다이얼로그를 표시하고, 사용자가 역을 선택하면 해당 역으로 이동
+                val stationNames = prevStationName.split("/")
+                showStationSelectionDialog(stationNames)
+            } else if (prevStationName != "종착") {
+                // 이전 역 이름이 "종착"이 아닌 경우에만 역 이동
+                moveToStation(prevStationName)
             }
         }
         binding.ivLineBgNext.setOnClickListener {
-
+            val nextStationName = binding.tvNextStationName.text.toString()
+            if (binding.tvNextStationName.text.contains("/")) {
+                // 역 선택 다이얼로그를 표시하고, 사용자가 역을 선택하면 해당 역으로 이동
+                val stationNames = nextStationName.split("/")
+                showStationSelectionDialog(stationNames)
+            } else if (nextStationName != "종착") {
+                // 이후 역 이름이 "종착"이 아닌 경우에만 역 이동
+                moveToStation(nextStationName)
+            }
         }
 
         // 새로 고침
@@ -181,7 +160,6 @@ class StationDetailActivity : AppCompatActivity() {
         (formatRefreshTime(arrivalResult.currentTime) + " 기준").also { binding.tvTime.text = it }
 
         // 혼잡도
-        binding.tvStationCongestionContent.text = arrivalResult.congestion
         val colorResId = when {
             "혼잡" in arrivalResult.congestion && "혼잡도" !in arrivalResult.congestion -> R.color.red
             "혼잡도" in arrivalResult.congestion -> R.color.black
@@ -344,16 +322,21 @@ class StationDetailActivity : AppCompatActivity() {
      * @return 12시간제 형식으로 형식화된 시간 (예: "오후 04:14")
      */
     private fun formatRefreshTime(refreshTime: String): String {
-        // 문자열에서 시간 부분을 추출
+        // 문자열에서 시간 부분과 오전/오후 부분을 추출
         val timeParts = refreshTime.split(" ")[2].split(":")
         val hours = timeParts[0].toInt()
         val minutes = timeParts[1].toInt()
+        val amPmIndicator = refreshTime.split(" ")[1]  // 오전 또는 오후
 
         // 12시간제로 변환
-        val amPm = if (refreshTime.contains("오후")) "오후" else "오전"
         val convertedHours = if (hours % 12 == 0) 12 else hours % 12
 
-        return "$amPm ${String.format("%02d", convertedHours)}:${String.format("%02d", minutes)}"
+        return "$amPmIndicator ${String.format("%02d", convertedHours)}:${
+            String.format(
+                "%02d",
+                minutes
+            )
+        }"
     }
 
 
@@ -372,6 +355,36 @@ class StationDetailActivity : AppCompatActivity() {
         val backgroundDrawable = binding.btnLineNumber.background as? GradientDrawable
         backgroundDrawable?.setStroke(4, color)
         binding.btnLineNumber.background = backgroundDrawable
+    }
+
+
+    /**
+     * 이동할 역을 선택하는 다이얼로그 표시
+     * @param stationNames 선택할 역 이름 목록
+     */
+    private fun showStationSelectionDialog(stationNames: List<String>) {
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("이동할 역 선택")
+            .setCancelable(true)
+            .setItems(stationNames.toTypedArray()) { dialog, which ->
+                // 선택한 역 이름으로 이동
+                moveToStation(stationNames[which])
+                dialog.dismiss()
+            }
+            .create()
+        dialog.show()
+    }
+
+    /**
+     * 선택한 역으로 이동 작업을 수행
+     * @param stationName 이동할 역의 이름
+     */
+    private fun moveToStation(stationName: String) {
+        lineId = lineRVAdapter.getItem(lineRVAdapter.selectedItemPosition).lineId
+        selectedLinePosition = lineRVAdapter.selectedItemPosition
+        this.stationName = stationName
+
+        viewModel.loadLineList(stationName)
     }
 
 }

@@ -13,12 +13,12 @@
         android:background="@drawable/btn_white_border2_gray400_radius30"
         android:minWidth="0dp"
         android:minHeight="0dp"
+        android:stateListAnimator="@null"
+        android:text="3"
         android:textAlignment="center"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:text="3"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
