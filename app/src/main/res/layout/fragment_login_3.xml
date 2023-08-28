@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="@drawable/rect_white_border20_gray500">
 
-
     <TextView
         android:id="@+id/tv_init"
         android:layout_width="wrap_content"
@@ -30,7 +29,7 @@
         app:layout_constraintWidth_percent="0.75">
 
         <ImageView
-            android:id="@+id/iv_progress_bar"
+            android:id="@+id/iv_progress_bar_background"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="0dp"
@@ -64,6 +63,34 @@
                 app:srcCompat="@drawable/shadowed_white_circle_size40" />
 
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="14dp">
+
+            <ImageView
+                android:id="@+id/iv_progress_bar_gauge_left"
+                android:layout_width="0dp"
+                android:layout_height="15dp"
+                android:layout_weight="1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/progress_bar_white"
+                app:tint="@color/blue" />
+
+            <ImageView
+                android:id="@+id/iv_progress_bar_gauge_right"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                 />
+
+        </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -150,7 +177,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="연도 입력"
+                android:text="@string/signup_age"
                 android:textColor="@color/white" />
 
             <TextView
@@ -159,7 +186,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="성별 입력"
+                android:text="@string/signup_gender"
                 android:textColor="@color/white" />
 
             <TextView
@@ -168,63 +195,70 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Offer"
+                android:text="@string/signup_agreement"
                 android:textColor="@color/gray" />
         </LinearLayout>
     </FrameLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:id="@+id/ll_age_selection"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="100dp"
-        android:orientation="horizontal"
+        android:layout_marginHorizontal="10dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fl_description">
+        app:layout_constraintTop_toBottomOf="@id/fl_description"
+        app:layout_constraintVertical_bias="0.3">
 
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-
-            <ImageView
-                android:id="@+id/iv_male"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/rounded_rect_size156x67" />
-
-            <TextView
-                android:id="@+id/tv_male"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:text="남자"
-                android:textSize="24sp" />
-        </FrameLayout>
-        <FrameLayout
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/ll_gender_selection"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="100dp"
+            android:layout_marginHorizontal="18dp"
+            android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fl_description">
+            app:layout_constraintTop_toBottomOf="@id/fl_description"
+            app:layout_constraintVertical_bias="0.3">
 
-            <ImageView
-                android:id="@+id/iv_female"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/rounded_rect_size156x67" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="67dp"
+                android:layout_marginHorizontal="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_rect_size156x67">
 
-            <TextView
-                android:id="@+id/tv_female"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:text="여자"
-                android:textSize="24sp" />
-        </FrameLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="남성"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="67dp"
+                android:layout_marginHorizontal="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_rect_size156x67">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="여성"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
     </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

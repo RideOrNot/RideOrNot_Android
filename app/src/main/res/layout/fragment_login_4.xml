@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    android:layout_height="match_parent"
+    android:background="@drawable/rect_white_border20_gray500">
 
     <TextView
         android:id="@+id/tv_init"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="초기설정을 진행합니다"
+        android:text="초기설정을 진행할게요"
         android:textSize="22sp"
         app:layout_constraintBottom_toTopOf="@+id/fl_progress_bar"
         app:layout_constraintEnd_toEndOf="parent"
@@ -65,6 +65,35 @@
         </LinearLayout>
 
         <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="14dp">
+
+            <ImageView
+                android:id="@+id/iv_progress_bar_gauge_left"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/progress_bar_white"
+                app:tint="@color/blue" />
+
+            <ImageView
+                android:id="@+id/iv_progress_bar_gauge_right"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/progress_bar_white"
+                app:tint="@color/blue" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="6.5dp"
@@ -77,21 +106,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
-                app:srcCompat="@drawable/donut_blue_white_size27" />
+                app:srcCompat="@drawable/check_circle_blue_size27" />
 
             <ImageView
                 android:id="@+id/iv_inner_circle_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/circle_gray_size27" />
+                app:srcCompat="@drawable/check_circle_blue_size27" />
 
             <ImageView
                 android:id="@+id/iv_inner_circle_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
-                app:srcCompat="@drawable/circle_gray_size27" />
+                app:srcCompat="@drawable/donut_blue_white_size27" />
         </LinearLayout>
 
     </FrameLayout>
@@ -126,14 +155,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/rounded_rect_with_arrow_on_top_white" />
+                app:srcCompat="@drawable/rounded_rect_with_arrow_on_top_blue" />
 
             <ImageView
                 android:id="@+id/iv_state_describer_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/rounded_rect_with_arrow_on_top_white" />
+                app:srcCompat="@drawable/rounded_rect_with_arrow_on_top_blue" />
         </LinearLayout>
 
         <LinearLayout
@@ -159,7 +188,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/signup_gender"
-                android:textColor="@color/gray" />
+                android:textColor="@color/white" />
 
             <TextView
                 android:id="@+id/tv_offer"
@@ -168,7 +197,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/signup_agreement"
-                android:textColor="@color/gray" />
+                android:textColor="@color/white" />
         </LinearLayout>
     </FrameLayout>
 
@@ -184,15 +213,17 @@
         app:layout_constraintVertical_bias="0.3">
 
         <LinearLayout
+            android:id="@+id/ll_gender_selection"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="18dp"
             android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/fl_description"
             app:layout_constraintVertical_bias="0.3">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_age_teens"
                 android:layout_width="0dp"
                 android:layout_height="67dp"
                 android:layout_marginHorizontal="4dp"
@@ -203,7 +234,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="10대"
+                    android:text="남성"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -211,7 +242,6 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_age_twenties"
                 android:layout_width="0dp"
                 android:layout_height="67dp"
                 android:layout_marginHorizontal="4dp"
@@ -222,92 +252,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="20대"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_age_thirties"
-                android:layout_width="0dp"
-                android:layout_height="67dp"
-                android:layout_marginHorizontal="4dp"
-                android:layout_weight="1"
-                android:background="@drawable/rounded_rect_size156x67">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="30대"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.3">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_age_forties"
-                android:layout_width="0dp"
-                android:layout_height="67dp"
-                android:layout_marginHorizontal="4dp"
-                android:layout_weight="1"
-                android:background="@drawable/rounded_rect_size156x67">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="40대"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_age_fifties"
-                android:layout_width="0dp"
-                android:layout_height="67dp"
-                android:layout_marginHorizontal="4dp"
-                android:layout_weight="1"
-                android:background="@drawable/rounded_rect_size156x67">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="50대"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_age_sixties"
-                android:layout_width="0dp"
-                android:layout_height="67dp"
-                android:layout_marginHorizontal="4dp"
-                android:layout_weight="1"
-                android:background="@drawable/rounded_rect_size156x67">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="60대 이상"
+                    android:text="여성"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -315,5 +260,6 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
     </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
