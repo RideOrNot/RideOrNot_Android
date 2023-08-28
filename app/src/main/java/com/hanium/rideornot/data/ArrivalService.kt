@@ -1,36 +1,31 @@
 package com.hanium.rideornot.data
 
-import android.util.Log
-import com.hanium.rideornot.ui.ArrivalView
-import com.hanium.rideornot.utils.NetworkModule.Companion.getRetrofit
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.hanium.rideornot.data.response.ArrivalResponse
+import com.hanium.rideornot.data.response.BaseResponse
+import com.hanium.rideornot.data.response.RideNotificationResponse
+import retrofit2.http.GET
+import retrofit2.http.Path
+import retrofit2.http.Query
 
-class ArrivalService {
-    private lateinit var arrivalView: ArrivalView
+interface ArrivalService {
 
-    fun setArrivalView(arrivalView: ArrivalView) {
-        this.arrivalView = arrivalView
-    }
+    // 해당 역, 노선에 대한 도착 정보, 역사 혼잡도 조회
+    @GET("/stations/{stationId}/{lineId}")
+    suspend fun getArrivalList(
+        @Path("stationId") stationId: String,
+        @Path("lineId") lineId: Int
+    ): BaseResponse<ArrivalResponse>
 
-    // 열차 도착 정보 조회
-    fun getArrivalInfo(stationName: String) {
-        val arrivalService = getRetrofit().create(ArrivalRetrofitInterface::class.java)
-        arrivalService.getArrivalInfo(stationName).enqueue(object : Callback<ArrayList<ArrivalResponse>> {
+    // 해당 역에 대한 모든 도착 정보 조회
+    @GET("/stations/arrivalInfo/{stationId}")
+    suspend fun getArrivalListByStationId(
+        @Path("stationId") stationId: String,
+    ): BaseResponse<ArrivalResponse>
 
-            override fun onResponse(
-                call: Call<ArrayList<ArrivalResponse>>,
-                response: Response<ArrayList<ArrivalResponse>>
-            ) {
-                Log.d("도착 정보 API/SUCCESS", response.toString())
-
-                arrivalView.onArrivalSuccess(response.body()!![0])
-            }
-
-            override fun onFailure(call: Call<ArrayList<ArrivalResponse>>, t: Throwable) {
-                Log.d("도착 정보 API/FAILURE", t.message.toString())
-            }
-        })
-    }
+    // 실시간 승차 알림
+    @GET("/stations/pushAlarm")
+    suspend fun getRideNotification(
+        @Query("stationName") stationName: String,
+        @Query("exitName") exitName: String
+        ): BaseResponse<RideNotificationResponse>
 }

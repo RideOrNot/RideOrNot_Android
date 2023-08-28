@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="10dp">
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_line"
+        style="@style/Text.Title3"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:background="@drawable/btn_white_border2_gray400_radius30"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:stateListAnimator="@null"
+        android:text="3"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

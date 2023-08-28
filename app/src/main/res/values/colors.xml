@@ -5,13 +5,15 @@
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
+    <color name="black">#FF121212</color>
     <color name="white">#FFFFFFFF</color>
     <color name="transparent">#00FFFFFF</color>
+    <color name="bnv_shadow">#0D121212</color>
 
     <!-- primary color -->
     <color name="blue">#2B73F3</color>
     <color name="gray">#818181</color>
+    <color name="pink">#FF7473</color>
     <color name="pink_50">#FFF1F1</color>
 
     <!-- gray-scale color -->
@@ -31,5 +33,21 @@
     <color name="yellow">#F59E69</color>
     <color name="red">#FF585D</color>
 
+    <!-- 호선별 color -->
+    <color name="line_1">#0D347F</color>
+    <color name="line_2">#3B9F37</color>
+    <color name="line_3">#DD5C32</color>
+    <color name="line_4">#3165A8</color>
+    <color name="line_5">#703E8C</color>
+    <color name="line_6">#904D23</color>
+    <color name="line_7">#5B692E</color>
+    <color name="line_8">#C82363</color>
+    <color name="line_9">#B39627</color>
+    <color name="line_bundang">#DBA829</color>
+    <color name="line_sinbundang">#971F2D</color>
+    <color name="line_ui_sinseol">#B7C450</color>
+    <color name="line_gyeongui_jungang">#76B69B</color>
+    <color name="line_airport_rail_link">#0090D2</color>
+    <color name="line_gyeongchun">#2D9B76</color>
 
 </resources>
