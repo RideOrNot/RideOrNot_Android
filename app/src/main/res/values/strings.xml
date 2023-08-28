@@ -11,6 +11,8 @@
     <string name="location">위치</string>
     <string name="notification">알림</string>
     <string name="station">%s역</string>
+    <string name="direction">%s 방면</string>
+    <string name="current_time">%s 기준</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -32,6 +34,7 @@
     <string name="info_notification_caption">지하철 지연, 사고 정보를 확인하세요</string>
     <string name="nearby_notification">주변 알림</string>
     <string name="last_station">최근 역</string>
+    <string name="more_info">더보기</string>
     <string name="congestion">혼잡도</string>
     <string name="percentage">(%)</string>
     <string name="edit">편집</string>

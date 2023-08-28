@@ -34,6 +34,8 @@ class HomeViewModel(context: Context, private val arrivalRepository: ArrivalRepo
     private val _nearestStation = MutableLiveData<String>()
     val nearestStation: LiveData<String> = _nearestStation
 
+    val currentTime = MutableLiveData<String>()
+
 
     // 해당 역의 모든 도착 정보 얻기
     fun loadArrivalInfo(stationId: String) {
@@ -41,8 +43,11 @@ class HomeViewModel(context: Context, private val arrivalRepository: ArrivalRepo
             val arrivalInfoList = arrivalRepository.getArrivalListByStationId(stationId).arrivalList
             val updatedArrivalList = updateLineIdsInArrivalList(arrivalInfoList)
 
+            val currentTime = arrivalRepository.getArrivalListByStationId(stationId).currentTime
+
             withContext(Dispatchers.Main) {
                 _arrivalInfoList.value = updatedArrivalList
+                updateCurrentTime(currentTime)
             }
         }
     }
@@ -63,7 +68,6 @@ class HomeViewModel(context: Context, private val arrivalRepository: ArrivalRepo
             _lineList.value = lineList
         }
     }
-
 
     // 현재 위치에서 가장 가까운 지하철 역의 이름 얻기
     @SuppressLint("MissingPermission")
@@ -118,6 +122,34 @@ class HomeViewModel(context: Context, private val arrivalRepository: ArrivalRepo
         }
 
         return nearestStation!!
+    }
+
+    // 도착 정보 호출 시간 업데이트
+    private fun updateCurrentTime(time: String) {
+        currentTime.value = formatRefreshTime(time)
+    }
+
+    /**
+     * 새로고침 시간을 받아서 12시간제로 형식화된 문자열로 반환
+     * @param refreshTime 새로고침 시간 (예: "2023-07-17 오후 16:14:14")
+     * @return 12시간제 형식으로 형식화된 시간 (예: "오후 04:14")
+     */
+    private fun formatRefreshTime(refreshTime: String): String {
+        // 문자열에서 시간 부분과 오전/오후 부분을 추출
+        val timeParts = refreshTime.split(" ")[2].split(":")
+        val hours = timeParts[0].toInt()
+        val minutes = timeParts[1].toInt()
+        val amPmIndicator = refreshTime.split(" ")[1]  // 오전 또는 오후
+
+        // 12시간제로 변환
+        val convertedHours = if (hours % 12 == 0) 12 else hours % 12
+
+        return "$amPmIndicator ${String.format("%02d", convertedHours)}:${
+            String.format(
+                "%02d",
+                minutes
+            )
+        }"
     }
 
 }

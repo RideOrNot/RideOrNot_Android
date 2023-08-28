@@ -48,7 +48,7 @@ class HomeLastStationRVAdapter(private var stationList: ArrayList<Station>) :
     inner class ViewHolder(val binding: ItemLastStationBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Station) {
-            binding.tvLineNumber.text = item.lineId.toString()
+//            binding.tvLineNumber.text = item.lineId.toString()
             binding.tvStationName.text = item.stationName
         }
     }

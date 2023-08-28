@@ -91,6 +91,14 @@
 
     <style name="Text.Body5" parent="android:TextAppearance">
         <item name="android:textStyle">normal</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">@font/pretendard_regular</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="Text.Body6" parent="android:TextAppearance">
+        <item name="android:textStyle">normal</item>
         <item name="android:textSize">11sp</item>
         <item name="android:fontFamily">@font/pretendard_regular</item>
         <item name="android:textColor">@color/black</item>

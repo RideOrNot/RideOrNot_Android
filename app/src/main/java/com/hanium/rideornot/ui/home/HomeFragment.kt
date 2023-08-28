@@ -23,7 +23,7 @@ class HomeFragment : Fragment() {
     private var homeLastStationRVAdapter = HomeLastStationRVAdapter(ArrayList())
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private var station: String = ""
+    private var stationName: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,7 +52,7 @@ class HomeFragment : Fragment() {
         // 주변 알림 - 근처 역, 도착 정보 조회
         viewModel.showNearestStationName(fusedLocationClient)
         viewModel.nearestStation.observe(viewLifecycleOwner) {
-            station = it
+            stationName = it
         }
 
         // 최근 역 - 더미 데이터
@@ -81,15 +81,13 @@ class HomeFragment : Fragment() {
             binding.fabRefresh.startAnimation(rotateAnimation)
 
             // 도착 정보 API 호출
-            viewModel.loadArrivalInfo(station)
+            viewModel.loadArrivalInfo(stationName)
         }
 
         // 주변 알림 - 더보기
         binding.btnNearbyNotificationMoreInfo.setOnClickListener {
             val stationName = viewModel.nearestStation.value
             stationName?.let {
-                viewModel.loadLineList(stationName)
-
                 // 역 상세정보 화면으로 이동
                 findNavController().navigate(
                     HomeFragmentDirections.actionFragmentHomeToActivityStationDetail(stationName)
@@ -106,7 +104,7 @@ class HomeFragment : Fragment() {
         // 주변 알림 - 도착 정보 재조회
         viewModel.showNearestStationName(fusedLocationClient)
         viewModel.nearestStation.observe(viewLifecycleOwner) {
-            station = it
+            stationName = it
         }
     }
 
