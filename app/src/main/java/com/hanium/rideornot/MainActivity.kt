@@ -26,10 +26,9 @@ import com.hanium.rideornot.gps.GpsManager
 import com.hanium.rideornot.gps.LOCATION_PERMISSION_REQUEST_CODE
 import com.hanium.rideornot.notification.NOTIFICATION_PERMISSION_REQUEST_CODE
 import com.hanium.rideornot.notification.NotificationManager
-import com.hanium.rideornot.ui.FavoriteFragment
+import com.hanium.rideornot.ui.signIn.SignInFragment1
 import com.hanium.rideornot.ui.dialog.PermissionInfoDialog
-import com.hanium.rideornot.ui.home.HomeFragment
-import com.hanium.rideornot.ui.setting.SettingFragment
+
 
 
 private const val REQ_ONE_TAP = 2
@@ -46,7 +45,6 @@ class MainActivity : AppCompatActivity() {
     private val loginResultHandler = registerForActivityResult<IntentSenderRequest, ActivityResult>(
         ActivityResultContracts.StartIntentSenderForResult()
     ) { result: ActivityResult ->
-        // handle intent result here
         if (result.resultCode == RESULT_OK) Log.d("loginResultHandler", "RESULT_OK.")
         if (result.resultCode == RESULT_CANCELED) Log.d("loginResultHandler", "RESULT_CANCELED.")
         if (result.resultCode == RESULT_FIRST_USER) Log.d("loginResultHandler", "RESULT_FIRST_USER.")
@@ -64,8 +62,6 @@ class MainActivity : AppCompatActivity() {
             if (username != null) {
                 Log.d("loginResultHandler", "Got username, $username")
             }
-
-
         } catch (e: ApiException) {
             when (e.statusCode) {
                 CommonStatusCodes.CANCELED -> {
@@ -121,7 +117,6 @@ class MainActivity : AppCompatActivity() {
             GpsManager.initGpsManager(this)
         }
 
-
         if (GpsManager.arePermissionsGranted(this) && NotificationManager.isPermissionGranted(this) && !GpsForegroundService.isServiceRunning) {
             // 포그라운드 서비스 시작
             val serviceIntent = Intent(this, GpsForegroundService::class.java)
@@ -133,6 +128,10 @@ class MainActivity : AppCompatActivity() {
         // 지오펜스 생성 예시
         //GpsManager.addGeofence("myStation", 37.540455,126.9700533 ,1000f, 1000000)
 
+        Log.d("FragmentManager", "replace fragment to SignInFragment")
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.frm_main, SignInFragment1())
+        transaction.commit()
 
         val googleWebClientId = BuildConfig.GOOGLE_WEB_CLIENT_ID
         oneTapClient = Identity.getSignInClient(this)

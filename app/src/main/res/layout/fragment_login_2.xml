@@ -219,62 +219,47 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.3">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cl_age_teens"
+                <TextView
+                    android:id="@+id/btn_teens"
                     android:layout_width="0dp"
                     android:layout_height="67dp"
                     android:layout_marginHorizontal="4dp"
                     android:layout_weight="1"
-                    android:background="@drawable/rounded_rect_size156x67">
+                    android:background="@drawable/rounded_rect_size156x67"
+                    android:gravity="center"
+                    android:text="10대"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="10대"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cl_age_twenties"
+                <TextView
+                    android:id="@+id/btn_twenties"
                     android:layout_width="0dp"
                     android:layout_height="67dp"
                     android:layout_marginHorizontal="4dp"
                     android:layout_weight="1"
-                    android:background="@drawable/rounded_rect_size156x67">
+                    android:background="@drawable/rounded_rect_size156x67"
+                    android:gravity="center"
+                    android:text="20대"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="20대"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cl_age_thirties"
+                <TextView
+                    android:id="@+id/btn_thirties"
                     android:layout_width="0dp"
                     android:layout_height="67dp"
                     android:layout_marginHorizontal="4dp"
                     android:layout_weight="1"
-                    android:background="@drawable/rounded_rect_size156x67">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="30대"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                    android:background="@drawable/rounded_rect_size156x67"
+                    android:gravity="center"
+                    android:text="30대"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
             </LinearLayout>
 
             <LinearLayout
@@ -285,115 +270,49 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.3">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cl_age_forties"
+                <TextView
+                    android:id="@+id/btn_forties"
                     android:layout_width="0dp"
                     android:layout_height="67dp"
                     android:layout_marginHorizontal="4dp"
                     android:layout_weight="1"
-                    android:background="@drawable/rounded_rect_size156x67">
+                    android:background="@drawable/rounded_rect_size156x67"
+                    android:gravity="center"
+                    android:text="40대"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="40대"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cl_age_fifties"
+                <TextView
+                    android:id="@+id/btn_fifties"
                     android:layout_width="0dp"
                     android:layout_height="67dp"
                     android:layout_marginHorizontal="4dp"
                     android:layout_weight="1"
-                    android:background="@drawable/rounded_rect_size156x67">
+                    android:background="@drawable/rounded_rect_size156x67"
+                    android:gravity="center"
+                    android:text="50대"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="50대"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cl_age_elders"
+                <TextView
+                    android:id="@+id/btn_elders"
                     android:layout_width="0dp"
                     android:layout_height="67dp"
                     android:layout_marginHorizontal="4dp"
                     android:layout_weight="1"
-                    android:background="@drawable/rounded_rect_size156x67">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="60대 이상"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                    android:background="@drawable/rounded_rect_size156x67"
+                    android:gravity="center"
+                    android:text="60대 이상"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
             </LinearLayout>
         </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_gender_selection"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="18dp"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/fl_description"
-            app:layout_constraintVertical_bias="0.3">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="0dp"
-                android:layout_height="67dp"
-                android:layout_marginHorizontal="4dp"
-                android:layout_weight="1"
-                android:background="@drawable/rounded_rect_size156x67">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="남성"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="0dp"
-                android:layout_height="67dp"
-                android:layout_marginHorizontal="4dp"
-                android:layout_weight="1"
-                android:background="@drawable/rounded_rect_size156x67">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="여성"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </LinearLayout>
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
