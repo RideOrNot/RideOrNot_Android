@@ -59,5 +59,9 @@
             android:id="@+id/action_fragment_inner_search_to_fragment_outer_search"
             app:destination="@id/fragment_outer_search" />
     </fragment>
+    <fragment
+        android:id="@+id/signInFragment"
+        android:name="com.hanium.rideornot.ui.SignInFragment"
+        android:label="SignInFragment" />
 
 </navigation>

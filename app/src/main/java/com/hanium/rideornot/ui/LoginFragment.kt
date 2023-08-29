@@ -5,8 +5,6 @@ import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.hanium.rideornot.BuildConfig
-import com.hanium.rideornot.R
-import com.hanium.rideornot.databinding.FragmentHomeBinding
 import com.hanium.rideornot.databinding.FragmentLogin1Binding
 
 
