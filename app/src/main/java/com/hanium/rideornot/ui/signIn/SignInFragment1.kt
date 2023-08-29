@@ -6,23 +6,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import com.hanium.rideornot.R
-import com.hanium.rideornot.databinding.FragmentLogin1Binding
+import com.hanium.rideornot.databinding.FragmentSignIn1Binding
 
 private const val FIRST_ANIM_DELAY: Long = 400
 private const val SECOND_ANIM_DELAY: Long = 1200
 private const val THIRD_ANIM_DELAY: Long = 2000
 
 class SignInFragment1 : Fragment() {
-    private lateinit var binding: FragmentLogin1Binding
+    private lateinit var binding: FragmentSignIn1Binding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         super.onCreate(savedInstanceState)
-        binding = FragmentLogin1Binding.inflate(inflater, container, false)
+        binding = FragmentSignIn1Binding.inflate(inflater, container, false)
 
         val fadeInAnim1 = AnimationUtils.loadAnimation(context, R.anim.fade_in)
         fadeInAnim1.startOffset = FIRST_ANIM_DELAY

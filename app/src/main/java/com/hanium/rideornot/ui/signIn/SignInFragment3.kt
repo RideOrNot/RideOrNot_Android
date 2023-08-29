@@ -8,12 +8,12 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.fragment.app.Fragment
 import com.hanium.rideornot.R
-import com.hanium.rideornot.databinding.FragmentLogin3Binding
+import com.hanium.rideornot.databinding.FragmentSignIn3Binding
 import com.hanium.rideornot.ui.signIn.SignInViewModel.Gender
 
 
 class SignInFragment3 : Fragment() {
-    private lateinit var binding: FragmentLogin3Binding
+    private lateinit var binding: FragmentSignIn3Binding
     private lateinit var signInViewModel: SignInViewModel
 
     override fun onCreateView(
@@ -21,7 +21,7 @@ class SignInFragment3 : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         super.onCreate(savedInstanceState)
-        binding = FragmentLogin3Binding.inflate(inflater, container, false)
+        binding = FragmentSignIn3Binding.inflate(inflater, container, false)
         signInViewModel = SignInViewModel(requireContext())
 
         val fadeInAnim = AnimationUtils.loadAnimation(context, R.anim.fade_out)

@@ -5,7 +5,7 @@ import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.hanium.rideornot.BuildConfig
-import com.hanium.rideornot.databinding.FragmentLogin1Binding
+import com.hanium.rideornot.databinding.FragmentSignIn1Binding
 
 
 class LoginFragment : Fragment() {
@@ -13,7 +13,7 @@ class LoginFragment : Fragment() {
 
     private lateinit var oneTapClient: SignInClient
     private lateinit var signInRequest: BeginSignInRequest
-    private lateinit var binding: FragmentLogin1Binding
+    private lateinit var binding: FragmentSignIn1Binding
 
 
     override fun onCreateView(
