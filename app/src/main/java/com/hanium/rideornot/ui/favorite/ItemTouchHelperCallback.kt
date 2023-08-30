@@ -1,8 +1,10 @@
 package com.hanium.rideornot.ui.favorite
 
 import android.util.Log
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.hanium.rideornot.R
 
 class ItemTouchHelperCallback(private val itemMoveListener: OnItemMoveListener) : ItemTouchHelper.Callback() {
 
@@ -25,12 +27,21 @@ class ItemTouchHelperCallback(private val itemMoveListener: OnItemMoveListener) 
         target: RecyclerView.ViewHolder
     ): Boolean {
         itemMoveListener.onItemMove(viewHolder.adapterPosition, target.adapterPosition)
-        Log.d("onMove", "onMove")
         return true
     }
 
     // 아이템이 스와이프 될 때 호출
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         TODO("Not yet implemented")
+    }
+
+    override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
+        super.onSelectedChanged(viewHolder, actionState)
+
+        if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
+            viewHolder?.itemView?.alpha = 0.7f
+        } else if (actionState == ItemTouchHelper.ACTION_STATE_IDLE) {
+            viewHolder?.itemView?.alpha = 1.0f
+        }
     }
 }
