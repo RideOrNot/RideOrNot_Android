@@ -83,7 +83,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginStart="20dp"
-            android:text="@string/tv_recent_search"
+            android:text="@string/recent_searched"
             android:textColor="@color/gray_950" />
 
         <!--        <FrameLayout-->

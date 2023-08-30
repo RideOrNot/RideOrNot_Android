@@ -1,8 +1,12 @@
 package com.hanium.rideornot.ui.favorite
 
+import android.graphics.Canvas
 import android.util.Log
+import android.view.View
+import androidx.coordinatorlayout.widget.CoordinatorLayout.Behavior.getTag
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_SWIPE
 import androidx.recyclerview.widget.RecyclerView
 import com.hanium.rideornot.R
 
@@ -32,9 +36,32 @@ class ItemTouchHelperCallback(private val itemMoveListener: OnItemMoveListener) 
 
     // 아이템이 스와이프 될 때 호출
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        TODO("Not yet implemented")
-    }
 
+    }
+    
+    // 스와이프 범위 제한
+    override fun onChildDraw(
+        c: Canvas,
+        recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder,
+        dX: Float,
+        dY: Float,
+        actionState: Int,
+        isCurrentlyActive: Boolean
+    ) {
+        val itemView = viewHolder.itemView
+        if (dX < 0) { // 왼쪽으로 스와이프할 때만 적용
+            val halfWidth = itemView.width / 4
+            if (dX < -halfWidth) {
+                super.onChildDraw(c, recyclerView, viewHolder, -halfWidth.toFloat(), dY, actionState, isCurrentlyActive)
+            } else {
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+            }
+        } else {
+            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+        }
+    }
+    
     override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
         super.onSelectedChanged(viewHolder, actionState)
 

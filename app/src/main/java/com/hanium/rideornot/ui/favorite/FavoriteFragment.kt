@@ -49,13 +49,13 @@ class FavoriteFragment : Fragment(), IFavoriteRV {
             if (!isEditing) {
                 isEditing = true
                 binding.ivEditIcon.setImageResource(R.drawable.ic_check_circle_24)
-                binding.tvEdit.text = "적용하기"
+                binding.tvEdit.text = getString(R.string.favorite_edit_apply)
                 itemTouchHelper.attachToRecyclerView(binding.rvFavorite)
                 binding.rvFavorite.adapter = favoriteEditRVAdapter
             } else {
                 isEditing = false
                 binding.ivEditIcon.setImageResource(R.drawable.ic_edit_24)
-                binding.tvEdit.text = "편집하기"
+                binding.tvEdit.text = getString(R.string.favorite_edit_start)
                 itemTouchHelper.attachToRecyclerView(null)
                 binding.rvFavorite.adapter = favoriteRVAdapter
                 applyChangesToDatabase()
