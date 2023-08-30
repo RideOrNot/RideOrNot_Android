@@ -1,18 +1,20 @@
 package com.hanium.rideornot.ui.home
 
 import android.os.Bundle
-
-import androidx.fragment.app.Fragment
-import com.hanium.rideornot.databinding.FragmentHomeBinding
 import android.view.*
+import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.hanium.rideornot.App.Companion.getApplicationContext
 import com.hanium.rideornot.R
+import com.hanium.rideornot.databinding.FragmentHomeBinding
 import com.hanium.rideornot.domain.Station
 import com.hanium.rideornot.ui.common.ViewModelFactory
+
 
 class HomeFragment : Fragment() {
 
@@ -25,6 +27,8 @@ class HomeFragment : Fragment() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var stationName: String = ""
 
+    private var isFirstAnimation = true
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -34,7 +38,8 @@ class HomeFragment : Fragment() {
         // TDL
         // 최근 역 RecyclerView 연결 필요
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+        fusedLocationClient =
+            LocationServices.getFusedLocationProviderClient(getApplicationContext())
 
         return binding.root
     }
@@ -67,6 +72,9 @@ class HomeFragment : Fragment() {
             val groupedArrivalInfoMap = arrivalInfoList.groupBy { it.lineId }
             val groupedArrivalInfoList = groupedArrivalInfoMap.values.toList()
             homeNearbyNotificationRVAdapter.updateData(groupedArrivalInfoList)
+
+            // 로딩 표시
+            showShimmerItem()
 
             // 도착 정보가 없는 경우
             if (arrivalInfoList.isEmpty())
@@ -107,5 +115,43 @@ class HomeFragment : Fragment() {
             stationName = it
         }
     }
+
+    /**
+     * 로딩 (Shimmer) 표시
+     */
+    private fun showShimmerItem() {
+        binding.sflHome.stopShimmer()
+        binding.sflHome.visibility = View.GONE
+
+        if (isFirstAnimation) {
+            // 애니메이션 설정
+            val fadeInAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_in)
+
+            fadeInAnimation.setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationStart(animation: Animation) {
+                    binding.tvNearbyNotificationStationName.visibility = View.VISIBLE
+                    binding.tvNearbyNotificationCurrentTime.visibility = View.VISIBLE
+                    binding.rvNearbyNotification.visibility = View.VISIBLE
+                }
+
+                override fun onAnimationEnd(animation: Animation) {
+                    isFirstAnimation = false
+                }
+
+                override fun onAnimationRepeat(animation: Animation) {
+                }
+            })
+
+            binding.tvNearbyNotificationStationName.startAnimation(fadeInAnimation)
+            binding.tvNearbyNotificationCurrentTime.startAnimation(fadeInAnimation)
+            binding.rvNearbyNotification.startAnimation(fadeInAnimation)
+        } else {
+            // 첫 애니메이션이 이미 진행된 경우, 뷰들의 가시성을 바로 변경
+            binding.tvNearbyNotificationStationName.visibility = View.VISIBLE
+            binding.tvNearbyNotificationCurrentTime.visibility = View.VISIBLE
+            binding.rvNearbyNotification.visibility = View.VISIBLE
+        }
+    }
+
 
 }

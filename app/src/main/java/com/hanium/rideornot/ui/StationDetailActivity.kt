@@ -16,6 +16,7 @@ import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.navigation.navArgs
+import com.google.android.material.snackbar.Snackbar
 import com.hanium.rideornot.R
 import com.hanium.rideornot.data.response.Arrival
 import com.hanium.rideornot.data.response.ArrivalResponse
@@ -52,7 +53,12 @@ class StationDetailActivity : AppCompatActivity() {
 
         viewModel.loadLineList(stationName)
         viewModel.lineList.observe(this) { lineList ->
-            // lineList 데이터를 사용하여 UI 업데이트 등 필요한 작업 수행
+
+            if (lineList.isNullOrEmpty()) {
+                Snackbar.make(binding.root, "존재하지 않는 역입니다.", Snackbar.LENGTH_SHORT).show()
+                return@observe
+            }
+
             lineRVAdapter.updateData(lineList as ArrayList<Line>)
 
             if (selectedLinePosition == -1)
