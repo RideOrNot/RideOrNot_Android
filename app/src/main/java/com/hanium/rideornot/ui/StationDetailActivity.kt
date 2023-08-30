@@ -70,7 +70,7 @@ class StationDetailActivity : AppCompatActivity(),
                     favoriteViewModel.deleteFavorite(existingFavorite)
                 } else {
                     binding.btnToggleFavorite.setImageResource(R.drawable.ic_favorite_on)
-                    favoriteViewModel.insertFavorite(Favorite(stationName = args.stationName))
+                    favoriteViewModel.insertFavorite(args.stationName)
                 }
             }
         }

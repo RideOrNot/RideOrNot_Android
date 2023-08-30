@@ -5,24 +5,23 @@ import android.view.*
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hanium.rideornot.R
 import com.hanium.rideornot.databinding.FragmentFavoriteBinding
 import com.hanium.rideornot.domain.Favorite
 import com.hanium.rideornot.ui.SearchViewModel
-import com.hanium.rideornot.ui.search.InnerSearchFragmentDirections
-import io.reactivex.Observer
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class FavoriteFragment : Fragment(), IFavoriteRV {
     private lateinit var binding: FragmentFavoriteBinding
     private lateinit var onBackPressedCallback: OnBackPressedCallback
     private lateinit var favoriteRVAdapter: FavoriteRVAdapter
-    private lateinit var favoriteViewModel: FavoriteViewModel
-    private lateinit var searchViewModel: SearchViewModel
+    private lateinit var favoriteEditRVAdapter: FavoriteEditRVAdapter
+    private lateinit var itemTouchHelper: ItemTouchHelper
+    private val favoriteViewModel: FavoriteViewModel by lazy { FavoriteViewModel(requireContext()) }
+    private val searchViewModel: SearchViewModel by lazy { SearchViewModel(requireContext()) }
 
+    private var isEditing = false
     private fun setBackBtnHandling() {
         onBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -35,10 +34,6 @@ class FavoriteFragment : Fragment(), IFavoriteRV {
         )
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -47,24 +42,51 @@ class FavoriteFragment : Fragment(), IFavoriteRV {
 
         setBackBtnHandling()
 
-        favoriteViewModel = FavoriteViewModel(requireContext())
-        searchViewModel = SearchViewModel(requireContext())
-
         binding.rvFavorite.layoutManager = LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
         binding.rvFavorite.setHasFixedSize(true)
-        favoriteViewModel.favoriteList.observe(this) {
+
+        binding.llEditBtn.setOnClickListener {
+            if (!isEditing) {
+                isEditing = true
+                binding.ivEditIcon.setImageResource(R.drawable.ic_check_circle_24)
+                binding.tvEdit.text = "적용하기"
+                itemTouchHelper.attachToRecyclerView(binding.rvFavorite)
+                binding.rvFavorite.adapter = favoriteEditRVAdapter
+            } else {
+                isEditing = false
+                binding.ivEditIcon.setImageResource(R.drawable.ic_edit_24)
+                binding.tvEdit.text = "편집하기"
+                itemTouchHelper.attachToRecyclerView(null)
+                binding.rvFavorite.adapter = favoriteRVAdapter
+                applyChangesToDatabase()
+            }
+        }
+
+        favoriteViewModel.favoriteList.observe(this) { it ->
             favoriteRVAdapter = FavoriteRVAdapter(
                 requireContext(),
-                favoriteViewModel.favoriteList.value!!,
+                // 즐겨찾기 목록을 order에 따라 정렬하여 어댑터에 전달
+                favoriteViewModel.favoriteList.value!!.sortedBy { it.orderNumber },
                 favoriteViewModel,
                 searchViewModel,
                 this
             )
+            favoriteEditRVAdapter = FavoriteEditRVAdapter(
+                requireContext(),
+                favoriteViewModel.favoriteList.value!!.sortedBy { it.orderNumber },
+                favoriteViewModel,
+                searchViewModel
+            )
+            itemTouchHelper = ItemTouchHelper(ItemTouchHelperCallback(favoriteEditRVAdapter))
             binding.rvFavorite.adapter = favoriteRVAdapter
-            favoriteRVAdapter.notifyDataSetChanged()
         }
 
         return binding.root
+    }
+
+    private fun applyChangesToDatabase() {
+        val updatedList = favoriteEditRVAdapter.itemList
+        favoriteViewModel.updateOrder(updatedList)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -1,10 +1,7 @@
 package com.hanium.rideornot.domain
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 
 @Dao
 interface FavoriteDao {
@@ -14,9 +11,15 @@ interface FavoriteDao {
     @Query("SELECT * FROM favorite WHERE station_name = :stationName")
     suspend fun getDataByStationName(stationName: String): Favorite?
 
+    @Query("SELECT MAX(order_number) FROM favorite")
+    suspend fun getLastOrder(): Int?
+
     @Insert
     fun insertData(favorite: Favorite)
 
     @Delete
     fun deleteData(favorite: Favorite)
+
+    @Update
+    fun updateData(favorite: Favorite)
 }

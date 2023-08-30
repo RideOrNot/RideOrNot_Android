@@ -13,6 +13,9 @@ data class Favorite(
 
     @ColumnInfo(name = "station_name")
     val stationName: String,
+
+    @ColumnInfo(name = "order_number")
+    var orderNumber: Int
 //
 //    @ColumnInfo(name = "is_expanded")
 //    val isExpanded: Boolean,

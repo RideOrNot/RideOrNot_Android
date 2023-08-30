@@ -3,8 +3,6 @@ package com.hanium.rideornot.repository
 import androidx.lifecycle.LiveData
 import com.hanium.rideornot.domain.Favorite
 import com.hanium.rideornot.domain.FavoriteDao
-import com.hanium.rideornot.domain.SearchHistory
-import com.hanium.rideornot.domain.SearchHistoryDao
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -19,11 +17,21 @@ class FavoriteRepository(private val favoriteDao: FavoriteDao) {
         }
     }
 
-    fun insertSearchHistory(favorite: Favorite) {
+    suspend fun getLastOrder() : Int {
+        return withContext(CoroutineScope(Dispatchers.Main).coroutineContext) {
+            favoriteDao.getLastOrder() ?: 0
+        }
+    }
+
+    suspend fun updateFavorite(favorite: Favorite) {
+        favoriteDao.updateData(favorite)
+    }
+
+    fun insertFavorite(favorite: Favorite) {
         favoriteDao.insertData(favorite)
     }
 
-    fun deleteSearchHistory(favorite: Favorite) {
+    fun deleteFavorite(favorite: Favorite) {
         favoriteDao.deleteData(favorite)
     }
 }

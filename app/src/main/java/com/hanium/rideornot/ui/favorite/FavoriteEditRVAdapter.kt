@@ -6,18 +6,16 @@ import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.hanium.rideornot.R
 import com.hanium.rideornot.databinding.ItemFavoriteBinding
+import com.hanium.rideornot.databinding.ItemFavoriteEditBinding
 import com.hanium.rideornot.domain.Favorite
-import com.hanium.rideornot.domain.SearchHistory
 import com.hanium.rideornot.ui.SearchViewModel
 import com.hanium.rideornot.utils.methods.getLineColorIdByLineId
 import kotlinx.coroutines.CoroutineScope
@@ -25,21 +23,26 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 
-class FavoriteRVAdapter(
+class FavoriteEditRVAdapter(
     private val context: Context,
     var itemList: List<Favorite>,
     private val favoriteViewModel: FavoriteViewModel,
     private val searchViewModel: SearchViewModel,
-    private val favoriteRVInterface: IFavoriteRV,
 ) :
-    RecyclerView.Adapter<FavoriteRVAdapter.ViewHolder>() {
+    RecyclerView.Adapter<FavoriteEditRVAdapter.ViewHolder>(),
+    ItemTouchHelperCallback.OnItemMoveListener {
+
+    override fun onItemMove(fromPosition: Int, toPosition: Int) {
+        Collections.swap(itemList, fromPosition, toPosition)
+        notifyItemMoved(fromPosition, toPosition)
+    }
 
     override fun onCreateViewHolder(
         viewGroup: ViewGroup,
         viewType: Int
     ): ViewHolder {
-        val binding: ItemFavoriteBinding =
-            ItemFavoriteBinding.inflate(
+        val binding: ItemFavoriteEditBinding =
+            ItemFavoriteEditBinding.inflate(
                 LayoutInflater.from(viewGroup.context),
                 viewGroup,
                 false
@@ -56,7 +59,7 @@ class FavoriteRVAdapter(
         return itemList.size
     }
 
-    inner class ViewHolder(val binding: ItemFavoriteBinding) :
+    inner class ViewHolder(val binding: ItemFavoriteEditBinding) :
         RecyclerView.ViewHolder(binding.root),
         View.OnClickListener {
         private val tvStationName: TextView = binding.tvStationName
@@ -65,7 +68,7 @@ class FavoriteRVAdapter(
 
         init {
             // 리스너 연결
-            clFavorite.setOnClickListener(this)
+            clFavorite.setOnClickListener(null)
         }
 
         fun bind(item: Favorite) {
@@ -92,13 +95,6 @@ class FavoriteRVAdapter(
 
         override fun onClick(view: View?) {
             when (view) {
-                clFavorite -> {
-                    val position = adapterPosition
-                    if (position != RecyclerView.NO_POSITION) {
-                        val clickedItem = itemList[position]
-                        favoriteRVInterface.onFavoriteItemClick(clickedItem)
-                    }
-                }
             }
         }
 
