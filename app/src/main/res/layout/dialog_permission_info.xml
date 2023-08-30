@@ -164,7 +164,7 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_permission_info_notice"
-        style="@style/Text.Body5"
+        style="@style/Text.Body6"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"

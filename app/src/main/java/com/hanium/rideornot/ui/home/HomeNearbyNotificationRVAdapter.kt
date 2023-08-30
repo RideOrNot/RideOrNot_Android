@@ -131,15 +131,6 @@ class HomeNearbyNotificationRVAdapter(
         }
     }
 
-    // 호선명 추출
-    private fun getLineDisplayName(lineName: String): String {
-        val suffix = "호선"
-        return if (lineName.endsWith(suffix)) {
-            lineName.substringBefore(suffix)
-        } else {
-            lineName.substringBefore("선")
-        }
-    }
 
     // 호선별 커스텀 설정
     private fun setLineCustom(
@@ -151,8 +142,6 @@ class HomeNearbyNotificationRVAdapter(
 
         val color = ContextCompat.getColor(context, lineColorResId)
         binding.btnLineNumber.backgroundTintList = ColorStateList.valueOf(color)
-
-        binding.btnLineNumber.text = getLineDisplayName(lineName)
     }
 
 }
