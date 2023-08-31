@@ -23,7 +23,7 @@ class SignInFragment4 : Fragment() {
         binding = FragmentSignIn4Binding.inflate(inflater, container, false)
         signInViewModel = SignInViewModel(requireContext())
 
-        val fadeInAnim = AnimationUtils.loadAnimation(context, R.anim.fade_out)
+        val fadeInAnim = AnimationUtils.loadAnimation(context, R.anim.fade_in)
         binding.llGenderSelection.startAnimation(fadeInAnim)
 
         val fillFromLeftAnim = AnimationUtils.loadAnimation(context, R.anim.fill_from_left)
