@@ -84,7 +84,9 @@ class FavoriteFragment : Fragment(), IFavoriteRV, IFavoriteEditRV {
 //                    }
 //                }
             )
-            val itemTouchHelperCallback = ItemTouchHelperCallback(favoriteEditRVAdapter)
+            val itemTouchHelperCallback = ItemTouchHelperCallback(favoriteEditRVAdapter).apply {
+                setClamp(resources.displayMetrics.widthPixels.toFloat() / 8)
+            }
             itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
             binding.rvFavorite.adapter = favoriteRVAdapter
             binding.rvFavorite.setOnTouchListener { _, _ ->

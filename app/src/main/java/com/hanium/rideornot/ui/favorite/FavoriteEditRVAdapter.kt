@@ -7,14 +7,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.hanium.rideornot.R
-import com.hanium.rideornot.databinding.ItemFavoriteBinding
 import com.hanium.rideornot.databinding.ItemFavoriteEditBinding
 import com.hanium.rideornot.domain.Favorite
 import com.hanium.rideornot.ui.SearchViewModel
@@ -69,7 +68,6 @@ class FavoriteEditRVAdapter(
         RecyclerView.ViewHolder(binding.root),
         View.OnClickListener {
         private val tvStationName: TextView = binding.tvStationName
-        private val clFavorite: ConstraintLayout = binding.root
         private val tvDeleteBtn: TextView = binding.tvDeleteBtn
         private val llLines: LinearLayout = itemView.findViewById(R.id.ll_lines)
 
@@ -108,7 +106,7 @@ class FavoriteEditRVAdapter(
             when (view) {
                 tvDeleteBtn -> {
 //                    myItemClickListener.onDeleteBtnClick(itemList[adapterPosition])
-                    iFavoriteEditRV.onDeleteBtnClick(itemList[adapterPosition])
+                    //iFavoriteEditRV.onDeleteBtnClick(itemList[adapterPosition])
                     Log.d("onDeleteClick","activated")
                 }
             }
