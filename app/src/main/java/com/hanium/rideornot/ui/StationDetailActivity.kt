@@ -25,8 +25,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class StationDetailActivity : AppCompatActivity(),
-    IFavoriteRV {
+class StationDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityStationDetailBinding
     private val args: StationDetailActivityArgs by navArgs()
@@ -324,10 +323,6 @@ class StationDetailActivity : AppCompatActivity(),
         val backgroundDrawable = binding.btnLineNumber.background as? GradientDrawable
         backgroundDrawable?.setStroke(4, color)
         binding.btnLineNumber.background = backgroundDrawable
-    }
-
-    override fun onFavoriteItemClick(favorite: Favorite) {
-
     }
 
 }

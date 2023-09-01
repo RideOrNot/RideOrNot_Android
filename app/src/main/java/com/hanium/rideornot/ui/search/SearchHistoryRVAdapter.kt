@@ -62,9 +62,6 @@ class SearchHistoryRVAdapter(
 
         fun bind(item: SearchHistory) {
             tvSearchHistory.text = item.stationName
-            clSearchItem.setOnClickListener {
-                searchHistoryRVInterface.onSearchHistoryItemClick(item.stationName)
-            }
             CoroutineScope(Dispatchers.Main).launch {
                 llLines.removeAllViews()
                 val lineIdList = searchViewModel.findLinesByStationName(item.stationName)
@@ -89,6 +86,9 @@ class SearchHistoryRVAdapter(
             when (view) {
                 ivDeleteSearchBtn -> {
                     searchHistoryRVInterface.onSearchHistoryItemDeleteClick(adapterPosition)
+                }
+                clSearchItem -> {
+                    searchHistoryRVInterface.onSearchHistoryItemClick(itemList[adapterPosition].stationName)
                 }
             }
         }

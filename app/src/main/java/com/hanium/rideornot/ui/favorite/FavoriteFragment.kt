@@ -1,6 +1,7 @@
 package com.hanium.rideornot.ui.favorite
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
@@ -12,7 +13,7 @@ import com.hanium.rideornot.databinding.FragmentFavoriteBinding
 import com.hanium.rideornot.domain.Favorite
 import com.hanium.rideornot.ui.SearchViewModel
 
-class FavoriteFragment : Fragment(), IFavoriteRV {
+class FavoriteFragment : Fragment(), IFavoriteRV, IFavoriteEditRV {
     private lateinit var binding: FragmentFavoriteBinding
     private lateinit var onBackPressedCallback: OnBackPressedCallback
     private lateinit var favoriteRVAdapter: FavoriteRVAdapter
@@ -74,12 +75,24 @@ class FavoriteFragment : Fragment(), IFavoriteRV {
             favoriteEditRVAdapter = FavoriteEditRVAdapter(
                 requireContext(),
                 favoriteViewModel.favoriteList.value!!.sortedBy { it.orderNumber },
-                favoriteViewModel,
-                searchViewModel
+                searchViewModel,
+                this
+//                object : FavoriteEditRVAdapter.MyItemClickListener {
+//                    override fun onDeleteBtnClick(favorite: Favorite) {
+//                        favoriteViewModel.deleteFavorite(favorite)
+//                        Log.d("delete","delete")
+//                    }
+//                }
             )
-            itemTouchHelper = ItemTouchHelper(ItemTouchHelperCallback(favoriteEditRVAdapter))
+            val itemTouchHelperCallback = ItemTouchHelperCallback(favoriteEditRVAdapter)
+            itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
             binding.rvFavorite.adapter = favoriteRVAdapter
+            binding.rvFavorite.setOnTouchListener { _, _ ->
+                itemTouchHelperCallback.removePreviousClamp(binding.rvFavorite)
+                false
+            }
         }
+
 
         return binding.root
     }
@@ -109,6 +122,10 @@ class FavoriteFragment : Fragment(), IFavoriteRV {
         findNavController().navigate(
             FavoriteFragmentDirections.actionFragmentFavoriteToActivityStationDetail(stationName)
         )
+    }
+
+    override fun onDeleteBtnClick(favorite: Favorite) {
+        favoriteViewModel.deleteFavorite(favorite)
     }
 
 }

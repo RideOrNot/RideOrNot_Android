@@ -3,6 +3,7 @@ package com.hanium.rideornot.ui.favorite
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.drawable.GradientDrawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,11 +27,16 @@ import java.util.*
 class FavoriteEditRVAdapter(
     private val context: Context,
     var itemList: List<Favorite>,
-    private val favoriteViewModel: FavoriteViewModel,
     private val searchViewModel: SearchViewModel,
+    private val iFavoriteEditRV: IFavoriteEditRV
+//    private val myItemClickListener: MyItemClickListener
 ) :
     RecyclerView.Adapter<FavoriteEditRVAdapter.ViewHolder>(),
     ItemTouchHelperCallback.OnItemMoveListener {
+
+//    interface MyItemClickListener {
+//        fun onDeleteBtnClick(favorite: Favorite)
+//    }
 
     override fun onItemMove(fromPosition: Int, toPosition: Int) {
         Collections.swap(itemList, fromPosition, toPosition)
@@ -64,11 +70,16 @@ class FavoriteEditRVAdapter(
         View.OnClickListener {
         private val tvStationName: TextView = binding.tvStationName
         private val clFavorite: ConstraintLayout = binding.root
+        private val tvDeleteBtn: TextView = binding.tvDeleteBtn
         private val llLines: LinearLayout = itemView.findViewById(R.id.ll_lines)
 
         init {
             // 리스너 연결
-            clFavorite.setOnClickListener(null)
+//            tvDeleteBtn.setOnClickListener {
+//                myItemClickListener.onDeleteBtnClick(itemList[adapterPosition])
+//                Log.d("not","")
+//            }
+            tvDeleteBtn.setOnClickListener(this)
         }
 
         fun bind(item: Favorite) {
@@ -95,6 +106,11 @@ class FavoriteEditRVAdapter(
 
         override fun onClick(view: View?) {
             when (view) {
+                tvDeleteBtn -> {
+//                    myItemClickListener.onDeleteBtnClick(itemList[adapterPosition])
+                    iFavoriteEditRV.onDeleteBtnClick(itemList[adapterPosition])
+                    Log.d("onDeleteClick","activated")
+                }
             }
         }
 

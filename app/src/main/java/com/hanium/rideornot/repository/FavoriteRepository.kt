@@ -17,7 +17,7 @@ class FavoriteRepository(private val favoriteDao: FavoriteDao) {
         }
     }
 
-    suspend fun getLastOrder() : Int {
+    suspend fun getLastOrder() : Int {0
         return withContext(CoroutineScope(Dispatchers.Main).coroutineContext) {
             favoriteDao.getLastOrder() ?: 0
         }

@@ -41,10 +41,10 @@ class FavoriteViewModel(context: Context) : ViewModel() {
             if (existingFavorite != null) {
                 favoriteRepository.deleteFavorite(existingFavorite)
             }
-            val order = favoriteRepository.getLastOrder()
+            val lastOrder = favoriteRepository.getLastOrder()
             favoriteRepository.insertFavorite(Favorite(
                 stationName = stationName,
-                orderNumber = order
+                orderNumber = lastOrder + 1
             ))
         }
     }
