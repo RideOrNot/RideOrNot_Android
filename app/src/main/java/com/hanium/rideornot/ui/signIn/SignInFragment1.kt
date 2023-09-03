@@ -36,9 +36,14 @@ class SignInFragment1 : Fragment() {
 
         binding.btnStart.setOnClickListener {
             parentFragmentManager.beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out).replace(R.id.frm_main, SignInFragment2()).commit()
+            disableButtons()
         }
 
         return binding.root
+    }
+
+    private fun disableButtons() {
+        binding.btnStart.isClickable = false
     }
 
 }

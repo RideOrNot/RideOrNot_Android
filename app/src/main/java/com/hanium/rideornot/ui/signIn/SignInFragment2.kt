@@ -38,29 +38,44 @@ class SignInFragment2 : Fragment() {
         binding.btnTeens.setOnClickListener {
             signInViewModel.age = Age.TEENS
             binding.llAgeSelection.startAnimation(fadeOutAnim)
+            disableButtons()
         }
         binding.btnTwenties.setOnClickListener {
             signInViewModel.age = Age.TWENTIES
             binding.llAgeSelection.startAnimation(fadeOutAnim)
+            disableButtons()
         }
         binding.btnThirties.setOnClickListener {
             signInViewModel.age = Age.THIRTIES
             binding.llAgeSelection.startAnimation(fadeOutAnim)
+            disableButtons()
         }
         binding.btnForties.setOnClickListener {
             signInViewModel.age = Age.FORTIES
             binding.llAgeSelection.startAnimation(fadeOutAnim)
+            disableButtons()
         }
         binding.btnFifties.setOnClickListener {
             signInViewModel.age = Age.FIFTIES
             binding.llAgeSelection.startAnimation(fadeOutAnim)
+            disableButtons()
         }
         binding.btnElders.setOnClickListener {
             signInViewModel.age = Age.ELDERS
             binding.llAgeSelection.startAnimation(fadeOutAnim)
+            disableButtons()
         }
 
         return binding.root
     }
 
+
+    private fun disableButtons() {
+        binding.btnTeens.isClickable = false
+        binding.btnTwenties.isClickable = false
+        binding.btnThirties.isClickable = false
+        binding.btnForties.isClickable = false
+        binding.btnFifties.isClickable = false
+        binding.btnElders.isClickable = false
+    }
 }

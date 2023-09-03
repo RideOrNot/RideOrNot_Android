@@ -193,7 +193,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/signup_agreement"
+                android:text="@string/signup_nickname"
                 android:textColor="@color/gray" />
         </LinearLayout>
     </FrameLayout>

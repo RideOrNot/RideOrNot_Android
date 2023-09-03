@@ -44,13 +44,20 @@ class SignInFragment3 : Fragment() {
         binding.btnMale.setOnClickListener {
             signInViewModel.gender = Gender.MALE
             binding.llGenderSelection.startAnimation(fadeOutAnim)
+            disableButtons()
         }
         binding.btnFemale.setOnClickListener {
             signInViewModel.gender = Gender.FEMALE
             binding.llGenderSelection.startAnimation(fadeOutAnim)
+            disableButtons()
         }
 
         return binding.root
+    }
+
+    private fun disableButtons() {
+        binding.btnFemale.isClickable = false
+        binding.btnMale.isClickable = false
     }
 
 }
