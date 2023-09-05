@@ -56,6 +56,7 @@ class SignUpFragment4 : Fragment() {
 
         binding.tvNicknameCurrentBytes.text = currentBytes.toString()
         binding.tvNicknameMaxBytes.text = MAX_NICKNAME_BYTES.toString()
+        binding.editTextNicknameInput.hint = signUpViewModel.name
 
         binding.editTextNicknameInput.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
@@ -80,6 +81,11 @@ class SignUpFragment4 : Fragment() {
 
         binding.tvOkBtn.setOnClickListener {
             binding.tvOkBtn.isClickable = false
+            if (binding.editTextNicknameInput.text.toString() == "") {
+                if (signUpViewModel.name != "") {
+                    TODO("닉네임 = name")
+                }
+            }
             disableButtons()
         }
 

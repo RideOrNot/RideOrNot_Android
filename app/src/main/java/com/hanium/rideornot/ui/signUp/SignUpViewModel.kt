@@ -16,5 +16,6 @@ class SignUpViewModel(context: Context): ViewModel() {
 
     var age: Age = Age.NONE
     var gender: Gender = Gender.NONE
+    var name: String = ""
 
 }

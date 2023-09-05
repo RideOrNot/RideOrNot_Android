@@ -28,6 +28,8 @@ import com.hanium.rideornot.notification.NOTIFICATION_PERMISSION_REQUEST_CODE
 import com.hanium.rideornot.notification.NotificationManager
 import com.hanium.rideornot.ui.signUp.SignUpFragment1
 import com.hanium.rideornot.ui.dialog.PermissionInfoDialog
+import com.hanium.rideornot.ui.signUp.SignUpFragment2
+import com.hanium.rideornot.ui.signUp.SignUpViewModel
 import com.hanium.rideornot.utils.NetworkModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -43,6 +45,9 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
+    // 안드로이드 기기의 API 레벨(31 이하?)이 낮을 경우 원탭로그인이 동작하지 않음.
+    // missing feature{name=auth_api_credentials_begin_sign_in, version=8}
+    // TODO: 원탭로그인이 동작하지 않는 예외상황을 고려하여 설정에서 따로 로그인할 수 있게 만들기
     private lateinit var oneTapClient: SignInClient
     private lateinit var signInRequest: BeginSignInRequest
     private var showOneTapUi: Boolean = true
@@ -133,9 +138,9 @@ class MainActivity : AppCompatActivity() {
         //GpsManager.addGeofence("myStation", 37.540455,126.9700533 ,1000f, 1000000)
 
         Log.d("FragmentManager", "replace fragment to SignInFragment")
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.frm_main, SignUpFragment1())
-        transaction.commit()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.frm_main, SignUpFragment1())
+            .commit()
 
         val googleWebClientId = BuildConfig.GOOGLE_WEB_CLIENT_ID
         oneTapClient = Identity.getSignInClient(this)
@@ -189,6 +194,8 @@ class MainActivity : AppCompatActivity() {
                     val idToken = credential.googleIdToken
                     val username = credential.id
                     val password = credential.password
+                    val familyName = credential.familyName
+                    val givenName = credential.givenName
                     Log.d("loginResultHandler", "method operated")
                     if (idToken != null) {
                         Log.d("loginResultHandler", "Got ID token, $idToken")
@@ -198,7 +205,11 @@ class MainActivity : AppCompatActivity() {
                             preferences.edit().putString(JWT_KEY, response.result.jwt).apply()
                             // 새 유저일 경우
                             if (response.result.isNewUser) {
-                                TODO("SignUpFragment로 이동")
+                                val signUpViewModel = SignUpViewModel(this@MainActivity)
+                                signUpViewModel.name = familyName + givenName
+                                supportFragmentManager.beginTransaction()
+                                    .replace(R.id.frm_main, SignUpFragment1())
+                                    .commit()
                             }
                         }
                     }
