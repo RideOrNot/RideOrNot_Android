@@ -1,4 +1,4 @@
-package com.hanium.rideornot.ui.signIn
+package com.hanium.rideornot.ui.signUp
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,12 +9,12 @@ import android.view.animation.AnimationUtils
 import androidx.fragment.app.Fragment
 import com.hanium.rideornot.R
 import com.hanium.rideornot.databinding.FragmentSignIn3Binding
-import com.hanium.rideornot.ui.signIn.SignInViewModel.Gender
+import com.hanium.rideornot.ui.signUp.SignUpViewModel.Gender
 
 
-class SignInFragment3 : Fragment() {
+class SignUpFragment3 : Fragment() {
     private lateinit var binding: FragmentSignIn3Binding
-    private lateinit var signInViewModel: SignInViewModel
+    private lateinit var signUpViewModel: SignUpViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -22,7 +22,7 @@ class SignInFragment3 : Fragment() {
     ): View? {
         super.onCreate(savedInstanceState)
         binding = FragmentSignIn3Binding.inflate(inflater, container, false)
-        signInViewModel = SignInViewModel(requireContext())
+        signUpViewModel = SignUpViewModel(requireContext())
 
         val fadeInAnim = AnimationUtils.loadAnimation(context, R.anim.fade_in)
         binding.llGenderSelection.startAnimation(fadeInAnim)
@@ -35,19 +35,19 @@ class SignInFragment3 : Fragment() {
             override fun onAnimationStart(p0: Animation?) {
             }
             override fun onAnimationEnd(p0: Animation?) {
-                parentFragmentManager.beginTransaction().replace(R.id.frm_main, SignInFragment4()).commit()
+                parentFragmentManager.beginTransaction().replace(R.id.frm_main, SignUpFragment4()).commit()
             }
             override fun onAnimationRepeat(p0: Animation?) {
             }
         })
 
         binding.btnMale.setOnClickListener {
-            signInViewModel.gender = Gender.MALE
+            signUpViewModel.gender = Gender.MALE
             binding.llGenderSelection.startAnimation(fadeOutAnim)
             disableButtons()
         }
         binding.btnFemale.setOnClickListener {
-            signInViewModel.gender = Gender.FEMALE
+            signUpViewModel.gender = Gender.FEMALE
             binding.llGenderSelection.startAnimation(fadeOutAnim)
             disableButtons()
         }

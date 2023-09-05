@@ -1,6 +1,5 @@
-package com.hanium.rideornot.ui.signIn
+package com.hanium.rideornot.ui.signUp
 
-import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -18,9 +17,9 @@ private const val FIRST_ANIM_DELAY: Long = 0
 private const val SECOND_ANIM_DELAY: Long = 800
 private const val MAX_NICKNAME_BYTES: Int = 24
 
-class SignInFragment4 : Fragment() {
+class SignUpFragment4 : Fragment() {
     private lateinit var binding: FragmentSignIn4Binding
-    private lateinit var signInViewModel: SignInViewModel
+    private lateinit var signUpViewModel: SignUpViewModel
 
     private var currentBytes = 0
 
@@ -30,7 +29,7 @@ class SignInFragment4 : Fragment() {
     ): View? {
         super.onCreate(savedInstanceState)
         binding = FragmentSignIn4Binding.inflate(inflater, container, false)
-        signInViewModel = SignInViewModel(requireContext())
+        signUpViewModel = SignUpViewModel(requireContext())
 
         val fadeInAnim1 = AnimationUtils.loadAnimation(context, R.anim.fade_in)
         fadeInAnim1.startOffset = FIRST_ANIM_DELAY
@@ -48,7 +47,7 @@ class SignInFragment4 : Fragment() {
             }
 
             override fun onAnimationEnd(p0: Animation?) {
-                parentFragmentManager.beginTransaction().replace(R.id.frm_main, SignInFragment4()).commit()
+                parentFragmentManager.beginTransaction().replace(R.id.frm_main, SignUpFragment4()).commit()
             }
 
             override fun onAnimationRepeat(p0: Animation?) {

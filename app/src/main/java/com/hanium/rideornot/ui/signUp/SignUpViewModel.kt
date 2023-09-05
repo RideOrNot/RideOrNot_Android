@@ -1,10 +1,10 @@
-package com.hanium.rideornot.ui.signIn
+package com.hanium.rideornot.ui.signUp
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
 
 
-class SignInViewModel(context: Context): ViewModel() {
+class SignUpViewModel(context: Context): ViewModel() {
     enum class Age {
         NONE, TEENS, TWENTIES,
         THIRTIES, FORTIES, FIFTIES, ELDERS

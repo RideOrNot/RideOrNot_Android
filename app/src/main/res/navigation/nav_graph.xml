@@ -61,7 +61,7 @@
     </fragment>
     <fragment
         android:id="@+id/signInFragment"
-        android:name="com.hanium.rideornot.ui.signIn.SignInFragment1"
+        android:name="com.hanium.rideornot.ui.signUp.SignUpFragment1"
         android:label="SignInFragment" />
 
 </navigation>

@@ -1,4 +1,4 @@
-package com.hanium.rideornot.ui.signIn
+package com.hanium.rideornot.ui.signUp
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,7 +13,7 @@ private const val FIRST_ANIM_DELAY: Long = 400
 private const val SECOND_ANIM_DELAY: Long = 1200
 private const val THIRD_ANIM_DELAY: Long = 2000
 
-class SignInFragment1 : Fragment() {
+class SignUpFragment1 : Fragment() {
     private lateinit var binding: FragmentSignIn1Binding
 
     override fun onCreateView(
@@ -35,7 +35,7 @@ class SignInFragment1 : Fragment() {
         binding.btnStart.startAnimation(fadeInAnim3)
 
         binding.btnStart.setOnClickListener {
-            parentFragmentManager.beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out).replace(R.id.frm_main, SignInFragment2()).commit()
+            parentFragmentManager.beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out).replace(R.id.frm_main, SignUpFragment2()).commit()
             disableButtons()
         }
 

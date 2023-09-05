@@ -1,4 +1,4 @@
-package com.hanium.rideornot.ui.signIn
+package com.hanium.rideornot.ui.signUp
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,12 +9,12 @@ import android.view.animation.AnimationUtils
 import androidx.fragment.app.Fragment
 import com.hanium.rideornot.R
 import com.hanium.rideornot.databinding.FragmentSignIn2Binding
-import com.hanium.rideornot.ui.signIn.SignInViewModel.Age
+import com.hanium.rideornot.ui.signUp.SignUpViewModel.Age
 
 
-class SignInFragment2 : Fragment() {
+class SignUpFragment2 : Fragment() {
     private lateinit var binding: FragmentSignIn2Binding
-    private lateinit var signInViewModel: SignInViewModel
+    private lateinit var signUpViewModel: SignUpViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -22,46 +22,46 @@ class SignInFragment2 : Fragment() {
     ): View? {
         super.onCreate(savedInstanceState)
         binding = FragmentSignIn2Binding.inflate(inflater, container, false)
-        signInViewModel = SignInViewModel(requireContext())
+        signUpViewModel = SignUpViewModel(requireContext())
 
         val fadeOutAnim = AnimationUtils.loadAnimation(context, R.anim.fade_out)
         fadeOutAnim.setAnimationListener(object: Animation.AnimationListener {
             override fun onAnimationStart(p0: Animation?) {
             }
             override fun onAnimationEnd(p0: Animation?) {
-                parentFragmentManager.beginTransaction().replace(R.id.frm_main, SignInFragment3()).commit()
+                parentFragmentManager.beginTransaction().replace(R.id.frm_main, SignUpFragment3()).commit()
             }
             override fun onAnimationRepeat(p0: Animation?) {
             }
         })
 
         binding.btnTeens.setOnClickListener {
-            signInViewModel.age = Age.TEENS
+            signUpViewModel.age = Age.TEENS
             binding.llAgeSelection.startAnimation(fadeOutAnim)
             disableButtons()
         }
         binding.btnTwenties.setOnClickListener {
-            signInViewModel.age = Age.TWENTIES
+            signUpViewModel.age = Age.TWENTIES
             binding.llAgeSelection.startAnimation(fadeOutAnim)
             disableButtons()
         }
         binding.btnThirties.setOnClickListener {
-            signInViewModel.age = Age.THIRTIES
+            signUpViewModel.age = Age.THIRTIES
             binding.llAgeSelection.startAnimation(fadeOutAnim)
             disableButtons()
         }
         binding.btnForties.setOnClickListener {
-            signInViewModel.age = Age.FORTIES
+            signUpViewModel.age = Age.FORTIES
             binding.llAgeSelection.startAnimation(fadeOutAnim)
             disableButtons()
         }
         binding.btnFifties.setOnClickListener {
-            signInViewModel.age = Age.FIFTIES
+            signUpViewModel.age = Age.FIFTIES
             binding.llAgeSelection.startAnimation(fadeOutAnim)
             disableButtons()
         }
         binding.btnElders.setOnClickListener {
-            signInViewModel.age = Age.ELDERS
+            signUpViewModel.age = Age.ELDERS
             binding.llAgeSelection.startAnimation(fadeOutAnim)
             disableButtons()
         }

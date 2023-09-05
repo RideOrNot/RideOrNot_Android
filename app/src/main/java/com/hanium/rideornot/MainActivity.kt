@@ -26,14 +26,18 @@ import com.hanium.rideornot.gps.GpsManager
 import com.hanium.rideornot.gps.LOCATION_PERMISSION_REQUEST_CODE
 import com.hanium.rideornot.notification.NOTIFICATION_PERMISSION_REQUEST_CODE
 import com.hanium.rideornot.notification.NotificationManager
-import com.hanium.rideornot.ui.signIn.SignInFragment1
+import com.hanium.rideornot.ui.signUp.SignUpFragment1
 import com.hanium.rideornot.ui.dialog.PermissionInfoDialog
-
+import com.hanium.rideornot.utils.NetworkModule
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 private const val REQ_ONE_TAP = 2
 private const val PREFS_NAME = "mainActivity"
 private const val FIRST_RUN_KEY = "firstRun"
+private const val JWT_KEY = "jwt"
 
 class MainActivity : AppCompatActivity() {
 
@@ -130,7 +134,7 @@ class MainActivity : AppCompatActivity() {
 
         Log.d("FragmentManager", "replace fragment to SignInFragment")
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.frm_main, SignInFragment1())
+        transaction.replace(R.id.frm_main, SignUpFragment1())
         transaction.commit()
 
         val googleWebClientId = BuildConfig.GOOGLE_WEB_CLIENT_ID
@@ -175,6 +179,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    // TODO: deprecated 메서드인 onActivityResult -> startActivityForResult로 변경하기
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
@@ -187,6 +192,15 @@ class MainActivity : AppCompatActivity() {
                     Log.d("loginResultHandler", "method operated")
                     if (idToken != null) {
                         Log.d("loginResultHandler", "Got ID token, $idToken")
+                        CoroutineScope(Dispatchers.Main).launch {
+                            val response = NetworkModule.getAuthService().postGoogleIdToken(idToken)
+                            val preferences: SharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+                            preferences.edit().putString(JWT_KEY, response.result.jwt).apply()
+                            // 새 유저일 경우
+                            if (response.result.isNewUser) {
+                                TODO("SignUpFragment로 이동")
+                            }
+                        }
                     }
                     if (password != null) {
                         Log.d("loginResultHandler", "Got password., $password")
@@ -272,7 +286,7 @@ class MainActivity : AppCompatActivity() {
                     NotificationManager.initNotificationManager(this)
                 }
             }
-        } else if(requestCode == NOTIFICATION_PERMISSION_REQUEST_CODE) {
+        } else if (requestCode == NOTIFICATION_PERMISSION_REQUEST_CODE) {
             if (NotificationManager.isPermissionGranted(this)) {
                 // 권한이 허용된 경우
                 if (GpsManager.arePermissionsGranted(this)) {
