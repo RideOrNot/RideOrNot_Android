@@ -185,8 +185,13 @@
                         style="@style/Text.Body1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="50dp"
+                        android:layout_marginBottom="50dp"
+                        android:drawableStart="@drawable/ic_exclamation_mark"
+                        android:drawablePadding="12dp"
+                        android:gravity="center"
                         android:text="@string/not_exist_arrival_info_message"
+                        android:textColor="@color/gray_500"
                         android:visibility="invisible"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -253,7 +258,6 @@
                                     app:layout_constraintBottom_toBottomOf="@+id/shimmer_tv_nearby_notification_station_name"
                                     app:layout_constraintStart_toEndOf="@+id/shimmer_tv_nearby_notification_station_name"
                                     app:layout_constraintTop_toTopOf="@+id/shimmer_tv_nearby_notification_station_name" />
-
 
                             </androidx.constraintlayout.widget.ConstraintLayout>
 

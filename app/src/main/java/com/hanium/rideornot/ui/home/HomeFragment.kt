@@ -15,7 +15,6 @@ import com.hanium.rideornot.databinding.FragmentHomeBinding
 import com.hanium.rideornot.domain.Station
 import com.hanium.rideornot.ui.common.ViewModelFactory
 
-
 class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
@@ -27,7 +26,7 @@ class HomeFragment : Fragment() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var stationName: String = ""
 
-    private var isFirstAnimation = true
+    private var isFirstAnimation = true  // 앱 최초 실행 여부
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

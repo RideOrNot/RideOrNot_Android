@@ -43,7 +43,7 @@
     <!-- Station Detail -->
     <string name="arrival_info">도착 정보</string>
     <string name="station_congestion">역사 혼잡도</string>
-    <string name="not_exist_arrival_info_message">도착 정보가 \n없습니다.</string>
+    <string name="not_exist_arrival_info_message">도착 정보가 없습니다.</string>
 
     <!-- Setting -->
     <string name="account_setting">계정 설정</string>
