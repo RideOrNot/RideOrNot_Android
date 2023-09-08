@@ -1,19 +1,31 @@
 package com.hanium.rideornot.ui.home
 
+import android.content.*
+import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
 import android.view.*
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.hanium.rideornot.App.Companion.getApplicationContext
+import com.hanium.rideornot.MainActivity
 import com.hanium.rideornot.R
 import com.hanium.rideornot.databinding.FragmentHomeBinding
 import com.hanium.rideornot.domain.Station
+import com.hanium.rideornot.gps.GpsForegroundService
+import com.hanium.rideornot.gps.GpsManager
+import com.hanium.rideornot.notification.NotificationManager
 import com.hanium.rideornot.ui.common.ViewModelFactory
+import com.hanium.rideornot.ui.dialog.OptionDialog
+
+private const val PREFS_NAME = "homeFragment"
+private const val SWITCH_RIDE_KEY = "switchRide"
 
 class HomeFragment : Fragment() {
 
@@ -23,10 +35,28 @@ class HomeFragment : Fragment() {
     private lateinit var homeNearbyNotificationRVAdapter: HomeNearbyNotificationRVAdapter
     private var homeLastStationRVAdapter = HomeLastStationRVAdapter(ArrayList())
 
+    private lateinit var sharedPreferences: SharedPreferences  // 승차 알림 스위치 상태 저장
+
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var stationName: String = ""
 
     private var isFirstAnimation = true  // 앱 최초 실행 여부
+
+    companion object {
+        var switchRideChecked = false
+    }
+
+    private val switchUpdateReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action == "ACTION_UPDATE_SWITCH_STATE") {
+                val isSwitchChecked = intent.getBooleanExtra("SWITCH_STATE", false)
+                // 스위치 상태를 업데이트하고 UI에 반영
+                switchRideChecked = isSwitchChecked
+                viewModel.updateSwitchCheck(isSwitchChecked)
+                updateSwitchSetting(isSwitchChecked)
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,6 +78,24 @@ class HomeFragment : Fragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
+        // 승차 알림 스위치 설정 초기화
+        sharedPreferences = requireContext().getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+        initializeSwitch()
+
+        // 승차 알림 스위치 상태 변경 이벤트 리스너 설정
+        binding.switchRideNotification.setOnCheckedChangeListener { button, isChecked ->
+            switchRideChecked = isChecked
+            viewModel.updateSwitchCheck(isChecked)
+            button.setOnClickListener {
+                updateSwitchSetting(isChecked)
+            }
+
+            // 변경된 스위치 상태를 SharedPreferences에 저장
+            sharedPreferences.edit().putBoolean(SWITCH_RIDE_KEY, isChecked).apply()
+        }
+
+
+        // RV Adapter 연결
         homeNearbyNotificationRVAdapter =
             HomeNearbyNotificationRVAdapter(requireContext(), ArrayList())
         binding.rvNearbyNotification.adapter = homeNearbyNotificationRVAdapter
@@ -113,6 +161,14 @@ class HomeFragment : Fragment() {
         viewModel.nearestStation.observe(viewLifecycleOwner) {
             stationName = it
         }
+
+        val filter = IntentFilter("ACTION_UPDATE_SWITCH_STATE")
+        requireActivity().registerReceiver(switchUpdateReceiver, filter)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        requireActivity().unregisterReceiver(switchUpdateReceiver)
     }
 
     /**
@@ -152,5 +208,68 @@ class HomeFragment : Fragment() {
         }
     }
 
+    /**
+     * 승차 알림 스위치 설정 초기화
+     */
+    private fun initializeSwitch() {
+        // 스위치의 이전 설정 값을 가져와서 적용
+        val isSwitchChecked = sharedPreferences.getBoolean(SWITCH_RIDE_KEY, false)
+        switchRideChecked = isSwitchChecked
+        viewModel.updateSwitchCheck(isSwitchChecked)
+
+        if (isSwitchChecked) {
+            binding.tvRideNotification.setTextColor(ContextCompat.getColor(requireContext(), R.color.blue))
+
+            GpsManager.initGpsManager(requireActivity() as MainActivity)
+
+            if (GpsManager.arePermissionsGranted(requireContext()) && NotificationManager.isPermissionGranted(requireContext()) && !GpsForegroundService.isServiceRunning) {
+                // 포그라운드 서비스 시작
+                val serviceIntent = Intent(requireContext(), GpsForegroundService::class.java)
+                ContextCompat.startForegroundService(requireContext(), serviceIntent)
+            }
+        }
+        else {
+            binding.tvRideNotification.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_700))
+        }
+    }
+
+
+    /**
+     * 승차 알림 스위치 상태에 따라 스위치 설정 업데이트
+     * @param isSwitchChecked 스위치의 상태
+     */
+    private fun updateSwitchSetting(isSwitchChecked: Boolean) {
+        if (isSwitchChecked) {
+            binding.tvRideNotification.setTextColor(ContextCompat.getColor(requireContext(), R.color.blue))
+
+            // 승차 알림 안내 Dialog 표시
+            val optionDialog = OptionDialog(activity as AppCompatActivity)
+            optionDialog.btnClickListener {
+                if (it) {
+                    // 확인 클릭 시
+                    GpsManager.initGpsManager(requireContext() as MainActivity)
+
+                    if (GpsManager.arePermissionsGranted(requireContext()) && NotificationManager.isPermissionGranted(requireContext()) && !GpsForegroundService.isServiceRunning && viewModel.switchRideChecked.value == true) {
+                        // 포그라운드 서비스 시작
+                        val serviceIntent = Intent(requireContext(), GpsForegroundService::class.java)
+                        ContextCompat.startForegroundService(requireContext(), serviceIntent)
+                    }
+                } else {
+                    // 취소 클릭 시
+                    switchRideChecked = false
+                    viewModel.updateSwitchCheck(false)
+
+                    binding.tvRideNotification.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_700))
+                }
+            }
+            optionDialog.show(getString(R.string.ride_notification_info))
+        }
+        else {
+            binding.tvRideNotification.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_700))
+            // 포그라운드 서비스 종료
+            val serviceIntent = Intent(requireContext(), GpsForegroundService::class.java)
+            requireActivity().stopService(serviceIntent)
+        }
+    }
 
 }

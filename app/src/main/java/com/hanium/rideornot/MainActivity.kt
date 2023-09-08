@@ -18,6 +18,7 @@ import com.hanium.rideornot.gps.LOCATION_PERMISSION_REQUEST_CODE
 import com.hanium.rideornot.notification.NOTIFICATION_PERMISSION_REQUEST_CODE
 import com.hanium.rideornot.notification.NotificationManager
 import com.hanium.rideornot.ui.dialog.PermissionInfoDialog
+import com.hanium.rideornot.ui.home.HomeFragment
 
 private const val PREFS_NAME = "mainActivity"
 private const val FIRST_RUN_KEY = "firstRun"
@@ -59,22 +60,7 @@ class MainActivity : AppCompatActivity() {
             val editor = preferences.edit()
             editor.putBoolean(FIRST_RUN_KEY, false)
             editor.apply()
-        } else {
-            // 최초 실행이 아닌 경우
-            GpsManager.initGpsManager(this)
         }
-
-
-        if (GpsManager.arePermissionsGranted(this) && NotificationManager.isPermissionGranted(this) && !GpsForegroundService.isServiceRunning) {
-            // 포그라운드 서비스 시작
-            val serviceIntent = Intent(this, GpsForegroundService::class.java)
-            ContextCompat.startForegroundService(this, serviceIntent)
-        }
-
-        // 실시간 위치 업데이트 시작
-        //GpsManager.startLocationUpdates()
-        // 지오펜스 생성 예시
-        //GpsManager.addGeofence("myStation", 37.540455,126.9700533 ,1000f, 1000000)
     }
 
     override fun onResume() {
@@ -103,7 +89,6 @@ class MainActivity : AppCompatActivity() {
         permissionDialog.btnClickListener {
             // 권한 요청 수행
             GpsManager.initGpsManager(this)
-//            NotificationManager.initNotificationManager(this)
         }
         permissionDialog.show()
     }
@@ -117,7 +102,7 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             if (GpsManager.arePermissionsGranted(this)) {
                 // 권한이 허용된 경우
-                if (NotificationManager.isPermissionGranted(this)) {
+                if (NotificationManager.isPermissionGranted(this) && HomeFragment.switchRideChecked) {
                     // 포그라운드 서비스 시작
                     val serviceIntent = Intent(this, GpsForegroundService::class.java)
                     ContextCompat.startForegroundService(this, serviceIntent)
@@ -147,7 +132,7 @@ class MainActivity : AppCompatActivity() {
         } else if(requestCode == NOTIFICATION_PERMISSION_REQUEST_CODE) {
             if (NotificationManager.isPermissionGranted(this)) {
                 // 권한이 허용된 경우
-                if (GpsManager.arePermissionsGranted(this)) {
+                if (GpsManager.arePermissionsGranted(this) && HomeFragment.switchRideChecked) {
                     // 포그라운드 서비스 시작
                     val serviceIntent = Intent(this, GpsForegroundService::class.java)
                     ContextCompat.startForegroundService(this, serviceIntent)
@@ -194,7 +179,7 @@ class MainActivity : AppCompatActivity() {
             // 설정 화면에서 돌아왔을 때의 처리
             GpsManager.initGpsManager(this)
 
-            if (GpsManager.arePermissionsGranted(this) && NotificationManager.isPermissionGranted(this) && !GpsForegroundService.isServiceRunning) {
+            if (GpsManager.arePermissionsGranted(this) && NotificationManager.isPermissionGranted(this) && !GpsForegroundService.isServiceRunning && HomeFragment.switchRideChecked) {
                 // 포그라운드 서비스 시작
                 val serviceIntent = Intent(this, GpsForegroundService::class.java)
                 ContextCompat.startForegroundService(this, serviceIntent)
@@ -206,7 +191,7 @@ class MainActivity : AppCompatActivity() {
             // 설정 화면에서 돌아왔을 때의 처리
             NotificationManager.initNotificationManager(this)
 
-            if (GpsManager.arePermissionsGranted(this) && NotificationManager.isPermissionGranted(this) && !GpsForegroundService.isServiceRunning) {
+            if (GpsManager.arePermissionsGranted(this) && NotificationManager.isPermissionGranted(this) && !GpsForegroundService.isServiceRunning && HomeFragment.switchRideChecked) {
                 // 포그라운드 서비스 재시작
                 val serviceIntent = Intent(this, GpsForegroundService::class.java)
                 stopService(serviceIntent)

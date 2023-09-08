@@ -12,6 +12,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import com.hanium.rideornot.MainActivity
 import com.hanium.rideornot.R
+import com.hanium.rideornot.ui.home.HomeFragment
 
 class GpsForegroundService : Service() {
 
@@ -45,6 +46,8 @@ class GpsForegroundService : Service() {
             }
         }
     }
+
+
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
@@ -82,8 +85,8 @@ class GpsForegroundService : Service() {
         )
 
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("탈래말래 Foreground Service")
-            .setContentText("주변 지하철 역을 탐색 중입니다")
+            .setContentTitle("위치 탐색")
+            .setContentText("주변 지하철 역을 찾고 있습니다")
             .setSmallIcon(R.drawable.ic_app_logo_round)
             .setColor(ContextCompat.getColor(this, R.color.blue))
             .setContentIntent(pendingIntent)
@@ -100,7 +103,7 @@ class GpsForegroundService : Service() {
     private fun createNotificationChannel() {
         val channel = NotificationChannel(
             CHANNEL_ID,
-            "포그라운드 서비스",
+            "위치 탐색",
             NotificationManager.IMPORTANCE_DEFAULT
         )
         val manager = getSystemService(NotificationManager::class.java)
@@ -108,6 +111,8 @@ class GpsForegroundService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        checkLocationProviderStatus()
+
         isServiceRunning = true
 
         // 실시간 위치 업데이트 시작
@@ -117,6 +122,11 @@ class GpsForegroundService : Service() {
             return START_NOT_STICKY
         }
         if (intent.action == ACTION_STOP_FOREGROUND_SERVICE) {
+            // 승차 알림 스위치 OFF 설정
+            val switchIntent = Intent("ACTION_UPDATE_SWITCH_STATE")
+            switchIntent.putExtra("SWITCH_STATE", false)
+            sendBroadcast(switchIntent)
+
             // 포그라운드 서비스 종료
             NotificationManagerCompat.from(this).cancel(FOREGROUND_NOTIFICATION_ID)
             stopForeground(STOP_FOREGROUND_REMOVE)
@@ -140,25 +150,18 @@ class GpsForegroundService : Service() {
     }
 
 
-    private fun sendPushNotification() {
-        // 승차 알림 테스트
-        // 지금 위치로부터 지하철역까지 걸어가는 시간은 추가 안 한 상태.
-        // "지금 10초 뛰면, 서울역(1호선)에서 광운대행 - 시청방면 열차를 탈 수 있어요"
-//        val notificationContent =
-//            "지금 " + result[0].arrivalTime + "초 뛰면, " + "서울역" + "(" +
-//                    result[0].lineName + "호선)에서 " + result[0].destination + " 열차를 탈 수 있어요"
-//
-//        val notificationManager = NotificationManager
-//        notificationManager.createNotification(
-//            requireContext(), NotificationModel(
-//                1,
-//                ContentType.RIDE,
-//                1,
-//                "승차 알림",
-//                notificationContent
-//            )
-//        )
-    }
+    // 위치 제공자 상태 확인
+    private fun checkLocationProviderStatus() {
+        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+        val isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
 
+        if (!isGpsEnabled || !isNetworkEnabled) {
+            // 위치 제공자가 비활성화된 경우
+            // 포그라운드 서비스 종료
+            stopForeground(STOP_FOREGROUND_REMOVE)
+            stopSelf()
+        }
+    }
 
 }

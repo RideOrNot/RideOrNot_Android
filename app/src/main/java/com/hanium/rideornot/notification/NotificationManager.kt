@@ -73,6 +73,47 @@ object NotificationManager {
         )
     }
 
+    fun updateNotificationContent(context: Context, notificationId: Int, updatedNotificationData: NotificationModel) {
+        val notificationManager: NotificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        // 기존 알림을 가져오기
+        val existingNotification = notificationManager.activeNotifications
+            .firstOrNull { it.id == notificationId }?.notification
+
+        if (existingNotification != null) {
+            // 새로운 알림 내용을 사용하여 기존 알림 업데이트
+            val updatedNotification = buildUpdatedNotification(context, existingNotification, updatedNotificationData)
+
+            // 기존 알림을 업데이트
+            notificationManager.notify(notificationId, updatedNotification)
+        }
+    }
+
+    // 기존 알림의 내용을 수정하고 업데이트된 알림을 반환하는 함수
+    private fun buildUpdatedNotification(context: Context, existingNotification: Notification, updatedNotificationData: NotificationModel): Notification {
+        // 기존 알림의 내용 가져오기
+        val notificationContent = NotificationCompat.getExtras(existingNotification)
+
+        // 업데이트된 내용으로 수정
+        notificationContent?.apply {
+            putString(NotificationCompat.EXTRA_TITLE, updatedNotificationData.title)
+            putString(NotificationCompat.EXTRA_TEXT, updatedNotificationData.text.joinToString("\n"))
+            // 기타 업데이트할 내용
+        }
+
+        // 수정된 내용으로 알림 빌드
+        val builder = NotificationCompat.Builder(context, CHANNEL_ID)
+            .setContentTitle(updatedNotificationData.title)
+            .setContentText(updatedNotificationData.text.joinToString("\n"))
+            .setSmallIcon(R.drawable.ic_app_logo_round)
+
+        // 수정된 내용을 알림에 적용
+        builder.setExtras(notificationContent)
+
+        return builder.build()
+    }
+
     private fun createNotificationChannel(
         context: Context,
         notificationManager: NotificationManager
@@ -112,14 +153,26 @@ object NotificationManager {
         )
 
 
+        val title = notificationData.title
+        val stationName = notificationData.stationName
+        val notificationText = notificationData.text.joinToString("\n")
+
+        // 글씨 굵기 조절
+//        val sb = SpannableStringBuilder()
+//        val boldStart = sb.length
+//        sb.append(stationName)
+//        val boldEnd = sb.length
+//        sb.setSpan(StyleSpan(Typeface.BOLD), boldStart, boldEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+////        sb.append("\n")
+////        sb.append(notificationText)
+
         return NotificationCompat.Builder(context, CHANNEL_ID)
             .setContentIntent(pendingIntent)
-            .setContentTitle(notificationData.title)
-            .setStyle(NotificationCompat.BigTextStyle().bigText(notificationData.text))
+            .setContentTitle("$stationName $title")
+            .setStyle(NotificationCompat.BigTextStyle().bigText(notificationText))
             .setSmallIcon(R.drawable.ic_app_logo_round)
             .setColor(ContextCompat.getColor(context, R.color.blue))
             .addAction(R.drawable.ic_app_logo_round, "해제", dismissPendingIntent)
-            .addAction(R.drawable.ic_app_logo_round, "확인", pendingIntent)
             .setAutoCancel(true)
             .build()
     }

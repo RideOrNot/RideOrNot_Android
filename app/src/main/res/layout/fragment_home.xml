@@ -30,6 +30,39 @@
                 android:layout_marginStart="24dp"
                 android:text="@string/app_name_kr" />
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end">
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switch_ride_notification"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="20dp"
+                    android:checked="@{viewModel.switchRideChecked}"
+                    android:thumb="@drawable/switch_thumb"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:track="@drawable/selector_switch" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_ride_notification"
+                    style="@style/Text.Title3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:fontFamily="@font/pretendard_semi_bold"
+                    android:letterSpacing="-0.05"
+                    android:text="@string/ride_or_not_notification_channel_name"
+                    android:textColor="@color/gray_700"
+                    app:layout_constraintBottom_toBottomOf="@+id/switch_ride_notification"
+                    app:layout_constraintEnd_toStartOf="@+id/switch_ride_notification"
+                    app:layout_constraintTop_toTopOf="@+id/switch_ride_notification" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
         </androidx.appcompat.widget.Toolbar>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
