@@ -4,9 +4,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hanium.rideornot.databinding.ItemLastStationBinding
+import com.hanium.rideornot.domain.LastStationHistory
 import com.hanium.rideornot.domain.Station
 
-class HomeLastStationRVAdapter(private var stationList: ArrayList<Station>) :
+class HomeLastStationRVAdapter(private var stationList: ArrayList<LastStationHistory>) :
     RecyclerView.Adapter<HomeLastStationRVAdapter.ViewHolder>() {
 
     interface MyItemClickListener {
@@ -18,10 +19,6 @@ class HomeLastStationRVAdapter(private var stationList: ArrayList<Station>) :
         mItemClickListener = itemClickListener
     }
 
-    fun updateData(newArrivalList: ArrayList<Station>) {
-        stationList = newArrivalList
-        notifyDataSetChanged()
-    }
 
     override fun onCreateViewHolder(
         viewGroup: ViewGroup,
@@ -47,9 +44,9 @@ class HomeLastStationRVAdapter(private var stationList: ArrayList<Station>) :
 
     inner class ViewHolder(val binding: ItemLastStationBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: Station) {
+        fun bind(item: LastStationHistory) {
 //            binding.tvLineNumber.text = item.lineId.toString()
-            binding.tvStationName.text = item.stationName
+            (item.stationName + "역").also { binding.tvStationName.text = it }
         }
     }
 
