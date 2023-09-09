@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hanium.rideornot.App.Companion.lastStationHistoryRepository
 import com.hanium.rideornot.App.Companion.lineRepository
 import com.hanium.rideornot.App.Companion.stationRepository
 import com.hanium.rideornot.data.response.ArrivalResponse
@@ -28,6 +29,7 @@ class StationDetailViewModel(context: Context, private val arrivalRepository: Ar
 
     val prevStationName = MutableLiveData<String>()
     val nextStationName = MutableLiveData<String>()
+
 
     // 해당 역, 호선의 도착 정보 얻기
     fun loadArrivalList(stationId: String, lineId: Int) {
@@ -70,4 +72,29 @@ class StationDetailViewModel(context: Context, private val arrivalRepository: Ar
             else -> "${station.nextStation1}/${station.nextStation2}"
         }
     }
+
+    // 최근 역 추가
+    fun insertLastStationHistory(lastStationName: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            var existingHistory = lastStationHistoryRepository.getAllLastStations()
+
+            // 중복된 항목 삭제
+            val duplicateItem = existingHistory.find { it.stationName == lastStationName }
+            duplicateItem?.let {
+                lastStationHistoryRepository.deleteLastStation(it)
+            }
+
+            lastStationHistoryRepository.insertLastStation(LastStationHistory(stationName = lastStationName))
+
+            existingHistory = lastStationHistoryRepository.getAllLastStations()
+            while (existingHistory.size > 5) {
+                // 항목이 5개가 넘으면, 가장 오래된 항목 삭제
+                val oldestItem = existingHistory.minByOrNull { it.lastStationHistoryId }
+                oldestItem?.let {
+                    lastStationHistoryRepository.deleteLastStation(it)
+                }
+            }
+        }
+    }
+
 }

@@ -17,15 +17,13 @@ import com.hanium.rideornot.App.Companion.getApplicationContext
 import com.hanium.rideornot.MainActivity
 import com.hanium.rideornot.R
 import com.hanium.rideornot.databinding.FragmentHomeBinding
-import com.hanium.rideornot.domain.Station
+import com.hanium.rideornot.domain.LastStationHistory
 import com.hanium.rideornot.gps.GpsForegroundService
 import com.hanium.rideornot.gps.GpsManager
 import com.hanium.rideornot.notification.NotificationManager
 import com.hanium.rideornot.ui.common.ViewModelFactory
 import com.hanium.rideornot.ui.dialog.OptionDialog
 
-private const val PREFS_NAME = "homeFragment"
-private const val SWITCH_RIDE_KEY = "switchRide"
 
 class HomeFragment : Fragment() {
 
@@ -33,7 +31,7 @@ class HomeFragment : Fragment() {
     private val viewModel: HomeViewModel by viewModels { ViewModelFactory(requireContext()) }
 
     private lateinit var homeNearbyNotificationRVAdapter: HomeNearbyNotificationRVAdapter
-    private var homeLastStationRVAdapter = HomeLastStationRVAdapter(ArrayList())
+    private lateinit var homeLastStationRVAdapter: HomeLastStationRVAdapter
 
     private lateinit var sharedPreferences: SharedPreferences  // 승차 알림 스위치 상태 저장
 
@@ -44,6 +42,9 @@ class HomeFragment : Fragment() {
 
     companion object {
         var switchRideChecked = false
+
+        const val PREFS_NAME = "rideSwitch"
+        const val SWITCH_IS_CHECKED_KEY = "switchRide"
     }
 
     private val switchUpdateReceiver = object : BroadcastReceiver() {
@@ -63,9 +64,6 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
-
-        // TDL
-        // 최근 역 RecyclerView 연결 필요
 
         fusedLocationClient =
             LocationServices.getFusedLocationProviderClient(getApplicationContext())
@@ -91,7 +89,7 @@ class HomeFragment : Fragment() {
             }
 
             // 변경된 스위치 상태를 SharedPreferences에 저장
-            sharedPreferences.edit().putBoolean(SWITCH_RIDE_KEY, isChecked).apply()
+            sharedPreferences.edit().putBoolean(SWITCH_IS_CHECKED_KEY, isChecked).apply()
         }
 
 
@@ -99,19 +97,19 @@ class HomeFragment : Fragment() {
         homeNearbyNotificationRVAdapter =
             HomeNearbyNotificationRVAdapter(requireContext(), ArrayList())
         binding.rvNearbyNotification.adapter = homeNearbyNotificationRVAdapter
-        binding.rvLastStation.adapter = homeLastStationRVAdapter
+
+        // 최근 역
+        viewModel.loadLastStationHistory()
+        viewModel.lastStation.observe(viewLifecycleOwner) {
+            homeLastStationRVAdapter = HomeLastStationRVAdapter(it as ArrayList<LastStationHistory>)
+            binding.rvLastStation.adapter = homeLastStationRVAdapter
+        }
 
         // 주변 알림 - 근처 역, 도착 정보 조회
         viewModel.showNearestStationName(fusedLocationClient)
         viewModel.nearestStation.observe(viewLifecycleOwner) {
             stationName = it
         }
-
-        // 최근 역 - 더미 데이터
-        val stations = Station(100, 37.948605, 127.061003, "소요산", 1001)
-        val stationList = ArrayList<Station>()
-        stationList.add(stations)
-        homeLastStationRVAdapter.updateData(stationList)
 
 
         viewModel.arrivalInfoList.observe(viewLifecycleOwner) { arrivalInfoList ->
@@ -162,8 +160,12 @@ class HomeFragment : Fragment() {
             stationName = it
         }
 
+        // 승차 알림 스위치
         val filter = IntentFilter("ACTION_UPDATE_SWITCH_STATE")
         requireActivity().registerReceiver(switchUpdateReceiver, filter)
+
+        // 최근 역 갱신
+        viewModel.loadLastStationHistory()
     }
 
     override fun onPause() {
@@ -213,23 +215,35 @@ class HomeFragment : Fragment() {
      */
     private fun initializeSwitch() {
         // 스위치의 이전 설정 값을 가져와서 적용
-        val isSwitchChecked = sharedPreferences.getBoolean(SWITCH_RIDE_KEY, false)
+        val isSwitchChecked = sharedPreferences.getBoolean(SWITCH_IS_CHECKED_KEY, false)
         switchRideChecked = isSwitchChecked
         viewModel.updateSwitchCheck(isSwitchChecked)
 
         if (isSwitchChecked) {
-            binding.tvRideNotification.setTextColor(ContextCompat.getColor(requireContext(), R.color.blue))
+            binding.tvRideNotification.setTextColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.blue
+                )
+            )
 
             GpsManager.initGpsManager(requireActivity() as MainActivity)
 
-            if (GpsManager.arePermissionsGranted(requireContext()) && NotificationManager.isPermissionGranted(requireContext()) && !GpsForegroundService.isServiceRunning) {
+            if (GpsManager.arePermissionsGranted(requireContext()) && NotificationManager.isPermissionGranted(
+                    requireContext()
+                ) && !GpsForegroundService.isServiceRunning
+            ) {
                 // 포그라운드 서비스 시작
                 val serviceIntent = Intent(requireContext(), GpsForegroundService::class.java)
                 ContextCompat.startForegroundService(requireContext(), serviceIntent)
             }
-        }
-        else {
-            binding.tvRideNotification.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_700))
+        } else {
+            binding.tvRideNotification.setTextColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.gray_700
+                )
+            )
         }
     }
 
@@ -240,7 +254,12 @@ class HomeFragment : Fragment() {
      */
     private fun updateSwitchSetting(isSwitchChecked: Boolean) {
         if (isSwitchChecked) {
-            binding.tvRideNotification.setTextColor(ContextCompat.getColor(requireContext(), R.color.blue))
+            binding.tvRideNotification.setTextColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.blue
+                )
+            )
 
             // 승차 알림 안내 Dialog 표시
             val optionDialog = OptionDialog(activity as AppCompatActivity)
@@ -249,9 +268,13 @@ class HomeFragment : Fragment() {
                     // 확인 클릭 시
                     GpsManager.initGpsManager(requireContext() as MainActivity)
 
-                    if (GpsManager.arePermissionsGranted(requireContext()) && NotificationManager.isPermissionGranted(requireContext()) && !GpsForegroundService.isServiceRunning && viewModel.switchRideChecked.value == true) {
+                    if (GpsManager.arePermissionsGranted(requireContext()) && NotificationManager.isPermissionGranted(
+                            requireContext()
+                        ) && !GpsForegroundService.isServiceRunning && viewModel.switchRideChecked.value == true
+                    ) {
                         // 포그라운드 서비스 시작
-                        val serviceIntent = Intent(requireContext(), GpsForegroundService::class.java)
+                        val serviceIntent =
+                            Intent(requireContext(), GpsForegroundService::class.java)
                         ContextCompat.startForegroundService(requireContext(), serviceIntent)
                     }
                 } else {
@@ -259,13 +282,22 @@ class HomeFragment : Fragment() {
                     switchRideChecked = false
                     viewModel.updateSwitchCheck(false)
 
-                    binding.tvRideNotification.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_700))
+                    binding.tvRideNotification.setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.gray_700
+                        )
+                    )
                 }
             }
             optionDialog.show(getString(R.string.ride_notification_info))
-        }
-        else {
-            binding.tvRideNotification.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_700))
+        } else {
+            binding.tvRideNotification.setTextColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.gray_700
+                )
+            )
             // 포그라운드 서비스 종료
             val serviceIntent = Intent(requireContext(), GpsForegroundService::class.java)
             requireActivity().stopService(serviceIntent)

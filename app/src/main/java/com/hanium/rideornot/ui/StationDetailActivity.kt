@@ -175,6 +175,14 @@ class StationDetailActivity : AppCompatActivity() {
 
     }
 
+    override fun onPause() {
+        super.onPause()
+
+        if (stationName.isNotEmpty()) {
+            viewModel.insertLastStationHistory(stationName)
+        }
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         // 모든 타이머 중지
