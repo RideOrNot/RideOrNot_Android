@@ -18,6 +18,7 @@ import android.content.SharedPreferences
 import android.net.Uri
 import android.provider.Settings
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.hanium.rideornot.data.request.SignInRequest
@@ -29,6 +30,7 @@ import com.hanium.rideornot.notification.NOTIFICATION_PERMISSION_REQUEST_CODE
 import com.hanium.rideornot.notification.NotificationManager
 import com.hanium.rideornot.ui.signUp.SignUpFragment1
 import com.hanium.rideornot.ui.dialog.PermissionInfoDialog
+import com.hanium.rideornot.ui.signUp.SignUpFragment2
 import com.hanium.rideornot.ui.signUp.SignUpViewModel
 import com.hanium.rideornot.utils.NetworkModule
 import kotlinx.coroutines.CoroutineScope
@@ -46,6 +48,8 @@ private const val JWT_KEY = "jwt"
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
+    private lateinit var signUpViewModel: SignUpViewModel
 
     // 안드로이드 기기의 API 레벨(31 이하?)이 낮을 경우 원탭로그인이 동작하지 않음.
     // missing feature{name=auth_api_credentials_begin_sign_in, version=8}
@@ -213,14 +217,16 @@ class MainActivity : AppCompatActivity() {
                             // 계정 생성 시 ageRange = 0, gender = 0, nickName = "구글 계정의 이름" 이 할당됨.
                             if (profileResponse.result.ageRange == 0
                                 || profileResponse.result.gender == 0
-                                || profileResponse.result.nickName == null
+//                                || profileResponse.result.nickName == null
                             ) {
                                 // 새 유저일 경우
-                                val signUpViewModel = SignUpViewModel(this@MainActivity)
-                                signUpViewModel.name = familyName + givenName
-                                Log.d("FullName",signUpViewModel.name)+
+                                val fullName = familyName + givenName
+                                signUpViewModel = ViewModelProvider(this@MainActivity).get(SignUpViewModel::class.java)
+                                signUpViewModel.nickName = fullName
+
                                 supportFragmentManager.beginTransaction()
-                                    .replace(R.id.frm_main, SignUpFragment1())
+                                    .add(R.id.frm_main, SignUpFragment1())
+                                    .addToBackStack("mainActivity")
                                     .commit()
                             }
 

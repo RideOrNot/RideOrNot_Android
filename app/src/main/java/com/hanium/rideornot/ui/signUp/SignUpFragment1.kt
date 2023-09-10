@@ -1,13 +1,17 @@
 package com.hanium.rideornot.ui.signUp
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import com.hanium.rideornot.R
 import com.hanium.rideornot.databinding.FragmentSignIn1Binding
+import kotlin.math.sign
 
 private const val FIRST_ANIM_DELAY: Long = 400
 private const val SECOND_ANIM_DELAY: Long = 1200
@@ -15,12 +19,14 @@ private const val THIRD_ANIM_DELAY: Long = 2000
 
 class SignUpFragment1 : Fragment() {
     private lateinit var binding: FragmentSignIn1Binding
+    private lateinit var signUpViewModel: SignUpViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         super.onCreate(savedInstanceState)
+        signUpViewModel = ViewModelProvider(requireActivity()).get(SignUpViewModel::class.java)
         binding = FragmentSignIn1Binding.inflate(inflater, container, false)
 
         val fadeInAnim1 = AnimationUtils.loadAnimation(context, R.anim.fade_in)
@@ -29,6 +35,8 @@ class SignUpFragment1 : Fragment() {
         fadeInAnim2.startOffset = SECOND_ANIM_DELAY
         val fadeInAnim3 = AnimationUtils.loadAnimation(context, R.anim.fade_in)
         fadeInAnim3.startOffset = THIRD_ANIM_DELAY
+        Log.d("FragmentContext", requireContext().toString())
+        Log.d("FullName2", signUpViewModel.nickName)
 
         binding.tvHi.startAnimation(fadeInAnim1)
         binding.tvExplanation.startAnimation(fadeInAnim2)

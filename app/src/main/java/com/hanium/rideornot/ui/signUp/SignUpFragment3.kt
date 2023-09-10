@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.hanium.rideornot.R
 import com.hanium.rideornot.databinding.FragmentSignIn3Binding
 import com.hanium.rideornot.ui.signUp.SignUpViewModel.Gender
@@ -22,7 +23,7 @@ class SignUpFragment3 : Fragment() {
     ): View? {
         super.onCreate(savedInstanceState)
         binding = FragmentSignIn3Binding.inflate(inflater, container, false)
-        signUpViewModel = SignUpViewModel(requireContext())
+        signUpViewModel = ViewModelProvider(requireActivity()).get(SignUpViewModel::class.java)
 
         val fadeInAnim = AnimationUtils.loadAnimation(context, R.anim.fade_in)
         binding.llGenderSelection.startAnimation(fadeInAnim)

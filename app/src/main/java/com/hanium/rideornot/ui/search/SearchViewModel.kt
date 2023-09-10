@@ -1,15 +1,11 @@
-package com.hanium.rideornot.ui
+package com.hanium.rideornot.ui.search
 
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hanium.rideornot.R
 import com.hanium.rideornot.domain.*
 import com.hanium.rideornot.repository.SearchHistoryRepository
-import com.hanium.rideornot.ui.home.HomeFragment
-import com.hanium.rideornot.ui.search.SearchHistoryRVAdapter
-import com.hanium.rideornot.ui.search.SearchResultRVAdapter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
