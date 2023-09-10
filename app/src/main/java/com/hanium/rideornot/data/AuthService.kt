@@ -1,13 +1,15 @@
 package com.hanium.rideornot.data
 
-import com.hanium.rideornot.data.response.BaseResponse
-import com.hanium.rideornot.data.response.SignInResponse
-import retrofit2.http.Field
+import com.hanium.rideornot.data.request.SignInRequest
+import retrofit2.Response
+import retrofit2.http.Body
+import retrofit2.http.Headers
 import retrofit2.http.POST
 
 interface AuthService {
-    @POST("/login")
+    @Headers("Content-Type: application/json")
+    @POST("/auths/sign-in")
     suspend fun postGoogleIdToken(
-        @Field("googleIdToken") googleIdToken: String
-    ): BaseResponse<SignInResponse>
+        @Body body: SignInRequest
+    ): Response<String>
 }

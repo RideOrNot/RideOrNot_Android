@@ -6,6 +6,7 @@ import com.hanium.rideornot.domain.StationDatabase
 import com.hanium.rideornot.repository.LineRepository
 import com.hanium.rideornot.repository.StationExitRepository
 import com.hanium.rideornot.repository.StationRepository
+import com.hanium.rideornot.utils.PreferenceUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 
@@ -21,6 +22,8 @@ class App : Application() {
 
         lateinit var instance: App
 
+        lateinit var preferenceUtil: PreferenceUtil
+
         fun getApplicationContext(): Context {
             return instance.applicationContext
         }
@@ -28,6 +31,7 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        preferenceUtil = PreferenceUtil(applicationContext)
         instance = this
     }
 }

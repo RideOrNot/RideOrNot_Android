@@ -20,6 +20,7 @@ import android.provider.Settings
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.hanium.rideornot.data.request.SignInRequest
 import com.hanium.rideornot.databinding.ActivityMainBinding
 import com.hanium.rideornot.gps.GpsForegroundService
 import com.hanium.rideornot.gps.GpsManager
@@ -28,7 +29,6 @@ import com.hanium.rideornot.notification.NOTIFICATION_PERMISSION_REQUEST_CODE
 import com.hanium.rideornot.notification.NotificationManager
 import com.hanium.rideornot.ui.signUp.SignUpFragment1
 import com.hanium.rideornot.ui.dialog.PermissionInfoDialog
-import com.hanium.rideornot.ui.signUp.SignUpFragment2
 import com.hanium.rideornot.ui.signUp.SignUpViewModel
 import com.hanium.rideornot.utils.NetworkModule
 import kotlinx.coroutines.CoroutineScope
@@ -39,6 +39,8 @@ import kotlinx.coroutines.launch
 private const val REQ_ONE_TAP = 2
 private const val PREFS_NAME = "mainActivity"
 private const val FIRST_RUN_KEY = "firstRun"
+
+private const val AUTH_PREFS_NAME = "auth"
 private const val JWT_KEY = "jwt"
 
 class MainActivity : AppCompatActivity() {
@@ -137,10 +139,10 @@ class MainActivity : AppCompatActivity() {
         // 지오펜스 생성 예시
         //GpsManager.addGeofence("myStation", 37.540455,126.9700533 ,1000f, 1000000)
 
-        Log.d("FragmentManager", "replace fragment to SignInFragment")
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.frm_main, SignUpFragment1())
-            .commit()
+//        Log.d("FragmentManager", "replace fragment to SignInFragment")
+//        supportFragmentManager.beginTransaction()
+//            .replace(R.id.frm_main, SignUpFragment1())
+//            .commit()
 
         val googleWebClientId = BuildConfig.GOOGLE_WEB_CLIENT_ID
         oneTapClient = Identity.getSignInClient(this)
@@ -200,17 +202,28 @@ class MainActivity : AppCompatActivity() {
                     if (idToken != null) {
                         Log.d("loginResultHandler", "Got ID token, $idToken")
                         CoroutineScope(Dispatchers.Main).launch {
-                            val response = NetworkModule.getAuthService().postGoogleIdToken(idToken)
-                            val preferences: SharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-                            preferences.edit().putString(JWT_KEY, response.result.jwt).apply()
-                            // 새 유저일 경우
-                            if (response.result.isNewUser) {
+                            val jwtResponse = NetworkModule.getAuthService().postGoogleIdToken(
+                                SignInRequest(idToken)
+                            ).body().toString()
+                            App.preferenceUtil.setJwt(jwtResponse)
+
+                            val profileResponse = NetworkModule.getProfileService().getProfile()
+                            Log.d("profile", profileResponse.toString())
+
+                            // 계정 생성 시 ageRange = 0, gender = 0, nickName = "구글 계정의 이름" 이 할당됨.
+                            if (profileResponse.result.ageRange == 0
+                                || profileResponse.result.gender == 0
+                                || profileResponse.result.nickName == null
+                            ) {
+                                // 새 유저일 경우
                                 val signUpViewModel = SignUpViewModel(this@MainActivity)
                                 signUpViewModel.name = familyName + givenName
+                                Log.d("FullName",signUpViewModel.name)+
                                 supportFragmentManager.beginTransaction()
                                     .replace(R.id.frm_main, SignUpFragment1())
                                     .commit()
                             }
+
                         }
                     }
                     if (password != null) {
