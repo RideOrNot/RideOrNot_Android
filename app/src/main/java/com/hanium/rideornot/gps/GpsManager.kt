@@ -25,7 +25,6 @@ import kotlinx.coroutines.launch
 const val LOCATION_PERMISSION_REQUEST_CODE: Int = 1
 private const val PRIORITY_LOCATION: @Priority Int = Priority.PRIORITY_HIGH_ACCURACY
 private const val MAX_LOCATION_UPDATE_THREAD_COUNT = 1 // startLocationUpdate 를 동시에 호출할 수 있는 최대 스레드 수
-private const val GEOFENCE_LIST_SIZE = 200
 private const val SUFFIX_GEOFENCE_ID_ENTER = "-enter"
 private const val SUFFIX_GEOFENCE_ID_EXIT = "-exit"
 private const val MAX_GEOFENCE_COUNT = 20
@@ -118,13 +117,6 @@ object GpsManager {
                     val geofenceRadius = 1000f
                     nearestStationExit = findNearestStationExit(lastLocation)
                     if (nearestStationExit != null) {
-//                        addGeofence(
-//                            "myStation",
-//                            36.348853916,  //36.348853916  // lastLocation!!.latitude
-//                            127.33261265,  //127.33261265  // lastLocation!!.longitude
-//                            geofenceRadius,
-//                            1000000
-//                        )
                         // 이미 같은 좌표에 대한 Geofence가 있는지 확인 후, 없으면 Geofence 생성
                         if (!isDuplicateGeofence(nearestStationExit!!.stationLatitude, nearestStationExit!!.stationLongitude)) {
                             addGeofence(
@@ -138,7 +130,7 @@ object GpsManager {
                         }
 
                         Log.e("[GpsManager] nearestStationExit", nearestStationExit.toString())
-                        logGeofenceList()
+                        // logGeofenceList()
                     }
                 }
             }
