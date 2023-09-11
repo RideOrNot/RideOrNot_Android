@@ -1,26 +1,27 @@
 package com.hanium.rideornot
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.content.IntentSender
-import androidx.appcompat.app.AppCompatActivity
+import android.content.SharedPreferences
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.CommonStatusCodes
-import android.app.AlertDialog
-import android.content.SharedPreferences
-import android.net.Uri
-import android.provider.Settings
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.setupWithNavController
+import com.hanium.rideornot.MainActivity.Companion.moveAppSettings
 import com.hanium.rideornot.data.request.SignInRequest
 import com.hanium.rideornot.databinding.ActivityMainBinding
 import com.hanium.rideornot.gps.GpsForegroundService
@@ -28,14 +29,14 @@ import com.hanium.rideornot.gps.GpsManager
 import com.hanium.rideornot.gps.LOCATION_PERMISSION_REQUEST_CODE
 import com.hanium.rideornot.notification.NOTIFICATION_PERMISSION_REQUEST_CODE
 import com.hanium.rideornot.notification.NotificationManager
-import com.hanium.rideornot.ui.signUp.SignUpFragment1
 import com.hanium.rideornot.ui.dialog.PermissionInfoDialog
-import com.hanium.rideornot.ui.signUp.SignUpFragment2
+import com.hanium.rideornot.ui.signUp.SignUpFragment1
 import com.hanium.rideornot.ui.signUp.SignUpViewModel
 import com.hanium.rideornot.utils.NetworkModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 private const val REQ_ONE_TAP = 2
@@ -148,46 +149,59 @@ class MainActivity : AppCompatActivity() {
 //            .replace(R.id.frm_main, SignUpFragment1())
 //            .commit()
 
-        val googleWebClientId = BuildConfig.GOOGLE_WEB_CLIENT_ID
-        oneTapClient = Identity.getSignInClient(this)
-        signInRequest = BeginSignInRequest.builder()
-            .setPasswordRequestOptions(
-                BeginSignInRequest.PasswordRequestOptions.builder()
-                    .setSupported(true)
-                    .build()
-            )
-            .setGoogleIdTokenRequestOptions(
-                BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
-                    .setSupported(true)
-                    // Your server's client ID, not your Android client ID.
-                    .setServerClientId(googleWebClientId)
-                    // Only show accounts previously used to sign in.
-                    // 첫 로그인 시 false로, 로그인 정보가 있을 땐 true로 설정하기
-                    .setFilterByAuthorizedAccounts(false)
-                    .build()
-            )
-            // Automatically sign in when exactly one credential is retrieved.
-            .setAutoSelectEnabled(true)
-            .build()
 
-        oneTapClient.beginSignIn(signInRequest)
-            .addOnSuccessListener(this) { result ->
-                try {
-                    startIntentSenderForResult(
-                        result.pendingIntent.intentSender, REQ_ONE_TAP,
-                        null, 0, 0, 0, null
+        CoroutineScope(Dispatchers.Main).launch {
+            // 현재 jwt 만료 시 서버에서 exception 반환이 아닌, result에 null을 할당하여 반환하도록
+            // 되어 있음. (resultCode도 SUCCESS로 나옴)
+            // TODO: 서버측에 jwt 만료시 exception 반환 요청하고 구현 수정하기
+            val response = withContext(Dispatchers.Default) {
+                NetworkModule.getProfileService().getProfile()
+            }
+            Log.d("responseProfileGet", response.toString())
+            if (response.result == null || response.result.ageRange == 0
+                || response.result.gender == 0) {
+                // jwt가 만료되었을 시 혹은 프로필 설정이 안 되어있을 시 로그인 시도 및 계정 생성
+                // TODO: 로그인, 회원가입 엔드포인트 분리하여 구현 변경
+                val googleWebClientId = BuildConfig.GOOGLE_WEB_CLIENT_ID
+                oneTapClient = Identity.getSignInClient(this@MainActivity)
+                signInRequest = BeginSignInRequest.builder()
+                    .setPasswordRequestOptions(
+                        BeginSignInRequest.PasswordRequestOptions.builder()
+                            .setSupported(true)
+                            .build()
                     )
-                } catch (e: IntentSender.SendIntentException) {
-                    Log.e("oneTapUiFailure", "Couldn't start One Tap UI: ${e.localizedMessage}")
-                }
-            }
-            .addOnFailureListener(this) { e ->
-                // No saved credentials found. Launch the One Tap sign-up flow, or
-                // do nothing and continue presenting the signed-out UI.
-                Log.d("beginSignInFailure", e.localizedMessage)
-            }
+                    .setGoogleIdTokenRequestOptions(
+                        BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
+                            .setSupported(true)
+                            // Your server's client ID, not your Android client ID.
+                            .setServerClientId(googleWebClientId)
+                            // Only show accounts previously used to sign in.
+                            // 첫 로그인 시 false로, 로그인 정보가 있을 땐 true로 설정하기
+                            .setFilterByAuthorizedAccounts(false)
+                            .build()
+                    )
+                    // Automatically sign in when exactly one credential is retrieved.
+                    .setAutoSelectEnabled(true)
+                    .build()
 
-
+                oneTapClient.beginSignIn(signInRequest)
+                    .addOnSuccessListener(this@MainActivity) { result ->
+                        try {
+                            startIntentSenderForResult(
+                                result.pendingIntent.intentSender, REQ_ONE_TAP,
+                                null, 0, 0, 0, null
+                            )
+                        } catch (e: IntentSender.SendIntentException) {
+                            Log.e("oneTapUiFailure", "Couldn't start One Tap UI: ${e.localizedMessage}")
+                        }
+                    }
+                    .addOnFailureListener(this@MainActivity) { e ->
+                        // No saved credentials found. Launch the One Tap sign-up flow, or
+                        // do nothing and continue presenting the signed-out UI.
+                        Log.d("beginSignInFailure", e.localizedMessage)
+                    }
+            }
+        }
     }
 
     // TODO: deprecated 메서드인 onActivityResult -> startActivityForResult로 변경하기
@@ -229,7 +243,6 @@ class MainActivity : AppCompatActivity() {
                                     .addToBackStack("mainActivity")
                                     .commit()
                             }
-
                         }
                     }
                     if (password != null) {
@@ -241,13 +254,10 @@ class MainActivity : AppCompatActivity() {
 
                 } catch (e: ApiException) {
                     Log.e("loginResultHandler", e.toString())
-                    // ...
                 }
             }
         }
     }
-    // ...
-
 
     override fun onResume() {
         super.onResume()
