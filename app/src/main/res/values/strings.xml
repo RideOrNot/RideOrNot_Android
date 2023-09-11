@@ -66,4 +66,9 @@
     <string name="tv_recent_search">최근 검색</string>
     <string name="search_tv_edit">수정</string>
 
+    <!-- SignIn -->
+    <string name="signup_age">연령대</string>
+    <string name="signup_gender">성별</string>
+    <string name="signup_nickname">닉네임</string>
+
 </resources>
