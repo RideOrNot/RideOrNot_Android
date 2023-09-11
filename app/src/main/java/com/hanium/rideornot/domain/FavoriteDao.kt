@@ -6,7 +6,7 @@ import androidx.room.*
 @Dao
 interface FavoriteDao {
     @Query("SELECT * FROM favorite ORDER BY favorite_id DESC")
-    fun getAllData(): LiveData<List<Favorite>>
+    fun getAllData(): LiveData<MutableList<Favorite>>
 
     @Query("SELECT * FROM favorite WHERE station_name = :stationName")
     suspend fun getDataByStationName(stationName: String): Favorite?

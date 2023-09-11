@@ -4,14 +4,18 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.activity.OnBackPressedCallback
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hanium.rideornot.R
 import com.hanium.rideornot.databinding.FragmentFavoriteBinding
 import com.hanium.rideornot.domain.Favorite
-import com.hanium.rideornot.ui.SearchViewModel
+import com.hanium.rideornot.ui.common.ViewModelFactory
+import com.hanium.rideornot.ui.search.SearchViewModel
 
 class FavoriteFragment : Fragment(), IFavoriteRV, IFavoriteEditRV {
     private lateinit var binding: FragmentFavoriteBinding
@@ -19,8 +23,9 @@ class FavoriteFragment : Fragment(), IFavoriteRV, IFavoriteEditRV {
     private lateinit var favoriteRVAdapter: FavoriteRVAdapter
     private lateinit var favoriteEditRVAdapter: FavoriteEditRVAdapter
     private lateinit var itemTouchHelper: ItemTouchHelper
-    private val favoriteViewModel: FavoriteViewModel by lazy { FavoriteViewModel(requireContext()) }
-    private val searchViewModel: SearchViewModel by lazy { SearchViewModel(requireContext()) }
+
+    private val favoriteViewModel: FavoriteViewModel by viewModels { ViewModelFactory(requireContext()) }
+    private val searchViewModel: SearchViewModel by viewModels { ViewModelFactory(requireContext()) }
 
     private var isEditing = false
     private fun setBackBtnHandling() {
@@ -72,17 +77,12 @@ class FavoriteFragment : Fragment(), IFavoriteRV, IFavoriteEditRV {
                 searchViewModel,
                 this
             )
+
+            val mutableFavoriteList = favoriteViewModel.favoriteList.value!!.sortedBy { it.orderNumber }.toMutableList()
             favoriteEditRVAdapter = FavoriteEditRVAdapter(
                 requireContext(),
-                favoriteViewModel.favoriteList.value!!.sortedBy { it.orderNumber },
-                searchViewModel,
-                this
-//                object : FavoriteEditRVAdapter.MyItemClickListener {
-//                    override fun onDeleteBtnClick(favorite: Favorite) {
-//                        favoriteViewModel.deleteFavorite(favorite)
-//                        Log.d("delete","delete")
-//                    }
-//                }
+                mutableFavoriteList,
+                searchViewModel
             )
             val itemTouchHelperCallback = ItemTouchHelperCallback(favoriteEditRVAdapter).apply {
                 setClamp(resources.displayMetrics.widthPixels.toFloat() / 8)

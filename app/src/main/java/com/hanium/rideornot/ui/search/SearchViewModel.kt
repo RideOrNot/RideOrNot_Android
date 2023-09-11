@@ -1,4 +1,4 @@
-package com.hanium.rideornot.ui
+package com.hanium.rideornot.ui.search
 
 import android.content.Context
 import androidx.lifecycle.LiveData

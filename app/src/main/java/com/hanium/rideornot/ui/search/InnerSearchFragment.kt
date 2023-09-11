@@ -4,26 +4,21 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.OnBackPressedCallback
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.internal.ViewUtils.hideKeyboard
-import com.google.android.material.internal.ViewUtils.showKeyboard
 import com.hanium.rideornot.R
 import com.hanium.rideornot.databinding.FragmentSearchInnerBinding
 import com.hanium.rideornot.domain.SearchHistory
 import com.hanium.rideornot.domain.Station
 import com.hanium.rideornot.domain.StationDatabase
-import com.hanium.rideornot.ui.SearchViewModel
+import com.hanium.rideornot.ui.common.ViewModelFactory
 import kotlinx.coroutines.*
 
 
@@ -33,7 +28,7 @@ class InnerSearchFragment : Fragment(),
     private lateinit var binding: FragmentSearchInnerBinding
     private lateinit var searchHistoryRVAdapter: SearchHistoryRVAdapter
     private lateinit var searchResultRVAdapter: SearchResultRVAdapter
-    private lateinit var searchViewModel: SearchViewModel
+    private val searchViewModel: SearchViewModel by viewModels { ViewModelFactory(requireContext()) }
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Main)
 
     private lateinit var onBackPressedCallback: OnBackPressedCallback
@@ -70,8 +65,6 @@ class InnerSearchFragment : Fragment(),
         val bottomNavigationView = requireActivity().findViewById<BottomNavigationView>(R.id.bnv_main)
         bottomNavigationView.visibility = View.GONE
         setBackBtnHandling()
-
-        searchViewModel = SearchViewModel(requireContext())
 
         binding.rvSearch.layoutManager =
             LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)

@@ -22,8 +22,6 @@ class ItemTouchHelperCallback(private val recyclerViewAdapter: FavoriteEditRVAda
     private var currentDx = 0f                  // 현재 x 값
     private var clampSize = 0f                      // 고정시킬 크기
 
-    private var tempViewHolder: RecyclerView.ViewHolder? = null
-
     // 드래그 방향과 드래그 이동을 정의
     override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
         val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
@@ -42,7 +40,7 @@ class ItemTouchHelperCallback(private val recyclerViewAdapter: FavoriteEditRVAda
         return true
     }
 
-    // 아이템이 스와이프 될 때 호출
+    // 아이템이 스와이프될 때 호출
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
 
     }
@@ -60,7 +58,7 @@ class ItemTouchHelperCallback(private val recyclerViewAdapter: FavoriteEditRVAda
         viewHolder?.let {
             // 현재 드래그 또는 스와이프 중인 view 의 position 기억
             currentPosition = viewHolder.adapterPosition
-            Log.d("onselectedChange, currentPosition set", currentPosition.toString())
+//            Log.d("onselectedChange, currentPosition set", currentPosition.toString())
             getDefaultUIUtil().onSelected(getView(it))
         }
     }
@@ -91,8 +89,8 @@ class ItemTouchHelperCallback(private val recyclerViewAdapter: FavoriteEditRVAda
             val isClamped = getTag(viewHolder)      // 고정할지 말지 결정, true : 고정함 false : 고정 안 함
             val newX = clampViewPositionHorizontal(dX, isClamped, isCurrentlyActive)  // newX 만큼 이동(고정 시 이동 위치/고정 해제 시 이동 위치 결정)
 
-            Log.d("newX", newX.toInt().toString())
-            Log.d("clampSize", clampSize.toInt().toString())
+//            Log.d("newX", newX.toInt().toString())
+//            Log.d("clampSize", clampSize.toInt().toString())
             // 고정시킬 시 애니메이션 추가
             if (newX == -clampSize) {
                 //getView(viewHolder).animate().translationX(-clampSize).setDuration(1000L).start()
@@ -146,7 +144,6 @@ class ItemTouchHelperCallback(private val recyclerViewAdapter: FavoriteEditRVAda
         // (-clampSize.toInt() , newX.toInt() 로 비교해보니 전자는 -180, 후자는 -181이 나온 것을 확인함)
         // 따라서 -clampSize 가 아닌 -clampSize-1 을 반환값으로 주어 임시 조치하였음.
         return max(min(newX, max), -clampSize -1)
-//        return min(newX, max)
     }
 
     private fun getView(viewHolder: RecyclerView.ViewHolder): View = viewHolder.itemView.findViewById(R.id.cl_favorite_body)

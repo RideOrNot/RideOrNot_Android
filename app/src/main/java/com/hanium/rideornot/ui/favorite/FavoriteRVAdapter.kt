@@ -6,24 +6,20 @@ import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.hanium.rideornot.R
 import com.hanium.rideornot.databinding.ItemFavoriteBinding
 import com.hanium.rideornot.domain.Favorite
-import com.hanium.rideornot.domain.SearchHistory
-import com.hanium.rideornot.ui.SearchViewModel
+import com.hanium.rideornot.ui.search.SearchViewModel
 import com.hanium.rideornot.utils.methods.getLineColorIdByLineId
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.*
 
 class FavoriteRVAdapter(
     private val context: Context,

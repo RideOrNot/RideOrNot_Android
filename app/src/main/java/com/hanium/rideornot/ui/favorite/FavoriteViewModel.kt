@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 
 class FavoriteViewModel(context: Context) : ViewModel() {
 
-    val favoriteList: LiveData<List<Favorite>>
+    val favoriteList: LiveData<MutableList<Favorite>>
     private val favoriteRepository: FavoriteRepository
     private val stationDao: StationDao
     private val lineDao: LineDao
@@ -28,9 +28,13 @@ class FavoriteViewModel(context: Context) : ViewModel() {
 
     fun updateOrder(itemList: List<Favorite>) {
         viewModelScope.launch(Dispatchers.IO) {
+            val difference = favoriteList.value!!.filterNot {it in itemList}
             for ((index, item) in itemList.withIndex()) {
                 item.orderNumber = index
                 favoriteRepository.updateFavorite(item)
+            }
+            for (item in difference) {
+                favoriteRepository.deleteFavorite(item)
             }
         }
     }

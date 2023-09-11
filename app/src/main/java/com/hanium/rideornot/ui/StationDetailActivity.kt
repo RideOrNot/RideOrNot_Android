@@ -37,7 +37,7 @@ class StationDetailActivity : AppCompatActivity() {
     private var stationName = ""
     private val timerList = mutableListOf<CountDownTimer>()
 
-    private lateinit var favoriteViewModel: FavoriteViewModel
+    private val favoriteViewModel: FavoriteViewModel by viewModels { ViewModelFactory(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,8 +48,6 @@ class StationDetailActivity : AppCompatActivity() {
 
         // 이전 화면에서 선택된 역 전달받기
         stationName = args.stationName
-
-        favoriteViewModel = FavoriteViewModel(this)
 
         // 즐겨찾기 버튼 색상 초기설정
         CoroutineScope(Dispatchers.Main).launch {

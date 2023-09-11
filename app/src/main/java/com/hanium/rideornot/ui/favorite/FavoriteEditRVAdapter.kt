@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
@@ -16,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hanium.rideornot.R
 import com.hanium.rideornot.databinding.ItemFavoriteEditBinding
 import com.hanium.rideornot.domain.Favorite
-import com.hanium.rideornot.ui.SearchViewModel
+import com.hanium.rideornot.ui.search.SearchViewModel
 import com.hanium.rideornot.utils.methods.getLineColorIdByLineId
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,17 +24,11 @@ import java.util.*
 
 class FavoriteEditRVAdapter(
     private val context: Context,
-    var itemList: List<Favorite>,
+    var itemList: MutableList<Favorite>,
     private val searchViewModel: SearchViewModel,
-    private val iFavoriteEditRV: IFavoriteEditRV
-//    private val myItemClickListener: MyItemClickListener
 ) :
     RecyclerView.Adapter<FavoriteEditRVAdapter.ViewHolder>(),
     ItemTouchHelperCallback.OnItemMoveListener {
-
-//    interface MyItemClickListener {
-//        fun onDeleteBtnClick(favorite: Favorite)
-//    }
 
     override fun onItemMove(fromPosition: Int, toPosition: Int) {
         Collections.swap(itemList, fromPosition, toPosition)
@@ -73,10 +66,6 @@ class FavoriteEditRVAdapter(
 
         init {
             // 리스너 연결
-//            tvDeleteBtn.setOnClickListener {
-//                myItemClickListener.onDeleteBtnClick(itemList[adapterPosition])
-//                Log.d("not","")
-//            }
             tvDeleteBtn.setOnClickListener(this)
         }
 
@@ -105,13 +94,11 @@ class FavoriteEditRVAdapter(
         override fun onClick(view: View?) {
             when (view) {
                 tvDeleteBtn -> {
-//                    myItemClickListener.onDeleteBtnClick(itemList[adapterPosition])
-                    //iFavoriteEditRV.onDeleteBtnClick(itemList[adapterPosition])
+                    itemList.removeAt(adapterPosition)
+                    notifyItemRemoved(adapterPosition)
                     Log.d("onDeleteClick","activated")
                 }
             }
         }
-
-
     }
 }

@@ -9,7 +9,7 @@ import kotlinx.coroutines.withContext
 
 class FavoriteRepository(private val favoriteDao: FavoriteDao) {
 
-    val getAllData: LiveData<List<Favorite>> = favoriteDao.getAllData()
+    val getAllData: LiveData<MutableList<Favorite>> = favoriteDao.getAllData()
 
     suspend fun getFavorite(stationName: String) : Favorite? {
         return withContext(CoroutineScope(Dispatchers.Main).coroutineContext) {

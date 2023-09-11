@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hanium.rideornot.R
 import com.hanium.rideornot.domain.SearchHistory
 import com.hanium.rideornot.domain.Station
-import com.hanium.rideornot.ui.SearchViewModel
 import com.hanium.rideornot.utils.methods.getLineColorIdByLineId
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
