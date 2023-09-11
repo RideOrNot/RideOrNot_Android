@@ -225,7 +225,7 @@ class MainActivity : AppCompatActivity() {
                                 signUpViewModel.nickName = fullName
 
                                 supportFragmentManager.beginTransaction()
-                                    .add(R.id.frm_main, SignUpFragment1())
+                                    .replace(R.id.frm_main, SignUpFragment1())
                                     .addToBackStack("mainActivity")
                                     .commit()
                             }

@@ -58,7 +58,7 @@ class SignUpFragment4 : Fragment() {
             }
 
             override fun onAnimationEnd(p0: Animation?) {
-
+                parentFragmentManager.beginTransaction().remove(this@SignUpFragment4).commit()
             }
 
             override fun onAnimationRepeat(p0: Animation?) {
@@ -116,8 +116,8 @@ class SignUpFragment4 : Fragment() {
                 Log.d("response-pre", "testtesttest")
                 Log.d("response", response.toString())
                 if (response.isSuccessful) {
-//                    parentFragmentManager.beginTransaction().remove(this@SignUpFragment4).commit()
                     parentFragmentManager.popBackStack()
+                    binding.root.startAnimation(fadeOutAnim)
                 }
             }
             disableButtons()
