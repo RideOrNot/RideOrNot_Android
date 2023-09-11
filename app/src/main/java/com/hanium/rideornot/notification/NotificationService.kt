@@ -66,7 +66,8 @@ class NotificationService : Service() {
 
     private fun updateNotificationContent(nearestStationExitId: Int) {
         applicationScope.launch {
-            val content = loadRideNotification(nearestStationExitId) // 502 236 양재 - 207 / nearestStationExitId
+            val content =
+                loadRideNotification(nearestStationExitId) // 502-홍대 236-서울 207-양재 / nearestStationExitId
 
             if (!content.isNullOrEmpty()) {
                 NotificationManager.updateNotification(
@@ -102,14 +103,14 @@ class NotificationService : Service() {
         val rideNotifications = ArrayList<String>()
 
         // 원래는 도착 정보가 없으면 푸시알림을 보내면 안되지만
-        // 테스트 중이므로 지하철 역 근처에 오면 도착 정보가 없어도 푸시알림 보냄 -> 주석 처리
+        // 테스트 중이므로 지하철 역 근처에 오면 도착 정보가 없어도 푸시알림 보냄 -> 주석 처리함
         return if (rideNotification.rideNotificationList.isNotEmpty()) {
             stationName = "${rideNotification.rideNotificationList[0].stationName}역"
             for (rideNotificationContent in rideNotification.rideNotificationList) {
                 // 예시: "서울역(1호선)에서 광운대행 - 시청방면 열차를 타려면 37초 동안 빠르게 걸으세요"
                 val lineId = lineRepository.getLineNameById(rideNotificationContent.lineId.toInt())
                 val rideMessage =
-                    "$lineId - ${rideNotificationContent.destination} 열차를 타려면 ${rideNotificationContent.message}"
+                    "$lineId) ${rideNotificationContent.destination} 열차를 타려면 ${rideNotificationContent.message}"
                 rideNotifications.add(rideMessage)
             }
 

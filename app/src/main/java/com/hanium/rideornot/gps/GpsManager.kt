@@ -130,7 +130,7 @@ object GpsManager {
                         }
 
                         Log.e("[GpsManager] nearestStationExit", nearestStationExit.toString())
-                        //logGeofenceList()
+                        // logGeofenceList()
                     }
                 }
             }
