@@ -1,4 +1,4 @@
-package com.hanium.rideornot.ui.search
+package com.hanium.rideornot.ui.favorite
 
 import android.content.Context
 import android.content.res.ColorStateList
@@ -7,60 +7,70 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.hanium.rideornot.R
-import com.hanium.rideornot.domain.SearchHistory
+import com.hanium.rideornot.databinding.ItemFavoriteEditBinding
+import com.hanium.rideornot.domain.Favorite
+import com.hanium.rideornot.ui.search.SearchViewModel
 import com.hanium.rideornot.utils.methods.getLineColorIdByLineId
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.*
 
-class SearchHistoryRVAdapter(
+class FavoriteEditRVAdapter(
     private val context: Context,
-    var itemList: List<SearchHistory>,
-    private val searchHistoryRVInterface: ISearchHistoryRV,
-    private val searchViewModel: SearchViewModel
+    var itemList: MutableList<Favorite>,
+    private val searchViewModel: SearchViewModel,
 ) :
-    RecyclerView.Adapter<SearchHistoryRVAdapter.ViewHolder>() {
+    RecyclerView.Adapter<FavoriteEditRVAdapter.ViewHolder>(),
+    ItemTouchHelperCallback.OnItemMoveListener {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_search_history, parent, false)
-        return ViewHolder(view)
+    override fun onItemMove(fromPosition: Int, toPosition: Int) {
+        Collections.swap(itemList, fromPosition, toPosition)
+        notifyItemMoved(fromPosition, toPosition)
     }
 
-    override fun getItemCount(): Int {
-        return itemList.count()
+    override fun onCreateViewHolder(
+        viewGroup: ViewGroup,
+        viewType: Int
+    ): ViewHolder {
+        val binding: ItemFavoriteEditBinding =
+            ItemFavoriteEditBinding.inflate(
+                LayoutInflater.from(viewGroup.context),
+                viewGroup,
+                false
+            )
+
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(itemList[position])
-        Log.d("onBindViewHolder", "is called")
     }
 
-    inner class ViewHolder(itemView: View) :
-        RecyclerView.ViewHolder(itemView),
+    override fun getItemCount(): Int {
+        return itemList.size
+    }
+
+    inner class ViewHolder(val binding: ItemFavoriteEditBinding) :
+        RecyclerView.ViewHolder(binding.root),
         View.OnClickListener {
-        private val tvSearchHistory: TextView = itemView.findViewById(R.id.tv_search_result)
-        private val ivDeleteSearchBtn: ImageView = itemView.findViewById(R.id.iv_delete_search_history_btn)
-        private val clSearchItem: ConstraintLayout =
-            itemView.findViewById(R.id.cl_search_item)
+        private val tvStationName: TextView = binding.tvStationName
+        private val tvDeleteBtn: TextView = binding.tvDeleteBtn
         private val llLines: LinearLayout = itemView.findViewById(R.id.ll_lines)
 
         init {
             // 리스너 연결
-            ivDeleteSearchBtn.setOnClickListener(this)
-            clSearchItem.setOnClickListener(this)
+            tvDeleteBtn.setOnClickListener(this)
         }
 
-        fun bind(item: SearchHistory) {
-            tvSearchHistory.text = item.stationName
+        fun bind(item: Favorite) {
+            tvStationName.text = item.stationName
             CoroutineScope(Dispatchers.Main).launch {
                 llLines.removeAllViews()
                 val lineIdList = searchViewModel.findLinesByStationName(item.stationName)
@@ -83,16 +93,12 @@ class SearchHistoryRVAdapter(
 
         override fun onClick(view: View?) {
             when (view) {
-                ivDeleteSearchBtn -> {
-                    searchHistoryRVInterface.onSearchHistoryItemDeleteClick(adapterPosition)
-                }
-                clSearchItem -> {
-                    searchHistoryRVInterface.onSearchHistoryItemClick(itemList[adapterPosition].stationName)
+                tvDeleteBtn -> {
+                    itemList.removeAt(adapterPosition)
+                    notifyItemRemoved(adapterPosition)
+                    Log.d("onDeleteClick","activated")
                 }
             }
         }
-
-
     }
-
 }
