@@ -175,7 +175,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/signup_age"
+                android:text="@string/signUp_age"
                 android:textColor="@color/white" />
 
             <TextView
@@ -184,7 +184,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/signup_gender"
+                android:text="@string/signUp_gender"
                 android:textColor="@color/white" />
 
             <TextView
@@ -193,7 +193,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/signup_nickname"
+                android:text="@string/signUp_nickname"
                 android:textColor="@color/gray" />
         </LinearLayout>
     </FrameLayout>

@@ -65,12 +65,13 @@ class SettingFragment : Fragment() {
             val dialog = VerticalDialog(requireContext() as AppCompatActivity)
             dialog.show(
                 getString(R.string.logout_message),
-                "기기에 두 개 이상의 구글 계정이 등록되어\n있을 경우, 계정을 변경할 수 있습니다.",
+                getString(R.string.logout_caption),
                 getString(R.string.logout),
                 getString(R.string.cancel)
             )
             dialog.topBtnClickListener {
                 if (it) {
+                    Toast.makeText(requireContext(), getString(R.string.toast_logout_success),Toast.LENGTH_SHORT).show()
                     App.signOut()
                     App.startSignIn(requireActivity() as MainActivity)
                     true
@@ -102,7 +103,7 @@ class SettingFragment : Fragment() {
                         if (it) {
                             CoroutineScope(Dispatchers.Main).launch {
                                 if (profiles == null) {
-                                    Toast.makeText(requireContext(), getString(R.string.action_fail), Toast.LENGTH_SHORT)
+                                    Toast.makeText(requireContext(), getString(R.string.action_fail), Toast.LENGTH_SHORT).show()
                                     return@launch
                                 }
                                 // TODO: 서버 응답 BaseResponse 형식으로 바뀌면 구현 수정하기
@@ -111,6 +112,7 @@ class SettingFragment : Fragment() {
                                    deleteResponse = NetworkModule.getProfileService().deleteUser(profiles.id)
                                 }
                                 if (deleteResponse.isSuccessful) {
+                                    Toast.makeText(requireContext(), getString(R.string.toast_unregister_success),Toast.LENGTH_SHORT).show()
                                     App.signOut()
                                     App.startSignIn(requireActivity() as MainActivity)
                                 }

@@ -139,6 +139,7 @@ class SignUpFragment4 : Fragment() {
                 }
                 Log.d("response-signUp", response.toString())
                 if (response.isSuccessful) {
+                    Toast.makeText(requireContext(), getString(R.string.toast_signUp_success), Toast.LENGTH_SHORT).show()
                     parentFragmentManager.popBackStack()
                     binding.root.startAnimation(fadeOutAnim)
                 }
