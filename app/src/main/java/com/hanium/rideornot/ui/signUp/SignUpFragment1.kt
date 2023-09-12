@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -20,6 +21,18 @@ private const val THIRD_ANIM_DELAY: Long = 2000
 class SignUpFragment1 : Fragment() {
     private lateinit var binding: FragmentSignIn1Binding
     private lateinit var signUpViewModel: SignUpViewModel
+    private lateinit var onBackPressedCallback: OnBackPressedCallback
+    private fun setBackBtnHandling() {
+        onBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                requireActivity().finish()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            onBackPressedCallback
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,6 +41,7 @@ class SignUpFragment1 : Fragment() {
         super.onCreate(savedInstanceState)
         signUpViewModel = ViewModelProvider(requireActivity())[SignUpViewModel::class.java]
         binding = FragmentSignIn1Binding.inflate(inflater, container, false)
+        setBackBtnHandling()
 
         val fadeInAnim1 = AnimationUtils.loadAnimation(context, R.anim.fade_in)
         fadeInAnim1.startOffset = FIRST_ANIM_DELAY
@@ -53,5 +67,4 @@ class SignUpFragment1 : Fragment() {
     private fun disableButtons() {
         binding.btnStart.isClickable = false
     }
-
 }

@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.hanium.rideornot.R
@@ -16,7 +17,18 @@ import com.hanium.rideornot.ui.signUp.SignUpViewModel.Gender
 class SignUpFragment3 : Fragment() {
     private lateinit var binding: FragmentSignIn3Binding
     private lateinit var signUpViewModel: SignUpViewModel
-
+    private lateinit var onBackPressedCallback: OnBackPressedCallback
+    private fun setBackBtnHandling() {
+        onBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                requireActivity().finish()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            onBackPressedCallback
+        )
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -24,6 +36,8 @@ class SignUpFragment3 : Fragment() {
         super.onCreate(savedInstanceState)
         binding = FragmentSignIn3Binding.inflate(inflater, container, false)
         signUpViewModel = ViewModelProvider(requireActivity())[SignUpViewModel::class.java]
+
+        setBackBtnHandling()
 
         val fadeInAnim = AnimationUtils.loadAnimation(context, R.anim.fade_in)
         binding.llGenderSelection.startAnimation(fadeInAnim)

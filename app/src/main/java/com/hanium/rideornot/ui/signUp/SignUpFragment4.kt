@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -32,8 +33,20 @@ class SignUpFragment4 : Fragment() {
     private lateinit var binding: FragmentSignIn4Binding
     private lateinit var signUpViewModel: SignUpViewModel
     private lateinit var settingViewModel: SettingViewModel
+    private lateinit var onBackPressedCallback: OnBackPressedCallback
 
     private var currentBytes = 0
+    private fun setBackBtnHandling() {
+        onBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                requireActivity().finish()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            onBackPressedCallback
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,6 +56,7 @@ class SignUpFragment4 : Fragment() {
         binding = FragmentSignIn4Binding.inflate(inflater, container, false)
         signUpViewModel = ViewModelProvider(requireActivity())[SignUpViewModel::class.java]
 
+        setBackBtnHandling()
 
         val fadeInAnim1 = AnimationUtils.loadAnimation(context, R.anim.fade_in)
         fadeInAnim1.startOffset = FIRST_ANIM_DELAY

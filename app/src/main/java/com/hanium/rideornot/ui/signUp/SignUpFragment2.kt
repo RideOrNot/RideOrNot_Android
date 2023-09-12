@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.hanium.rideornot.R
@@ -16,14 +17,26 @@ import com.hanium.rideornot.ui.signUp.SignUpViewModel.AgeRange
 class SignUpFragment2 : Fragment() {
     private lateinit var binding: FragmentSignIn2Binding
     private lateinit var signUpViewModel: SignUpViewModel
-
+    private lateinit var onBackPressedCallback: OnBackPressedCallback
+    private fun setBackBtnHandling() {
+        onBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                requireActivity().finish()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            onBackPressedCallback
+        )
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         super.onCreate(savedInstanceState)
         binding = FragmentSignIn2Binding.inflate(inflater, container, false)
-        signUpViewModel = ViewModelProvider(requireActivity()).get(SignUpViewModel::class.java)
+        signUpViewModel = ViewModelProvider(requireActivity())[SignUpViewModel::class.java]
+        setBackBtnHandling()
 
         val fadeOutAnim = AnimationUtils.loadAnimation(context, R.anim.fade_out)
         fadeOutAnim.setAnimationListener(object: Animation.AnimationListener {
