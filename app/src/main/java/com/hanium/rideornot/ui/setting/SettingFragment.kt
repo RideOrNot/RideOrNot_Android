@@ -131,6 +131,16 @@ class SettingFragment : Fragment() {
                 if (dialogBottomBtnClicked) true
             }
         }
+
+        binding.btnAccountInfo.setOnClickListener {
+            // TODO: 계정 정보 설정 구현하기
+            Toast.makeText(requireContext(), getString(R.string.toast_not_yet_implemented),Toast.LENGTH_SHORT).show()
+        }
+
+        binding.btnWalkingSpeedSetting.setOnClickListener {
+            // TODO: 걸음 속도 설정 구현하기
+            Toast.makeText(requireContext(), getString(R.string.toast_not_yet_implemented),Toast.LENGTH_SHORT).show()
+        }
     }
 
 }

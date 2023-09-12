@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.*
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -54,6 +55,10 @@ class HomeFragment : Fragment() {
         binding.rvNearbyNotification.adapter = homeNearbyNotificationRVAdapter
         binding.rvLastStation.adapter = homeLastStationRVAdapter
 
+        binding.clNoticeBtn.setOnClickListener {
+            Toast.makeText(requireContext(), getString(R.string.toast_not_yet_implemented), Toast.LENGTH_SHORT).show()
+        }
+
         // 주변 알림 - 근처 역, 도착 정보 조회
         viewModel.showNearestStationName(fusedLocationClient)
         viewModel.nearestStation.observe(viewLifecycleOwner) {
@@ -65,7 +70,6 @@ class HomeFragment : Fragment() {
         val stationList = ArrayList<Station>()
         stationList.add(stations)
         homeLastStationRVAdapter.updateData(stationList)
-
 
         viewModel.arrivalInfoList.observe(viewLifecycleOwner) { arrivalInfoList ->
             // 같은 lineId를 갖는 도착 정보끼리 리스트로 묶어 RecyclerView에 전달
