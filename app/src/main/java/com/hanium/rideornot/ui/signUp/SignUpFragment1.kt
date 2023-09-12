@@ -36,7 +36,7 @@ class SignUpFragment1 : Fragment() {
         val fadeInAnim3 = AnimationUtils.loadAnimation(context, R.anim.fade_in)
         fadeInAnim3.startOffset = THIRD_ANIM_DELAY
         Log.d("FragmentContext", requireContext().toString())
-        Log.d("FullName2", signUpViewModel.profiles.nickName)
+        Log.d("FullName2", signUpViewModel.nickName)
 
         binding.tvHi.startAnimation(fadeInAnim1)
         binding.tvExplanation.startAnimation(fadeInAnim2)

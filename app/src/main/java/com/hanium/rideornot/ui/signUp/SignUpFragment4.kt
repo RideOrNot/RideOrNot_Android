@@ -67,15 +67,15 @@ class SignUpFragment4 : Fragment() {
             }
         })
 
-        binding.tvNicknameCurrentBytes.text = signUpViewModel.profiles.nickName.toByteArray(Charsets.UTF_8).size.toString()
+        binding.tvNicknameCurrentBytes.text = signUpViewModel.nickName.toByteArray(Charsets.UTF_8).size.toString()
         binding.tvNicknameMaxBytes.text = MAX_NICKNAME_BYTES.toString()
-        binding.editTextNicknameInput.hint = signUpViewModel.profiles.nickName
+        binding.editTextNicknameInput.hint = signUpViewModel.nickName
 
         binding.editTextNicknameInput.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 val text = s.toString()
 
-                currentBytes = if (text == "") signUpViewModel.profiles.nickName.toByteArray(Charsets.UTF_8).size
+                currentBytes = if (text == "") signUpViewModel.nickName.toByteArray(Charsets.UTF_8).size
                 else text.toByteArray(Charsets.UTF_8).size
 
                 binding.tvNicknameCurrentBytes.text = currentBytes.toString()
@@ -101,14 +101,14 @@ class SignUpFragment4 : Fragment() {
                 binding.editTextNicknameInput.text.toString() == ""
             ) {
                 ProfilePostRequestBody(
-                    ageRange = signUpViewModel.profiles.ageRange,
-                    gender = signUpViewModel.profiles.gender,
-                    nickName = signUpViewModel.profiles.nickName
+                    ageRange = signUpViewModel.ageRange.id,
+                    gender = signUpViewModel.gender.id,
+                    nickName = signUpViewModel.nickName
                 )
             } else {
                 ProfilePostRequestBody(
-                    ageRange = signUpViewModel.profiles.ageRange,
-                    gender = signUpViewModel.profiles.gender,
+                    ageRange = signUpViewModel.ageRange.id,
+                    gender = signUpViewModel.gender.id,
                     nickName = binding.editTextNicknameInput.text.toString()
                 )
             }
@@ -119,9 +119,7 @@ class SignUpFragment4 : Fragment() {
                 Log.d("response-signUp", response.toString())
                 if (response.isSuccessful) {
                     parentFragmentManager.popBackStack()
-                    settingViewModel = ViewModelProvider(requireActivity())[SettingViewModel::class.java]
-
-//                    settingViewModel.profiles = signUpViewModel.
+//                    settingViewModel = signUpViewModel.
                     binding.root.startAnimation(fadeOutAnim)
                 }
             }

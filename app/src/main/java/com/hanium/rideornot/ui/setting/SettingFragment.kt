@@ -1,27 +1,26 @@
 package com.hanium.rideornot.ui.setting
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.hanium.rideornot.R
 import com.hanium.rideornot.databinding.FragmentSettingBinding
 import com.hanium.rideornot.ui.dialog.VerticalDialog
-import com.hanium.rideornot.ui.signUp.SignUpViewModel
+import com.hanium.rideornot.utils.NetworkModule
+import kotlinx.coroutines.*
 
 class SettingFragment : Fragment() {
 
     private lateinit var binding: FragmentSettingBinding
     private lateinit var onBackPressedCallback: OnBackPressedCallback
     private val settingViewModel: SettingViewModel by activityViewModels()
-    private lateinit var signUpViewModel: SignUpViewModel
+//    private lateinit var signUpViewModel: SignUpViewModel
 
     private fun setBackBtnHandling() {
         onBackPressedCallback = object : OnBackPressedCallback(true) {
@@ -41,13 +40,19 @@ class SettingFragment : Fragment() {
     ): View {
         binding = FragmentSettingBinding.inflate(inflater, container, false)
 
-        signUpViewModel = ViewModelProvider(requireActivity())[SignUpViewModel::class.java]
         setBackBtnHandling()
 
         initView()
 
-        binding.tvNickname.text = signUpViewModel.profiles.nickName
-        binding.tvEmail.text = signUpViewModel.profiles.email
+//        signUpViewModel = ViewModelProvider(requireActivity())[SignUpViewModel::class.java]
+        CoroutineScope(Dispatchers.Main).launch {
+                val response = withContext(Dispatchers.Default) {
+                NetworkModule.getProfileService().getProfile()
+            }
+            Log.d("responseSetting",response.toString())
+            binding.tvNickname.text = response.result.nickName
+            binding.tvEmail.text = response.result.email
+        }
 
         return binding.root
     }

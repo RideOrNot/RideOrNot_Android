@@ -15,5 +15,7 @@ class SignUpViewModel: ViewModel() {
         NONE(0), MALE(1), FEMALE(2)
     }
 
-    lateinit var profiles: ProfileGetResponse
+    var ageRange : AgeRange = AgeRange.NONE
+    var gender: Gender = Gender.NONE
+    var nickName: String = ""
 }

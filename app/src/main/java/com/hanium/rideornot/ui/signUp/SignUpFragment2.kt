@@ -37,32 +37,32 @@ class SignUpFragment2 : Fragment() {
         })
 
         binding.btnTeens.setOnClickListener {
-            signUpViewModel.profiles.ageRange = AgeRange.TEENS.id
+            signUpViewModel.ageRange = AgeRange.TEENS
             binding.llAgeSelection.startAnimation(fadeOutAnim)
             disableButtons()
         }
         binding.btnTwenties.setOnClickListener {
-            signUpViewModel.profiles.ageRange = AgeRange.TWENTIES.id
+            signUpViewModel.ageRange = AgeRange.TWENTIES
             binding.llAgeSelection.startAnimation(fadeOutAnim)
             disableButtons()
         }
         binding.btnThirties.setOnClickListener {
-            signUpViewModel.profiles.ageRange = AgeRange.THIRTIES.id
+            signUpViewModel.ageRange = AgeRange.THIRTIES
             binding.llAgeSelection.startAnimation(fadeOutAnim)
             disableButtons()
         }
         binding.btnForties.setOnClickListener {
-            signUpViewModel.profiles.ageRange = AgeRange.FORTIES.id
+            signUpViewModel.ageRange = AgeRange.FORTIES
             binding.llAgeSelection.startAnimation(fadeOutAnim)
             disableButtons()
         }
         binding.btnFifties.setOnClickListener {
-            signUpViewModel.profiles.ageRange = AgeRange.FIFTIES.id
+            signUpViewModel.ageRange = AgeRange.FIFTIES
             binding.llAgeSelection.startAnimation(fadeOutAnim)
             disableButtons()
         }
         binding.btnElders.setOnClickListener {
-            signUpViewModel.profiles.ageRange = AgeRange.ELDERS.id
+            signUpViewModel.ageRange = AgeRange.ELDERS
             binding.llAgeSelection.startAnimation(fadeOutAnim)
             disableButtons()
         }

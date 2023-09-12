@@ -36,6 +36,7 @@ import com.hanium.rideornot.ui.setting.SettingViewModel
 import com.hanium.rideornot.ui.signUp.SignUpFragment1
 import com.hanium.rideornot.ui.signUp.SignUpViewModel
 import com.hanium.rideornot.utils.NetworkModule
+import com.hanium.rideornot.utils.PreferenceUtil
 import kotlinx.coroutines.*
 
 
@@ -49,9 +50,9 @@ private const val JWT_KEY = "jwt"
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-
     private lateinit var signUpViewModel: SignUpViewModel
-    private lateinit var settingViewModel: SettingViewModel
+//    private lateinit var settingViewModel: SettingViewModel
+    private lateinit var preferenceUtil: PreferenceUtil
 
     // 안드로이드 기기의 API 레벨(31 이하?)이 낮을 경우 원탭로그인이 동작하지 않음.
     // missing feature{name=auth_api_credentials_begin_sign_in, version=8}
@@ -118,6 +119,8 @@ class MainActivity : AppCompatActivity() {
 
         initBottomNavigation()
 
+//        preferenceUtil = PreferenceUtil(this)
+//        preferenceUtil.setJwt("")
         val preferences: SharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
         val isFirstRun = preferences.getBoolean(FIRST_RUN_KEY, true)
 
@@ -158,6 +161,7 @@ class MainActivity : AppCompatActivity() {
             val response = withContext(Dispatchers.Default) {
                 NetworkModule.getProfileService().getProfile()
             }
+
             Log.d("responseProfileGet", response.toString())
             // jwt가 만료되었을 시 혹은 프로필 설정이 안 되어있을 시 로그인 시도 및 계정 생성
             if (response.result == null || response.result.ageRange == 0
@@ -204,10 +208,6 @@ class MainActivity : AppCompatActivity() {
                     }
             } else if (response.resultCode == NetworkModule.SUCCESS) {
                 // jwt가 유효하고 프로필이 설정되어 있을 시, 정상 로그인 처리
-                Log.d("SUCCESS, mainContext", this@MainActivity.toString())
-                // settings에서 사용하기 위해 signUpViewModel에 받아온 프로필을 저장
-                signUpViewModel = ViewModelProvider(this@MainActivity)[SignUpViewModel::class.java]
-                signUpViewModel.profiles = response.result
             }
         }
     }
@@ -235,16 +235,14 @@ class MainActivity : AppCompatActivity() {
                             }
                             App.preferenceUtil.setJwt(jwtResponse.body().toString())
                             val profileGetResponse = NetworkModule.getProfileService().getProfile()
-
                             // 계정 생성 시 ageRange = 0, gender = 0, nickName = "구글 계정의 이름" 이 할당됨.
                             if (profileGetResponse.result.ageRange == 0 || profileGetResponse.result.gender == 0
 //                                || profileResponse.result.nickName == null
                             ) {
                                 // 새 유저일 경우, 초기설정 화면으로 fragment 전환
-                                val fullName = familyName + givenName
                                 signUpViewModel = ViewModelProvider(this@MainActivity)[SignUpViewModel::class.java]
-                                signUpViewModel.profiles = profileGetResponse.result
-
+                                val fullName = familyName + givenName
+                                signUpViewModel.nickName = fullName
                                 supportFragmentManager.beginTransaction()
                                     .replace(R.id.frm_main, SignUpFragment1())
                                     .addToBackStack("mainActivity")

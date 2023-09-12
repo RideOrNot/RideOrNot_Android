@@ -43,12 +43,12 @@ class SignUpFragment3 : Fragment() {
         })
 
         binding.btnMale.setOnClickListener {
-            signUpViewModel.profiles.gender = Gender.MALE.id
+            signUpViewModel.gender = Gender.MALE
             binding.llGenderSelection.startAnimation(fadeOutAnim)
             disableButtons()
         }
         binding.btnFemale.setOnClickListener {
-            signUpViewModel.profiles.gender = Gender.FEMALE.id
+            signUpViewModel.gender = Gender.FEMALE
             binding.llGenderSelection.startAnimation(fadeOutAnim)
             disableButtons()
         }
