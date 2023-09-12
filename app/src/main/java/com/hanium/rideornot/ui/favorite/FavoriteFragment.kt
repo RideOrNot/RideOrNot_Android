@@ -11,6 +11,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.hanium.rideornot.App
 import com.hanium.rideornot.R
 import com.hanium.rideornot.databinding.FragmentFavoriteBinding
 import com.hanium.rideornot.domain.Favorite
@@ -68,7 +69,7 @@ class FavoriteFragment : Fragment(), IFavoriteRV, IFavoriteEditRV {
             }
         }
 
-        favoriteViewModel.favoriteList.observe(this) { it ->
+        favoriteViewModel.favoriteList.observe(this) {
             favoriteRVAdapter = FavoriteRVAdapter(
                 requireContext(),
                 // 즐겨찾기 목록을 order에 따라 정렬하여 어댑터에 전달
@@ -77,7 +78,6 @@ class FavoriteFragment : Fragment(), IFavoriteRV, IFavoriteEditRV {
                 searchViewModel,
                 this
             )
-
             val mutableFavoriteList = favoriteViewModel.favoriteList.value!!.sortedBy { it.orderNumber }.toMutableList()
             favoriteEditRVAdapter = FavoriteEditRVAdapter(
                 requireContext(),
@@ -92,6 +92,12 @@ class FavoriteFragment : Fragment(), IFavoriteRV, IFavoriteEditRV {
             binding.rvFavorite.setOnTouchListener { _, _ ->
                 itemTouchHelperCallback.removePreviousClamp(binding.rvFavorite)
                 false
+            }
+
+            if (favoriteViewModel.favoriteList.value!!.size == 0) {
+                binding.tvNoFavoriteExists.visibility = View.VISIBLE
+            } else {
+                binding.tvNoFavoriteExists.visibility = View.GONE
             }
         }
 

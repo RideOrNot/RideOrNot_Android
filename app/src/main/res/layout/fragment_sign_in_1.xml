@@ -63,6 +63,7 @@
         android:background="@drawable/rounded_rect_size156x67"
         android:gravity="center"
         android:text="시작하기"
+        android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
