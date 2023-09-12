@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -110,6 +111,12 @@ class SignUpFragment4 : Fragment() {
 
         // TODO: 글자수 제한 넘으면 재설정 플로팅 출력
         binding.tvOkBtn.setOnClickListener {
+            if (currentBytes > MAX_NICKNAME_BYTES) {
+                //TODO: 추후 dataBinding으로 리팩토링
+                Toast.makeText(requireContext(), "닉네임의 길이가 최대 글자 수를 초과하였습니다.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             Log.d("okBtn", "clicked")
             val profilePostRequestBody: ProfilePostRequestBody = if (
                 binding.editTextNicknameInput.text.toString() == ""
@@ -133,7 +140,6 @@ class SignUpFragment4 : Fragment() {
                 Log.d("response-signUp", response.toString())
                 if (response.isSuccessful) {
                     parentFragmentManager.popBackStack()
-//                    settingViewModel = signUpViewModel.
                     binding.root.startAnimation(fadeOutAnim)
                 }
             }
