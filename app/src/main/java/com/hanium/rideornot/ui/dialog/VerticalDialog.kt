@@ -43,14 +43,18 @@ class VerticalDialog(private val context: AppCompatActivity) {
         dialog.show()
 
         binding.btnContinue.setOnClickListener {
-//            topBtnListener.onClicked(true)
+            topBtnListener.onClicked(true)
             dialog.dismiss()
         }
 
         binding.btnQuit.setOnClickListener {
-//            bottomBtnListener.onClicked(true)
+            bottomBtnListener.onClicked(true)
             dialog.dismiss()
         }
+    }
+
+    fun dismiss() {
+        dialog.dismiss()
     }
 
     fun bottomBtnClickListener(listener: (Boolean) -> Unit) {

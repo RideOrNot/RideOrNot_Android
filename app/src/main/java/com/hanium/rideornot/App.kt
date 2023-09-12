@@ -27,6 +27,14 @@ class App : Application() {
         fun getApplicationContext(): Context {
             return instance.applicationContext
         }
+
+        fun signOut() {
+            preferenceUtil.setJwt("")
+        }
+
+        fun startSignIn(mainActivity: MainActivity) {
+            mainActivity.startSignIn()
+        }
     }
 
     override fun onCreate() {

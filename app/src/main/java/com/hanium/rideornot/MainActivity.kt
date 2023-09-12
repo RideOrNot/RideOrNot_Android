@@ -110,6 +110,7 @@ class MainActivity : AppCompatActivity() {
             else if (requestCode == NOTIFICATION_PERMISSION_REQUEST_CODE)
                 mainActivity.moveNotificationSettingsLauncher.launch(intent)
         }
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -152,8 +153,10 @@ class MainActivity : AppCompatActivity() {
 //        supportFragmentManager.beginTransaction()
 //            .replace(R.id.frm_main, SignUpFragment1())
 //            .commit()
+        startSignIn()
+    }
 
-
+    fun startSignIn() {
         CoroutineScope(Dispatchers.Main).launch {
             // 현재 jwt 만료 시 서버에서 exception 반환이 아닌, result에 null을 할당하여 반환하도록
             // 되어 있음. (resultCode도 SUCCESS로 나옴)
@@ -210,6 +213,7 @@ class MainActivity : AppCompatActivity() {
                 // jwt가 유효하고 프로필이 설정되어 있을 시, 정상 로그인 처리
             }
         }
+
     }
 
     // TODO: deprecated 메서드인 onActivityResult -> startActivityForResult로 변경하기

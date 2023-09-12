@@ -52,15 +52,19 @@
     <string name="notification_setting">알림 설정</string>
     <string name="push_notification_reception">Push 알림 수신</string>
     <string name="etc_setting">기타</string>
-    <string name="logout">로그아웃</string>
+    <string name="logout">계정 변경</string>
     <string name="unregister">회원탈퇴</string>
     <string name="logout_message">로그아웃 하시겠습니까?</string>
     <string name="unregister_message">회원탈퇴하시겠습니까?</string>
     <string name="unregister_caption">탈퇴 시 모든 정보가 삭제됩니다.</string>
+    <string name="unregister_confirmation_message">정말로 회원탈퇴하시겠습니까?</string>
+    <string name="unregister_confirmation_caption">탈퇴 후 기존의 계정 정보는\n다시 복구할 수 없게 됩니다.</string>
+    <string name="unregister_confirmation_top_btn_title">네, 탈퇴할게요.</string>
 
     <!-- Dialog -->
     <string name="check">확인</string>
     <string name="cancel">취소</string>
+    <string name="action_fail">처리에 실패하였습니다. 다시 시도해 주세요.</string>
 
     <!-- Search -->
     <string name="recent_searched">최근 검색</string>
