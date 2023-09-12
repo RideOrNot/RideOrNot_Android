@@ -11,13 +11,13 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import com.hanium.rideornot.MainActivity
 import com.hanium.rideornot.R
-import com.hanium.rideornot.data.response.ProfileDto
+import com.hanium.rideornot.data.request.ProfilePostRequestBody
+import com.hanium.rideornot.data.response.ProfileGetResponse
 import com.hanium.rideornot.databinding.FragmentSignIn4Binding
-import com.hanium.rideornot.ui.home.HomeFragment
+import com.hanium.rideornot.ui.setting.SettingViewModel
 import com.hanium.rideornot.utils.NetworkModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -31,6 +31,7 @@ private const val MAX_NICKNAME_BYTES: Int = 24
 class SignUpFragment4 : Fragment() {
     private lateinit var binding: FragmentSignIn4Binding
     private lateinit var signUpViewModel: SignUpViewModel
+    private lateinit var settingViewModel: SettingViewModel
 
     private var currentBytes = 0
 
@@ -40,7 +41,8 @@ class SignUpFragment4 : Fragment() {
     ): View? {
         super.onCreate(savedInstanceState)
         binding = FragmentSignIn4Binding.inflate(inflater, container, false)
-        signUpViewModel = ViewModelProvider(requireActivity()).get(SignUpViewModel::class.java)
+        signUpViewModel = ViewModelProvider(requireActivity())[SignUpViewModel::class.java]
+
 
         val fadeInAnim1 = AnimationUtils.loadAnimation(context, R.anim.fade_in)
         fadeInAnim1.startOffset = FIRST_ANIM_DELAY
@@ -65,15 +67,15 @@ class SignUpFragment4 : Fragment() {
             }
         })
 
-        binding.tvNicknameCurrentBytes.text = signUpViewModel.nickName.toByteArray(Charsets.UTF_8).size.toString()
+        binding.tvNicknameCurrentBytes.text = signUpViewModel.profiles.nickName.toByteArray(Charsets.UTF_8).size.toString()
         binding.tvNicknameMaxBytes.text = MAX_NICKNAME_BYTES.toString()
-        binding.editTextNicknameInput.hint = signUpViewModel.nickName
+        binding.editTextNicknameInput.hint = signUpViewModel.profiles.nickName
 
         binding.editTextNicknameInput.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 val text = s.toString()
 
-                currentBytes = if (text == "") signUpViewModel.nickName.toByteArray(Charsets.UTF_8).size
+                currentBytes = if (text == "") signUpViewModel.profiles.nickName.toByteArray(Charsets.UTF_8).size
                 else text.toByteArray(Charsets.UTF_8).size
 
                 binding.tvNicknameCurrentBytes.text = currentBytes.toString()
@@ -95,28 +97,31 @@ class SignUpFragment4 : Fragment() {
         // TODO: 글자수 제한 넘으면 재설정 플로팅 출력
         binding.tvOkBtn.setOnClickListener {
             Log.d("okBtn", "clicked")
-            val profileDto: ProfileDto = if (binding.editTextNicknameInput.text.toString() == "") {
-                ProfileDto(
-                    ageRange = signUpViewModel.ageRange.id,
-                    gender = signUpViewModel.gender.id,
-                    nickName = signUpViewModel.nickName
+            val profilePostRequestBody: ProfilePostRequestBody = if (
+                binding.editTextNicknameInput.text.toString() == ""
+            ) {
+                ProfilePostRequestBody(
+                    ageRange = signUpViewModel.profiles.ageRange,
+                    gender = signUpViewModel.profiles.gender,
+                    nickName = signUpViewModel.profiles.nickName
                 )
             } else {
-                ProfileDto(
-                    ageRange = signUpViewModel.ageRange.id,
-                    gender = signUpViewModel.gender.id,
+                ProfilePostRequestBody(
+                    ageRange = signUpViewModel.profiles.ageRange,
+                    gender = signUpViewModel.profiles.gender,
                     nickName = binding.editTextNicknameInput.text.toString()
                 )
             }
             CoroutineScope(Dispatchers.Main).launch {
-                Log.d("response-prepre", "testtesttest")
                 val response = withContext(Dispatchers.Default) {
-                    NetworkModule.getProfileService().postProfile(profileDto)
+                    NetworkModule.getProfileService().postProfile(profilePostRequestBody)
                 }
-                Log.d("response-pre", "testtesttest")
-                Log.d("response", response.toString())
+                Log.d("response-signUp", response.toString())
                 if (response.isSuccessful) {
                     parentFragmentManager.popBackStack()
+                    settingViewModel = ViewModelProvider(requireActivity())[SettingViewModel::class.java]
+
+//                    settingViewModel.profiles = signUpViewModel.
                     binding.root.startAnimation(fadeOutAnim)
                 }
             }

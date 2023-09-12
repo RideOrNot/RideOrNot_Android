@@ -23,7 +23,7 @@ class SignUpFragment3 : Fragment() {
     ): View? {
         super.onCreate(savedInstanceState)
         binding = FragmentSignIn3Binding.inflate(inflater, container, false)
-        signUpViewModel = ViewModelProvider(requireActivity()).get(SignUpViewModel::class.java)
+        signUpViewModel = ViewModelProvider(requireActivity())[SignUpViewModel::class.java]
 
         val fadeInAnim = AnimationUtils.loadAnimation(context, R.anim.fade_in)
         binding.llGenderSelection.startAnimation(fadeInAnim)
@@ -43,12 +43,12 @@ class SignUpFragment3 : Fragment() {
         })
 
         binding.btnMale.setOnClickListener {
-            signUpViewModel.gender = Gender.MALE
+            signUpViewModel.profiles.gender = Gender.MALE.id
             binding.llGenderSelection.startAnimation(fadeOutAnim)
             disableButtons()
         }
         binding.btnFemale.setOnClickListener {
-            signUpViewModel.gender = Gender.FEMALE
+            signUpViewModel.profiles.gender = Gender.FEMALE.id
             binding.llGenderSelection.startAnimation(fadeOutAnim)
             disableButtons()
         }

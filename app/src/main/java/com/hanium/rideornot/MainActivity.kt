@@ -11,8 +11,10 @@ import android.util.Log
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -21,8 +23,8 @@ import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.CommonStatusCodes
-import com.hanium.rideornot.MainActivity.Companion.moveAppSettings
-import com.hanium.rideornot.data.request.SignInRequest
+import com.hanium.rideornot.data.request.SignInRequestBody
+import com.hanium.rideornot.data.response.ProfileGetResponse
 import com.hanium.rideornot.databinding.ActivityMainBinding
 import com.hanium.rideornot.gps.GpsForegroundService
 import com.hanium.rideornot.gps.GpsManager
@@ -30,13 +32,11 @@ import com.hanium.rideornot.gps.LOCATION_PERMISSION_REQUEST_CODE
 import com.hanium.rideornot.notification.NOTIFICATION_PERMISSION_REQUEST_CODE
 import com.hanium.rideornot.notification.NotificationManager
 import com.hanium.rideornot.ui.dialog.PermissionInfoDialog
+import com.hanium.rideornot.ui.setting.SettingViewModel
 import com.hanium.rideornot.ui.signUp.SignUpFragment1
 import com.hanium.rideornot.ui.signUp.SignUpViewModel
 import com.hanium.rideornot.utils.NetworkModule
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 
 private const val REQ_ONE_TAP = 2
@@ -51,6 +51,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private lateinit var signUpViewModel: SignUpViewModel
+    private lateinit var settingViewModel: SettingViewModel
 
     // 안드로이드 기기의 API 레벨(31 이하?)이 낮을 경우 원탭로그인이 동작하지 않음.
     // missing feature{name=auth_api_credentials_begin_sign_in, version=8}
@@ -158,9 +159,10 @@ class MainActivity : AppCompatActivity() {
                 NetworkModule.getProfileService().getProfile()
             }
             Log.d("responseProfileGet", response.toString())
+            // jwt가 만료되었을 시 혹은 프로필 설정이 안 되어있을 시 로그인 시도 및 계정 생성
             if (response.result == null || response.result.ageRange == 0
-                || response.result.gender == 0) {
-                // jwt가 만료되었을 시 혹은 프로필 설정이 안 되어있을 시 로그인 시도 및 계정 생성
+                || response.result.gender == 0
+            ) {
                 // TODO: 로그인, 회원가입 엔드포인트 분리하여 구현 변경
                 val googleWebClientId = BuildConfig.GOOGLE_WEB_CLIENT_ID
                 oneTapClient = Identity.getSignInClient(this@MainActivity)
@@ -200,6 +202,12 @@ class MainActivity : AppCompatActivity() {
                         // do nothing and continue presenting the signed-out UI.
                         Log.d("beginSignInFailure", e.localizedMessage)
                     }
+            } else if (response.resultCode == NetworkModule.SUCCESS) {
+                // jwt가 유효하고 프로필이 설정되어 있을 시, 정상 로그인 처리
+                Log.d("SUCCESS, mainContext", this@MainActivity.toString())
+                // settings에서 사용하기 위해 signUpViewModel에 받아온 프로필을 저장
+                signUpViewModel = ViewModelProvider(this@MainActivity)[SignUpViewModel::class.java]
+                signUpViewModel.profiles = response.result
             }
         }
     }
@@ -220,23 +228,22 @@ class MainActivity : AppCompatActivity() {
                     if (idToken != null) {
                         Log.d("loginResultHandler", "Got ID token, $idToken")
                         CoroutineScope(Dispatchers.Main).launch {
-                            val jwtResponse = NetworkModule.getAuthService().postGoogleIdToken(
-                                SignInRequest(idToken)
-                            ).body().toString()
-                            App.preferenceUtil.setJwt(jwtResponse)
-
-                            val profileResponse = NetworkModule.getProfileService().getProfile()
-                            Log.d("profile", profileResponse.toString())
+                            val jwtResponse = withContext(Dispatchers.Default) {
+                                NetworkModule.getAuthService().postGoogleIdToken(
+                                    SignInRequestBody(idToken)
+                                )
+                            }
+                            App.preferenceUtil.setJwt(jwtResponse.body().toString())
+                            val profileGetResponse = NetworkModule.getProfileService().getProfile()
 
                             // 계정 생성 시 ageRange = 0, gender = 0, nickName = "구글 계정의 이름" 이 할당됨.
-                            if (profileResponse.result.ageRange == 0
-                                || profileResponse.result.gender == 0
+                            if (profileGetResponse.result.ageRange == 0 || profileGetResponse.result.gender == 0
 //                                || profileResponse.result.nickName == null
                             ) {
-                                // 새 유저일 경우
+                                // 새 유저일 경우, 초기설정 화면으로 fragment 전환
                                 val fullName = familyName + givenName
-                                signUpViewModel = ViewModelProvider(this@MainActivity).get(SignUpViewModel::class.java)
-                                signUpViewModel.nickName = fullName
+                                signUpViewModel = ViewModelProvider(this@MainActivity)[SignUpViewModel::class.java]
+                                signUpViewModel.profiles = profileGetResponse.result
 
                                 supportFragmentManager.beginTransaction()
                                     .replace(R.id.frm_main, SignUpFragment1())

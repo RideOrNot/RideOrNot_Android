@@ -18,6 +18,8 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.io.IOException
 
 object NetworkModule {
+    const val SUCCESS = "SUCCESS"
+    const val FAILURE = "FAILURE"
     fun getArrivalService(
     ): ArrivalService {
         return retrofit.create(ArrivalService::class.java)

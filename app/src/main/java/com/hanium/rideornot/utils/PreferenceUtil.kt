@@ -4,9 +4,9 @@ import android.content.Context
 import android.content.SharedPreferences
 
 private const val PREFS_NAME = "mainActivity"
-private const val FIRST_RUN_KEY = "firstRun"
 
-private const val JWT_KEY = "jwt"
+const val FIRST_RUN_KEY = "firstRun"
+const val JWT_KEY = "jwt"
 
 class PreferenceUtil(context: Context) {
     private val prefs: SharedPreferences =

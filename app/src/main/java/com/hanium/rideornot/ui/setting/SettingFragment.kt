@@ -7,14 +7,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.hanium.rideornot.R
 import com.hanium.rideornot.databinding.FragmentSettingBinding
 import com.hanium.rideornot.ui.dialog.VerticalDialog
+import com.hanium.rideornot.ui.signUp.SignUpViewModel
 
 class SettingFragment : Fragment() {
 
     private lateinit var binding: FragmentSettingBinding
     private lateinit var onBackPressedCallback: OnBackPressedCallback
+    private val settingViewModel: SettingViewModel by activityViewModels()
+    private lateinit var signUpViewModel: SignUpViewModel
 
     private fun setBackBtnHandling() {
         onBackPressedCallback = object : OnBackPressedCallback(true) {
@@ -34,9 +41,13 @@ class SettingFragment : Fragment() {
     ): View {
         binding = FragmentSettingBinding.inflate(inflater, container, false)
 
+        signUpViewModel = ViewModelProvider(requireActivity())[SignUpViewModel::class.java]
         setBackBtnHandling()
 
         initView()
+
+        binding.tvNickname.text = signUpViewModel.profiles.nickName
+        binding.tvEmail.text = signUpViewModel.profiles.email
 
         return binding.root
     }

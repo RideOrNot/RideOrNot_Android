@@ -26,7 +26,7 @@ class SignUpFragment1 : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         super.onCreate(savedInstanceState)
-        signUpViewModel = ViewModelProvider(requireActivity()).get(SignUpViewModel::class.java)
+        signUpViewModel = ViewModelProvider(requireActivity())[SignUpViewModel::class.java]
         binding = FragmentSignIn1Binding.inflate(inflater, container, false)
 
         val fadeInAnim1 = AnimationUtils.loadAnimation(context, R.anim.fade_in)
@@ -36,7 +36,7 @@ class SignUpFragment1 : Fragment() {
         val fadeInAnim3 = AnimationUtils.loadAnimation(context, R.anim.fade_in)
         fadeInAnim3.startOffset = THIRD_ANIM_DELAY
         Log.d("FragmentContext", requireContext().toString())
-        Log.d("FullName2", signUpViewModel.nickName)
+        Log.d("FullName2", signUpViewModel.profiles.nickName)
 
         binding.tvHi.startAnimation(fadeInAnim1)
         binding.tvExplanation.startAnimation(fadeInAnim2)
