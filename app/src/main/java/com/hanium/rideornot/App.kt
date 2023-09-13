@@ -2,6 +2,7 @@ package com.hanium.rideornot
 
 import android.app.Application
 import android.content.Context
+import androidx.appcompat.app.AppCompatDelegate
 import com.hanium.rideornot.domain.StationDatabase
 import com.hanium.rideornot.repository.LineRepository
 import com.hanium.rideornot.repository.StationExitRepository
@@ -41,5 +42,7 @@ class App : Application() {
         super.onCreate()
         preferenceUtil = PreferenceUtil(applicationContext)
         instance = this
+        // 다크모드 임시 비활성화
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
     }
 }
