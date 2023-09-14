@@ -7,9 +7,6 @@ import android.util.Log
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofenceStatusCodes
 import com.google.android.gms.location.GeofencingEvent
-import com.hanium.rideornot.notification.ContentType
-import com.hanium.rideornot.notification.NotificationManager
-import com.hanium.rideornot.notification.NotificationModel
 import com.hanium.rideornot.notification.NotificationService
 
 class GeofenceBroadcastReceiver : BroadcastReceiver() {
@@ -64,9 +61,9 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
 
                 if (exitId != -1) {
                     // 푸시 알림 전송 위해 NotificationService 시작 (도착 정보 API 호출은 Service에서 구현해야 함)
-                    val intent = Intent(context, NotificationService::class.java)
-                    intent.putExtra("nearestStationExit", exitId)  // 출구 데이터 전달
-                    context.startService(intent)
+                    val notificationIntent = Intent(context, NotificationService::class.java)
+                    notificationIntent.putExtra("nearestStationExit", exitId)  // 출구 데이터 전달
+                    context.startService(notificationIntent)
                 }
             }
             Geofence.GEOFENCE_TRANSITION_EXIT -> {
@@ -77,19 +74,13 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                 }
 
                 // NotificationService 종료
-                val serviceIntent = Intent(context, NotificationService::class.java)
-                context.stopService(serviceIntent)
+                val stopServiceIntent = Intent(context, NotificationService::class.java)
+                context.stopService(stopServiceIntent)
 
-//                NotificationManager.createNotification(
-//                    context,
-//                    NotificationModel(
-//                        1,
-//                        ContentType.RIDE,
-//                        1,
-//                        "지오펜싱 테스트 알림",
-//                        "지오펜스에서 빠져나왔습니다, requestId: " + intent.getIntExtra("nearestStationExit", -1)
-//                    )
-//                )
+                // 탑승 여부 묻는 알림 서비스 시작
+                val boardingStatusIntent = Intent(context, NotificationService::class.java)
+                boardingStatusIntent.putExtra("action", "boardingStatus")
+                context.startService(boardingStatusIntent)
             }
             else -> {
                 // 트리거된 지오펜싱 트리거가 Enter || Exit 이 아닐 경우 (이 또한 정상적인 경우는 아님)
