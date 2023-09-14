@@ -12,6 +12,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import com.hanium.rideornot.MainActivity
 import com.hanium.rideornot.R
+import com.hanium.rideornot.notification.NotificationService
 import com.hanium.rideornot.ui.home.HomeFragment
 
 class GpsForegroundService : Service() {

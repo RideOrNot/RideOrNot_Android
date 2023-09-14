@@ -22,6 +22,10 @@
     <string name="ride_or_not_notification_channel_description">승차 알림을 표시합니다.</string>
     <string name="ride_notification_info">주변 역을 탐색하여 \n지하철 승차 알림을 드립니다.\n동의하십니까?</string>
 
+    <!-- 탈래말래 탑승 여부 알림 -->
+    <string name="ride_or_not_notification_boarding_status_title">승차하셨습니까?</string>
+    <string name="ride_or_not_notification_boarding_status_content">열차에 승차하셨는지 서비스 개선을 위해 알려주세요</string>
+
     <!-- Permission Info -->
     <string name="permission_info">앱 접근 권한 안내</string>
     <string name="permission_info_caption">탈래말래 서비스 이용을 위해\n아래의 권한이 필요합니다.</string>

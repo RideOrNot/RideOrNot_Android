@@ -20,7 +20,9 @@ const val NOTIFICATION_PERMISSION_REQUEST_CODE: Int = 2
 
 object NotificationManager {
 
-    private const val CHANNEL_ID = "ride_or_not_notification_push_channel"
+    private const val RIDE_CHANNEL_ID = "ride_or_not_ride_notification_push_channel"
+    private const val BOARDING_STATUS_CHANNEL_ID = "ride_or_not_boarding_status_notification_push_channel"
+
     var index = 1
 
     private var builder: NotificationCompat.Builder? = null
@@ -94,7 +96,7 @@ object NotificationManager {
         notificationManager: NotificationManager
     ) {
         val channel = NotificationChannel(
-            CHANNEL_ID,
+            RIDE_CHANNEL_ID,
             context.getString(R.string.ride_or_not_notification_channel_name),
             NotificationManager.IMPORTANCE_HIGH
         ).apply {
@@ -132,13 +134,84 @@ object NotificationManager {
         val stationName = notificationData.stationName
         val notificationText = notificationData.text.joinToString("\n")
 
-        builder = NotificationCompat.Builder(context, CHANNEL_ID)
+        builder = NotificationCompat.Builder(context, RIDE_CHANNEL_ID)
             .setContentIntent(pendingIntent)
             .setContentTitle("$stationName $title")
             .setStyle(NotificationCompat.BigTextStyle().bigText(notificationText))
             .setSmallIcon(R.drawable.ic_app_logo_round)
             .setColor(ContextCompat.getColor(context, R.color.blue))
             .addAction(R.drawable.ic_app_logo_round, "해제", dismissPendingIntent)
+            .setAutoCancel(true)
+            .setOnlyAlertOnce(true)
+
+        return builder!!.build()
+    }
+
+
+    // 탑승 여부 알림 채널 생성
+    private fun createBoardingStatusNotificationChannel(
+        context: Context,
+        notificationManager: NotificationManager
+    ) {
+        val channel = NotificationChannel(
+            BOARDING_STATUS_CHANNEL_ID,
+            "탑승 여부 확인",
+            NotificationManager.IMPORTANCE_HIGH
+        ).apply {
+            description = "서비스 개선을 위해 사용자의 탑승 여부를 체크합니다."
+        }
+        notificationManager.createNotificationChannel(channel)
+    }
+
+    // 탑승 여부 알림 생성
+    fun createBoardingStatusNotification(context: Context) {
+        val notificationManager: NotificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        createBoardingStatusNotificationChannel(context, notificationManager)
+        notificationManager.notify(
+            index, buildBoardingStatusNotification(
+                context
+            )
+        )
+    }
+
+    // 탑승 여부 알림 빌드
+    private fun buildBoardingStatusNotification(
+        context: Context
+    ): Notification {
+
+        // 푸시 알림 터치시 실행할 작업 설정 (여기선 MainActivity로 이동하도록 설정)
+        val intent = Intent(context, MainActivity::class.java)
+        // 푸시 알림을 터치하여 실행할 작업에 대한 Flag 설정 (현재 액티비티를 최상단으로 올림 | 최상단 액티비티를 제외하고 모든 액티비티를 제거)
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+
+        val pendingIntent = PendingIntent.getActivity(
+            context, 0, intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        // "네, 아니요" 버튼을 눌렀을 때 실행될 BroadcastReceiver의 Intent 생성
+        val dismissIntent = Intent(context, NotificationBroadcastReceiver::class.java)
+        val dismissPendingIntent = PendingIntent.getBroadcast(
+            context,
+            0,
+            dismissIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+
+        builder = NotificationCompat.Builder(context, RIDE_CHANNEL_ID)
+            .setContentIntent(pendingIntent)
+            .setContentTitle(context.getString(R.string.ride_or_not_notification_boarding_status_title))
+            .setStyle(
+                NotificationCompat.BigTextStyle()
+                    .bigText(context.getString(R.string.ride_or_not_notification_boarding_status_content))
+            )
+            .setSmallIcon(R.drawable.ic_app_logo_round)
+            .setColor(ContextCompat.getColor(context, R.color.blue))
+            .addAction(R.drawable.ic_app_logo_round, "네", dismissPendingIntent)
+            .addAction(R.drawable.ic_app_logo_round, "아니요", dismissPendingIntent)
             .setAutoCancel(true)
             .setOnlyAlertOnce(true)
 

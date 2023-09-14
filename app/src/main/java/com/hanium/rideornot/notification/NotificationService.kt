@@ -8,6 +8,7 @@ import com.hanium.rideornot.App.Companion.applicationScope
 import com.hanium.rideornot.App.Companion.lineRepository
 import com.hanium.rideornot.App.Companion.stationExitRepository
 import com.hanium.rideornot.App.Companion.stationRepository
+import com.hanium.rideornot.gps.GpsForegroundService.Companion.isServiceRunning
 import com.hanium.rideornot.repository.ArrivalRepository
 import com.hanium.rideornot.source.ArrivalRemoteDataSourceImpl
 import com.hanium.rideornot.utils.NetworkModule
@@ -30,20 +31,35 @@ class NotificationService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        val nearestStationExitId = intent?.getIntExtra("nearestStationExit", -1)
-        if (nearestStationExitId != -1) {
-            if (nearestStationExitId != null) {
-                createNotification(nearestStationExitId)
+        if (intent != null) {
+            when (intent.getStringExtra("action")) {
+                "boardingStatus" -> {
+                    // 탑승 여부 묻는 알림 전송
+                    sendBoardingStatusNotification()
+                }
+                else -> {
+                    val nearestStationExitId = intent.getIntExtra("nearestStationExit", -1)
+                    if (nearestStationExitId != -1) {
+                        createNotification(nearestStationExitId)
 
-                // 주기적으로 알림 업데이트
-                timer?.scheduleAtFixedRate(object : TimerTask() {
-                    override fun run() {
-                        updateNotificationContent(nearestStationExitId)
+                        // 주기적으로 알림 업데이트
+                        timer?.scheduleAtFixedRate(object : TimerTask() {
+                            override fun run() {
+                                // GpsForegroundService(위치 탐색 서비스)가 종료된 경우
+                                if (!isServiceRunning) {
+                                    cancel() // 타이머를 취소
+                                    stopSelf() // 서비스를 종료
+                                    return
+                                }
+
+                                updateNotificationContent(nearestStationExitId)
+                            }
+                        }, updateInterval.toLong(), updateInterval.toLong())
                     }
-                }, updateInterval.toLong(), updateInterval.toLong())
-
+                }
             }
         }
+
         return START_NOT_STICKY
     }
 
@@ -80,6 +96,7 @@ class NotificationService : Service() {
         }
     }
 
+    // 알림 내용 업데이트
     private fun updateNotificationContent(nearestStationExitId: Int) {
         applicationScope.launch {
             val content =
@@ -133,5 +150,10 @@ class NotificationService : Service() {
         } else {
             null
         }
+    }
+
+    // 탑승 여부 묻는 알림 전송
+    private fun sendBoardingStatusNotification() {
+        NotificationManager.createBoardingStatusNotification(applicationContext)
     }
 }

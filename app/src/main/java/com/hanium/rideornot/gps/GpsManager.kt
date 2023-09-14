@@ -24,7 +24,8 @@ import kotlinx.coroutines.launch
 
 const val LOCATION_PERMISSION_REQUEST_CODE: Int = 1
 private const val PRIORITY_LOCATION: @Priority Int = Priority.PRIORITY_HIGH_ACCURACY
-private const val MAX_LOCATION_UPDATE_THREAD_COUNT = 1 // startLocationUpdate 를 동시에 호출할 수 있는 최대 스레드 수
+private const val MAX_LOCATION_UPDATE_THREAD_COUNT =
+    1 // startLocationUpdate 를 동시에 호출할 수 있는 최대 스레드 수
 private const val SUFFIX_GEOFENCE_ID_ENTER = "-enter"
 private const val SUFFIX_GEOFENCE_ID_EXIT = "-exit"
 private const val MAX_GEOFENCE_COUNT = 20
@@ -117,17 +118,22 @@ object GpsManager {
                     val geofenceRadius = 1000f
                     nearestStationExit = findNearestStationExit(lastLocation)
                     if (nearestStationExit != null) {
-                        // 이미 같은 좌표에 대한 Geofence가 있는지 확인 후, 없으면 Geofence 생성
-                        if (!isDuplicateGeofence(nearestStationExit!!.stationLatitude, nearestStationExit!!.stationLongitude)) {
-                            addGeofence(
-                                "myStation-$tempGeofenceIndex",
-                                nearestStationExit!!.stationLatitude,
-                                nearestStationExit!!.stationLongitude,
-                                geofenceRadius,
-                                1000000
-                            )
-                            tempGeofenceIndex++
+                        // 중복 Geofence 검사
+                        // 이미 같은 좌표에 대한 Geofence가 있는지 확인 후, 있으면 삭제 후 Geofence 생성
+                        val duplicateGeofence = findDuplicateGeofence(
+                            nearestStationExit!!.stationLatitude,
+                            nearestStationExit!!.stationLongitude
+                        )
+                        if (duplicateGeofence != null) {
+                            removeGeofences(listOf(duplicateGeofence.requestId))
                         }
+
+                        // 새로운 Geofence 추가
+                        addGeofence(
+                            "myStation-$tempGeofenceIndex", nearestStationExit!!.stationLatitude,
+                            nearestStationExit!!.stationLongitude, geofenceRadius, 1000000
+                        )
+                        tempGeofenceIndex++
 
                         Log.e("[GpsManager] nearestStationExit", nearestStationExit.toString())
                         // logGeofenceList()
@@ -262,7 +268,12 @@ object GpsManager {
         // https://stackoverflow.com/questions/74174663/geofencingevent-fromintentintent-returns-null
 
         // API 버전에 따라 동작하는 flag가 달라짐 (intent에 putExtra를 해줬으므로 31 이상에서는 FLAG_MUTABLE, 그 아래는 FLAG_CANCEL_CURRENT 로 작동)
-        PendingIntent.getBroadcast(mainActivity, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_MUTABLE)
+        PendingIntent.getBroadcast(
+            mainActivity,
+            0,
+            intent,
+            PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_MUTABLE
+        )
     }
 
     // 위치 권한 허용 여부를 확인
@@ -279,14 +290,14 @@ object GpsManager {
         return true
     }
 
-    // 이미 같은 좌표에 대한 Geofence가 있는지 확인
-    private fun isDuplicateGeofence(latitude: Double, longitude: Double): Boolean {
+    // 이미 같은 좌표에 대한 Geofence가 있는지 조회
+    private fun findDuplicateGeofence(latitude: Double, longitude: Double): Geofence? {
         for (existingGeofence in geofenceList) {
             if (existingGeofence?.latitude == latitude && existingGeofence.longitude == longitude) {
-                return true
+                return existingGeofence
             }
         }
-        return false
+        return null
     }
 
     // 가장 가까운 지하철 역 출구 찾기
