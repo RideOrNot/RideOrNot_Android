@@ -4,10 +4,12 @@ data class NotificationModel(
     val id: Long,
     val contentType: ContentType,
     val contentId: Long,
+    val stationName: String,
     val title: String,
-    val text: String
+    val text: ArrayList<String>
 )
 
 enum class ContentType {
-    RIDE
+    RIDE,  // 승차
+    STATUS  // 탑승 여부
 }

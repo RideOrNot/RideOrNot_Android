@@ -23,6 +23,8 @@ object NotificationManager {
     private const val CHANNEL_ID = "ride_or_not_notification_push_channel"
     var index = 1
 
+    private var builder: NotificationCompat.Builder? = null
+
     fun initNotificationManager(activity: MainActivity) {
         // 알림 권한 확인
         if (ActivityCompat.checkSelfPermission(
@@ -65,13 +67,27 @@ object NotificationManager {
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         createNotificationChannel(context, notificationManager)
-
         notificationManager.notify(
             index, buildNotification(
                 context, notificationData
             )
         )
     }
+
+    fun updateNotification(context: Context, notificationData: NotificationModel) {
+        val notificationManager: NotificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        val title = notificationData.title
+        val stationName = notificationData.stationName
+        val notificationText = notificationData.text.joinToString("\n")
+
+        builder?.setContentTitle("$stationName $title")
+            ?.setStyle(NotificationCompat.BigTextStyle().bigText(notificationText))
+
+        builder?.let { notificationManager.notify(index, it.build()) }
+    }
+
 
     private fun createNotificationChannel(
         context: Context,
@@ -112,16 +128,21 @@ object NotificationManager {
         )
 
 
-        return NotificationCompat.Builder(context, CHANNEL_ID)
+        val title = notificationData.title
+        val stationName = notificationData.stationName
+        val notificationText = notificationData.text.joinToString("\n")
+
+        builder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setContentIntent(pendingIntent)
-            .setContentTitle(notificationData.title)
-            .setStyle(NotificationCompat.BigTextStyle().bigText(notificationData.text))
+            .setContentTitle("$stationName $title")
+            .setStyle(NotificationCompat.BigTextStyle().bigText(notificationText))
             .setSmallIcon(R.drawable.ic_app_logo_round)
             .setColor(ContextCompat.getColor(context, R.color.blue))
             .addAction(R.drawable.ic_app_logo_round, "해제", dismissPendingIntent)
-            .addAction(R.drawable.ic_app_logo_round, "확인", pendingIntent)
             .setAutoCancel(true)
-            .build()
+            .setOnlyAlertOnce(true)
+
+        return builder!!.build()
     }
 
     // 알림 권한 허용 여부를 확인
@@ -137,4 +158,3 @@ object NotificationManager {
     }
 
 }
-

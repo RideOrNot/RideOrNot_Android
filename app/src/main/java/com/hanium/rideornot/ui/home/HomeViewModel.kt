@@ -36,6 +36,7 @@ class HomeViewModel(context: Context, private val arrivalRepository: ArrivalRepo
 
     val currentTime = MutableLiveData<String>()
 
+    var switchRideChecked = MutableLiveData<Boolean>()  // 승차 알림 스위치 ON/OFF 여부
 
     // 해당 역의 모든 도착 정보 얻기
     fun loadArrivalInfo(stationId: String) {
@@ -128,6 +129,12 @@ class HomeViewModel(context: Context, private val arrivalRepository: ArrivalRepo
     private fun updateCurrentTime(time: String) {
         currentTime.value = formatRefreshTime(time)
     }
+
+    // 승차 알림 스위치 상태 업데이트
+    fun updateSwitchCheck(isChecked: Boolean) {
+        switchRideChecked.value = isChecked
+    }
+
 
     /**
      * 새로고침 시간을 받아서 12시간제로 형식화된 문자열로 반환
