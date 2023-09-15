@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.*
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -97,6 +98,10 @@ class HomeFragment : Fragment() {
         homeNearbyNotificationRVAdapter =
             HomeNearbyNotificationRVAdapter(requireContext(), ArrayList())
         binding.rvNearbyNotification.adapter = homeNearbyNotificationRVAdapter
+
+        binding.clNotice.setOnClickListener {
+            Toast.makeText(requireContext(), getString(R.string.toast_not_yet_implemented), Toast.LENGTH_SHORT).show()
+        }
 
         // 최근 역
         viewModel.loadLastStationHistory()
