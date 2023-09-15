@@ -111,7 +111,7 @@ object GpsManager {
             override fun onLocationResult(p0: LocationResult) {
                 super.onLocationResult(p0)
                 lastLocation = p0.lastLocation
-                //Log.e("[GpsManager] lastLocation", lastLocation.toString())
+                Log.e("[GpsManager] lastLocation", lastLocation.toString())
                 applicationScope.launch {
                     // 새로운 위치 정보가 업데이트될 때마다 가까운 역 찾기 및 Geofence 추가
                     val geofenceRadius = 1000f

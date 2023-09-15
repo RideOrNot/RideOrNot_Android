@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var signUpViewModel: SignUpViewModel
-//    private lateinit var settingViewModel: SettingViewModel
+    //    private lateinit var settingViewModel: SettingViewModel
     private lateinit var preferenceUtil: PreferenceUtil
 
     // 안드로이드 기기의 API 레벨(31 이하?)이 낮을 경우 원탭로그인이 동작하지 않음.
