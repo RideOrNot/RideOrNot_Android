@@ -13,6 +13,7 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.Priority
+import com.hanium.rideornot.App.Companion.lastStationHistoryRepository
 import com.hanium.rideornot.App.Companion.lineRepository
 import com.hanium.rideornot.App.Companion.stationRepository
 import com.hanium.rideornot.data.response.Arrival
@@ -35,6 +36,12 @@ class HomeViewModel(context: Context, private val arrivalRepository: ArrivalRepo
     val nearestStation: LiveData<String> = _nearestStation
 
     val currentTime = MutableLiveData<String>()
+
+    var switchRideChecked = MutableLiveData<Boolean>()  // 승차 알림 스위치 ON/OFF 여부
+
+    // 최근 역
+    private val _lastStation = MutableLiveData<List<LastStationHistory>>()
+    val lastStation: LiveData<List<LastStationHistory>> = _lastStation
 
 
     // 해당 역의 모든 도착 정보 얻기
@@ -60,12 +67,18 @@ class HomeViewModel(context: Context, private val arrivalRepository: ArrivalRepo
         }
     }
 
-    // 해당 역의 호선 목록 얻기
-    fun loadLineList(stationName: String) {
-        viewModelScope.launch {
-            val lineId = stationRepository.findLineByName(stationName)
-            val lineList = lineRepository.getLinesByIds(lineId) as ArrayList<Line>
-            _lineList.value = lineList
+    // 최근 역 조회
+    fun loadLastStationHistory() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val lastStationHistory = lastStationHistoryRepository.getAllLastStations()
+            _lastStation.postValue(lastStationHistory)
+        }
+    }
+
+    // 최근 역 삭제
+    fun deleteLastStationHistory(lastStationHistory: LastStationHistory) {
+        viewModelScope.launch(Dispatchers.IO) {
+            lastStationHistoryRepository.deleteLastStation(lastStationHistory)
         }
     }
 
@@ -127,6 +140,10 @@ class HomeViewModel(context: Context, private val arrivalRepository: ArrivalRepo
     // 도착 정보 호출 시간 업데이트
     private fun updateCurrentTime(time: String) {
         currentTime.value = formatRefreshTime(time)
+    }
+
+    fun updateSwitchCheck(isChecked: Boolean) {
+        switchRideChecked.value = isChecked
     }
 
     /**

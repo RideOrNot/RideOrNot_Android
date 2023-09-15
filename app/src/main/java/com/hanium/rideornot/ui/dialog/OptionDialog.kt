@@ -5,16 +5,16 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import com.hanium.rideornot.databinding.DialogBaseBinding
+import com.hanium.rideornot.databinding.DialogOptionBinding
 
-class BaseDialog(private val context: AppCompatActivity) {
+class OptionDialog(private val context: AppCompatActivity) {
 
-    private lateinit var binding: DialogBaseBinding
+    private lateinit var binding: DialogOptionBinding
     private val dialog = Dialog(context)
     private lateinit var listener: CheckBtnClickedListener
 
     fun show(text: String) {
-        binding = DialogBaseBinding.inflate(context.layoutInflater)
+        binding = DialogOptionBinding.inflate(context.layoutInflater)
         dialog.setContentView(binding.root)
 
         // 배경 색 투명
@@ -25,8 +25,10 @@ class BaseDialog(private val context: AppCompatActivity) {
             WindowManager.LayoutParams.WRAP_CONTENT
         )
 
-        dialog.setCanceledOnTouchOutside(false)
-        dialog.setCancelable(false)
+        var userConfirmed = false  // 사용자 클릭 여부
+
+        dialog.setCanceledOnTouchOutside(true)
+        dialog.setCancelable(true)
 
         binding.tvContent.text = text
 
@@ -34,8 +36,21 @@ class BaseDialog(private val context: AppCompatActivity) {
 
 
         binding.btnCheck.setOnClickListener {
-//            listener.onClicked(true)
+            userConfirmed = true
+            listener.onClicked(true)
             dialog.dismiss()
+        }
+
+        binding.btnCancel.setOnClickListener {
+            userConfirmed = false
+            listener.onClicked(false)
+            dialog.dismiss()
+        }
+
+        dialog.setOnDismissListener {
+            if (!userConfirmed) {
+                listener.onClicked(false)
+            }
         }
     }
 
