@@ -53,8 +53,12 @@ class SettingFragment : Fragment() {
             }
             profiles = response.result
             Log.d("responseSetting", response.toString())
-            binding.tvNickname.text = response.result.nickName
-            binding.tvEmail.text = response.result.email
+            if (response.result != null) {
+                binding.tvNickname.text = response.result.nickName
+                binding.tvEmail.text = response.result.email
+            } else {
+                binding.tvNickname.text = "계정 정보 확인 불가"
+            }
         }
 
         return binding.root

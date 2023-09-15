@@ -72,13 +72,13 @@ class MainActivity : AppCompatActivity() {
             val username = credential.id
             val password = credential.password
             if (idToken != null) {
-                Log.d("loginResultHandler", "Got ID token, $idToken")
+//                Log.d("loginResultHandler", "Got ID token, $idToken")
             }
             if (password != null) {
-                Log.d("loginResultHandler", "Got password., $password")
+//                Log.d("loginResultHandler", "Got password., $password")
             }
             if (username != null) {
-                Log.d("loginResultHandler", "Got username, $username")
+//                Log.d("loginResultHandler", "Got username, $username")
             }
         } catch (e: ApiException) {
             when (e.statusCode) {
@@ -228,9 +228,9 @@ class MainActivity : AppCompatActivity() {
                     val password = credential.password
                     val familyName = credential.familyName
                     val givenName = credential.givenName
-                    Log.d("loginResultHandler", "method operated")
+//                    Log.d("loginResultHandler", "method operated")
                     if (idToken != null) {
-                        Log.d("loginResultHandler", "Got ID token, $idToken")
+//                        Log.d("loginResultHandler", "Got ID token, $idToken")
                         CoroutineScope(Dispatchers.Main).launch {
                             val jwtResponse = withContext(Dispatchers.Default) {
                                 NetworkModule.getAuthService().postGoogleIdToken(
@@ -255,10 +255,10 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                     if (password != null) {
-                        Log.d("loginResultHandler", "Got password., $password")
+//                        Log.d("loginResultHandler", "Got password., $password")
                     }
                     if (username != null) {
-                        Log.d("loginResultHandler", "Got username, $username")
+//                        Log.d("loginResultHandler", "Got username, $username")
                     }
 
                 } catch (e: ApiException) {
