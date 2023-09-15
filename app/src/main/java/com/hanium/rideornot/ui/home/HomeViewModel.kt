@@ -13,6 +13,7 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.Priority
+import com.hanium.rideornot.App.Companion.lastStationHistoryRepository
 import com.hanium.rideornot.App.Companion.lineRepository
 import com.hanium.rideornot.App.Companion.stationRepository
 import com.hanium.rideornot.data.response.Arrival
@@ -66,12 +67,18 @@ class HomeViewModel(context: Context, private val arrivalRepository: ArrivalRepo
         }
     }
 
-    // 해당 역의 호선 목록 얻기
-    fun loadLineList(stationName: String) {
-        viewModelScope.launch {
-            val lineId = stationRepository.findLineByName(stationName)
-            val lineList = lineRepository.getLinesByIds(lineId) as ArrayList<Line>
-            _lineList.value = lineList
+    // 최근 역 조회
+    fun loadLastStationHistory() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val lastStationHistory = lastStationHistoryRepository.getAllLastStations()
+            _lastStation.postValue(lastStationHistory)
+        }
+    }
+
+    // 최근 역 삭제
+    fun deleteLastStationHistory(lastStationHistory: LastStationHistory) {
+        viewModelScope.launch(Dispatchers.IO) {
+            lastStationHistoryRepository.deleteLastStation(lastStationHistory)
         }
     }
 
@@ -135,11 +142,9 @@ class HomeViewModel(context: Context, private val arrivalRepository: ArrivalRepo
         currentTime.value = formatRefreshTime(time)
     }
 
-    // 승차 알림 스위치 상태 업데이트
     fun updateSwitchCheck(isChecked: Boolean) {
         switchRideChecked.value = isChecked
     }
-
 
     /**
      * 새로고침 시간을 받아서 12시간제로 형식화된 문자열로 반환
