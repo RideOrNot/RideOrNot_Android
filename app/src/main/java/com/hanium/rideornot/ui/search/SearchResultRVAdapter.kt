@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hanium.rideornot.R
 import com.hanium.rideornot.domain.SearchHistory
 import com.hanium.rideornot.domain.Station
-import com.hanium.rideornot.ui.SearchViewModel
 import com.hanium.rideornot.utils.methods.getLineColorIdByLineId
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,17 +24,13 @@ class SearchResultRVAdapter(
     private val context: Context,
     private val itemList: List<Station>,
     private val searchViewModel: SearchViewModel,
-    private val searchRecyclerViewInterface: ISearchResultRV,
+    private val searchResultRVInterface: ISearchResultRV,
 ) :
     RecyclerView.Adapter<SearchResultRVAdapter.ViewHolder>() {
 
-    interface OnItemClickListener {
-        fun onItemClick(position: Int)
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_search_result_recycler_ex, parent, false)
+            .inflate(R.layout.item_search_result, parent, false)
         return ViewHolder(view)
     }
 
@@ -90,7 +85,7 @@ class SearchResultRVAdapter(
                     val position = adapterPosition
                     if (position != RecyclerView.NO_POSITION) {
                         val clickedItem = itemList[position]
-                        searchRecyclerViewInterface.onSearchResultItemClick(clickedItem)
+                        searchResultRVInterface.onSearchResultItemClick(clickedItem)
                         searchViewModel.insertSearchHistory(
                             SearchHistory(
                                 stationName = clickedItem.stationName

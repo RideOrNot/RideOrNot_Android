@@ -16,7 +16,6 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.hanium.rideornot.R
 import com.hanium.rideornot.domain.SearchHistory
-import com.hanium.rideornot.ui.SearchViewModel
 import com.hanium.rideornot.utils.methods.getLineColorIdByLineId
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,14 +24,14 @@ import kotlinx.coroutines.launch
 class SearchHistoryRVAdapter(
     private val context: Context,
     var itemList: List<SearchHistory>,
-    private val searchRecyclerViewInterface: ISearchHistoryRV,
+    private val searchHistoryRVInterface: ISearchHistoryRV,
     private val searchViewModel: SearchViewModel
 ) :
     RecyclerView.Adapter<SearchHistoryRVAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_search_history_recycler_ex, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.item_search_history, parent, false)
         return ViewHolder(view)
     }
 
@@ -62,9 +61,6 @@ class SearchHistoryRVAdapter(
 
         fun bind(item: SearchHistory) {
             tvSearchHistory.text = item.stationName
-            clSearchItem.setOnClickListener {
-                searchRecyclerViewInterface.onSearchHistoryItemClick(item.stationName)
-            }
             CoroutineScope(Dispatchers.Main).launch {
                 llLines.removeAllViews()
                 val lineIdList = searchViewModel.findLinesByStationName(item.stationName)
@@ -88,7 +84,10 @@ class SearchHistoryRVAdapter(
         override fun onClick(view: View?) {
             when (view) {
                 ivDeleteSearchBtn -> {
-                    searchRecyclerViewInterface.onSearchHistoryItemDeleteClick(adapterPosition)
+                    searchHistoryRVInterface.onSearchHistoryItemDeleteClick(adapterPosition)
+                }
+                clSearchItem -> {
+                    searchHistoryRVInterface.onSearchHistoryItemClick(itemList[adapterPosition].stationName)
                 }
             }
         }

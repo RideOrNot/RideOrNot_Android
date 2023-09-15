@@ -23,6 +23,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField "String", "BASE_URL", properties['BASE_URL']
+        buildConfigField "String", "GOOGLE_WEB_CLIENT_ID", properties["GOOGLE_WEB_CLIENT_ID"]
 
         manifestPlaceholders = [NAVER_MAP: NAVER_MAP]
     }
@@ -72,6 +73,8 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-scalars:$retrofit_version"
+
 
     // OkHttp
     implementation "com.squareup.okhttp3:okhttp:4.10.0"
@@ -86,6 +89,9 @@ dependencies {
 
     // 네이버 지도 SDK
     implementation 'com.naver.maps:map-sdk:3.16.2'
+
+    // 구글 로그인 연동
+    implementation 'com.google.android.gms:play-services-auth:20.6.0'
 
     // Room
     implementation "androidx.room:room-runtime:$room_version"

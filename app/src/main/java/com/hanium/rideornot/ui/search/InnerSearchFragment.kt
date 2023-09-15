@@ -4,37 +4,31 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.OnBackPressedCallback
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.internal.ViewUtils.hideKeyboard
-import com.google.android.material.internal.ViewUtils.showKeyboard
 import com.hanium.rideornot.R
 import com.hanium.rideornot.databinding.FragmentSearchInnerBinding
 import com.hanium.rideornot.domain.SearchHistory
 import com.hanium.rideornot.domain.Station
 import com.hanium.rideornot.domain.StationDatabase
-import com.hanium.rideornot.ui.SearchViewModel
+import com.hanium.rideornot.ui.common.ViewModelFactory
 import kotlinx.coroutines.*
 
 
 class InnerSearchFragment : Fragment(),
     ISearchHistoryRV,
-    ISearchResultRV,
-    SearchResultRVAdapter.OnItemClickListener {
+    ISearchResultRV {
     private lateinit var binding: FragmentSearchInnerBinding
     private lateinit var searchHistoryRVAdapter: SearchHistoryRVAdapter
     private lateinit var searchResultRVAdapter: SearchResultRVAdapter
-    private lateinit var searchViewModel: SearchViewModel
+    private val searchViewModel: SearchViewModel by viewModels { ViewModelFactory(requireContext()) }
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Main)
 
     private lateinit var onBackPressedCallback: OnBackPressedCallback
@@ -52,7 +46,7 @@ class InnerSearchFragment : Fragment(),
 
     private fun handleSwitchToSearchHistory(searchHistoryList: List<SearchHistory>) {
         initSearchHistoryRecycler(searchHistoryList)
-        binding.recyclerView.adapter = searchHistoryRVAdapter
+        binding.rvSearch.adapter = searchHistoryRVAdapter
         binding.tvRecentSearch.text = "최근 검색"
     }
 
@@ -72,11 +66,9 @@ class InnerSearchFragment : Fragment(),
         bottomNavigationView.visibility = View.GONE
         setBackBtnHandling()
 
-        searchViewModel = SearchViewModel(requireContext())
-
-        binding.recyclerView.layoutManager =
+        binding.rvSearch.layoutManager =
             LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
-        binding.recyclerView.setHasFixedSize(true)
+        binding.rvSearch.setHasFixedSize(true)
 
         // editText에 부착되어 있는 뒤로가기 버튼 클릭 시 동작
         binding.ivPrev.setOnClickListener {
@@ -122,14 +114,14 @@ class InnerSearchFragment : Fragment(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        searchViewModel.searchHistoryList.observe(this, Observer {
+        searchViewModel.searchHistoryList.observe(this) {
             // searchResult 아이템 클릭 시 serachHistory 리사이클러뷰로 교체되어 버려서, 검색어가 입력된 상태면 리사이클러뷰를 교체하지 않도록 설정
             if (binding.editTextSearch.text.isEmpty()) {
                 handleSwitchToSearchHistory(it)
             } else {
                 initSearchHistoryRecycler(it)
             }
-        })
+        }
 
         // 검색어 입력을 실시간으로 탐지하여 검색 결과에 반영
         binding.editTextSearch.addTextChangedListener(
@@ -148,10 +140,8 @@ class InnerSearchFragment : Fragment(),
                         binding.ivClear.setOnClickListener(null)
                     }
                 }
-
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 }
-
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 }
             })
@@ -214,13 +204,11 @@ class InnerSearchFragment : Fragment(),
                     searchViewModel,
                     this@InnerSearchFragment
                 )
-                binding.recyclerView.adapter = searchResultRVAdapter
+                binding.rvSearch.adapter = searchResultRVAdapter
             }
         }
     }
 
-    override fun onItemClick(position: Int) {
-    }
 
     private fun switchToStationDetailFragment(stationName: String) {
         findNavController().navigate(

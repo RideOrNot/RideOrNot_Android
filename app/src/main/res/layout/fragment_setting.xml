@@ -39,9 +39,9 @@
                     style="@style/Text.Header2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="탈래말래"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="탈래말래"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="wrap_content"
@@ -64,9 +64,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-                android:text="rideornot@gmail.com"
                 android:textColor="@color/gray_800"
-                app:layout_constraintStart_toEndOf="@+id/iv_logo" />
+                app:layout_constraintStart_toEndOf="@+id/iv_logo"
+                tools:text="rideornot@gmail.com"/>
 
         </LinearLayout>
 

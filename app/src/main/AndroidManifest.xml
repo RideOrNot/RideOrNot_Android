@@ -52,6 +52,17 @@
             android:name=".MainActivity"
             android:exported="true" />
 
+<!--        <activity-->
+<!--            android:name=".signIn.SignInActivity"-->
+<!--            android:exported="true"-->
+<!--            android:label="Sign In">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+<!--        </activity>-->
+
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="${NAVER_MAP}" />

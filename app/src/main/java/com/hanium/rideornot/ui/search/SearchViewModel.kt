@@ -1,15 +1,11 @@
-package com.hanium.rideornot.ui
+package com.hanium.rideornot.ui.search
 
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hanium.rideornot.R
 import com.hanium.rideornot.domain.*
 import com.hanium.rideornot.repository.SearchHistoryRepository
-import com.hanium.rideornot.ui.home.HomeFragment
-import com.hanium.rideornot.ui.search.SearchHistoryRVAdapter
-import com.hanium.rideornot.ui.search.SearchResultRVAdapter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -34,7 +30,6 @@ class SearchViewModel(context: Context) : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             val existingHistory = searchHistoryRepository.getSearchHistory(searchHistory.stationName)
             if (existingHistory != null) {
-                // 이미 존재하는 검색어가 있다면, 해당 검색어를 리스트의 첫 번째로 옮깁니다.
                 searchHistoryRepository.deleteSearchHistory(existingHistory)
                 searchHistoryRepository.insertSearchHistory(searchHistory)
             } else {
