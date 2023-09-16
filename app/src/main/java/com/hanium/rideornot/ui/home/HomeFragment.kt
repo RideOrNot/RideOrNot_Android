@@ -91,8 +91,10 @@ class HomeFragment : Fragment() {
             val rotateAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.rotate360)
             binding.fabRefresh.startAnimation(rotateAnimation)
 
-            // 도착 정보 API 호출
-            viewModel.loadArrivalInfo(stationName)
+            Toast.makeText(requireContext(), getString(R.string.toast_not_yet_implemented), Toast.LENGTH_SHORT).show()
+
+//            // 도착 정보 API 호출
+//            viewModel.loadArrivalInfo(stationName)
         }
 
         // 주변 알림 - 더보기
