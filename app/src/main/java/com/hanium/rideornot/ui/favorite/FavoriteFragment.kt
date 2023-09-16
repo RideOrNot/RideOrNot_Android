@@ -1,17 +1,13 @@
 package com.hanium.rideornot.ui.favorite
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.activity.OnBackPressedCallback
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.hanium.rideornot.App
 import com.hanium.rideornot.R
 import com.hanium.rideornot.databinding.FragmentFavoriteBinding
 import com.hanium.rideornot.domain.Favorite
@@ -84,13 +80,13 @@ class FavoriteFragment : Fragment(), IFavoriteRV, IFavoriteEditRV {
                 mutableFavoriteList,
                 searchViewModel
             )
-            val itemTouchHelperCallback = ItemTouchHelperCallback(favoriteEditRVAdapter).apply {
+            val favoriteItemTouchHelperCallback = FavoriteItemTouchHelperCallback(favoriteEditRVAdapter).apply {
                 setClamp(resources.displayMetrics.widthPixels.toFloat() / 8)
             }
-            itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+            itemTouchHelper = ItemTouchHelper(favoriteItemTouchHelperCallback)
             binding.rvFavorite.adapter = favoriteRVAdapter
             binding.rvFavorite.setOnTouchListener { _, _ ->
-                itemTouchHelperCallback.removePreviousClamp(binding.rvFavorite)
+                favoriteItemTouchHelperCallback.removePreviousClamp(binding.rvFavorite)
                 false
             }
 

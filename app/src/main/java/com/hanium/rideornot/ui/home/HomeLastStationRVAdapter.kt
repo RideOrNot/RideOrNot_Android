@@ -2,7 +2,10 @@ package com.hanium.rideornot.ui.home
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.RecyclerView
+import com.hanium.rideornot.R
 import com.hanium.rideornot.databinding.ItemLastStationBinding
 import com.hanium.rideornot.domain.Station
 
@@ -33,7 +36,6 @@ class HomeLastStationRVAdapter(private var stationList: ArrayList<Station>) :
                 viewGroup,
                 false
             )
-
         return ViewHolder(binding)
     }
 

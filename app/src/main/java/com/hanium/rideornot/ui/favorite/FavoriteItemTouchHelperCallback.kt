@@ -1,7 +1,6 @@
 package com.hanium.rideornot.ui.favorite
 
 import android.graphics.Canvas
-import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_SWIPE
@@ -10,7 +9,7 @@ import com.hanium.rideornot.R
 import kotlin.math.max
 import kotlin.math.min
 
-class ItemTouchHelperCallback(private val recyclerViewAdapter: FavoriteEditRVAdapter) : ItemTouchHelper.Callback() {
+class FavoriteItemTouchHelperCallback(private val recyclerViewAdapter: FavoriteEditRVAdapter) : ItemTouchHelper.Callback() {
 
     interface OnItemMoveListener {
         fun onItemMove(fromPosition: Int, toPosition: Int)

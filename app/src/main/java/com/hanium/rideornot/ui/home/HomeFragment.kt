@@ -54,9 +54,20 @@ class HomeFragment : Fragment() {
         binding.rvNearbyNotification.adapter = homeNearbyNotificationRVAdapter
         binding.rvLastStation.adapter = homeLastStationRVAdapter
 
+
+        // 플레이스토어 정책 위반(반응하지 않는 버튼) 때문에 임시로 토스트 출력
+        // TODO: 최근 역 편집 기능 구현
+        binding.btnRecentStationEdit.setOnClickListener{
+            Toast.makeText(requireContext(), getString(R.string.toast_not_yet_implemented),Toast.LENGTH_SHORT).show()
+        }
+        binding.rvLastStation.setOnClickListener {
+            Toast.makeText(requireContext(), getString(R.string.toast_not_yet_implemented),Toast.LENGTH_SHORT).show()
+        }
+
         binding.clNoticeBtn.setOnClickListener {
             Toast.makeText(requireContext(), getString(R.string.toast_not_yet_implemented), Toast.LENGTH_SHORT).show()
         }
+
 
         // 주변 알림 - 근처 역, 도착 정보 조회
         viewModel.showNearestStationName(fusedLocationClient)
@@ -65,10 +76,10 @@ class HomeFragment : Fragment() {
         }
 
         // 최근 역 - 더미 데이터
-        val stations = Station(100, 37.948605, 127.061003, "소요산", 1001)
-        val stationList = ArrayList<Station>()
-        stationList.add(stations)
-        homeLastStationRVAdapter.updateData(stationList)
+//        val stations = Station(100, 37.948605, 127.061003, "소요산", 1001)
+//        val stationList = ArrayList<Station>()
+//        stationList.add(stations)
+//        homeLastStationRVAdapter.updateData(stationList)
 
         viewModel.arrivalInfoList.observe(viewLifecycleOwner) { arrivalInfoList ->
             // 같은 lineId를 갖는 도착 정보끼리 리스트로 묶어 RecyclerView에 전달

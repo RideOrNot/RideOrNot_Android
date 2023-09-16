@@ -28,7 +28,7 @@ class FavoriteEditRVAdapter(
     private val searchViewModel: SearchViewModel,
 ) :
     RecyclerView.Adapter<FavoriteEditRVAdapter.ViewHolder>(),
-    ItemTouchHelperCallback.OnItemMoveListener {
+    FavoriteItemTouchHelperCallback.OnItemMoveListener {
 
     override fun onItemMove(fromPosition: Int, toPosition: Int) {
         Collections.swap(itemList, fromPosition, toPosition)
