@@ -37,7 +37,7 @@ object GpsManager {
     var lastLocation: Location? = null
     val geofenceList: MutableList<Geofence?> = mutableListOf()
 
-    private lateinit var mainActivity: MainActivity
+    private var mainActivity: MainActivity = MainActivity()
     private var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var locationRequest: LocationRequest
     private lateinit var locationCallback: LocationCallback

@@ -73,7 +73,7 @@ class HomeViewModel(context: Context, private val arrivalRepository: ArrivalRepo
     @SuppressLint("MissingPermission")
     fun showNearestStationName(fusedLocationClient: FusedLocationProviderClient) {
         val locationRequest =
-            LocationRequest.Builder(1000).setPriority(Priority.PRIORITY_HIGH_ACCURACY).build()
+            LocationRequest.Builder(30000).setPriority(Priority.PRIORITY_HIGH_ACCURACY).build()  // 원래 1000초 했다가 심사때문에 변경
 
         val locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
