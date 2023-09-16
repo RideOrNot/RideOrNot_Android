@@ -23,7 +23,7 @@ class SettingFragment : Fragment() {
 
     private lateinit var binding: FragmentSettingBinding
     private lateinit var onBackPressedCallback: OnBackPressedCallback
-    private lateinit var profiles: ProfileGetResponse
+    private var profiles: ProfileGetResponse? = null
 
     private fun setBackBtnHandling() {
         onBackPressedCallback = object : OnBackPressedCallback(true) {
@@ -113,7 +113,7 @@ class SettingFragment : Fragment() {
                                 // TODO: 서버 응답 BaseResponse 형식으로 바뀌면 구현 수정하기
                                 lateinit var deleteResponse: Response<String>
                                 withContext(Dispatchers.Default) {
-                                   deleteResponse = NetworkModule.getProfileService().deleteUser(profiles.id)
+                                   deleteResponse = NetworkModule.getProfileService().deleteUser(profiles!!.id)
                                 }
                                 if (deleteResponse.isSuccessful) {
                                     Toast.makeText(requireContext(), getString(R.string.toast_unregister_success),Toast.LENGTH_SHORT).show()

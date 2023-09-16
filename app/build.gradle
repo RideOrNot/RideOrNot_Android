@@ -15,10 +15,10 @@ android {
 
     defaultConfig {
         applicationId "com.hanium.rideornot"
-        minSdk 27
+        minSdk 33
         targetSdk 33
-        versionCode 5
-        versionName "1.0.2"
+        versionCode 14
+        versionName "1.0.4"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 

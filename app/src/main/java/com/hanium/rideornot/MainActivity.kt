@@ -118,6 +118,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+//        throw java.lang.IllegalArgumentException("test for DefaultUncaughtExceptionHandler")
+
         initBottomNavigation()
 
 //        preferenceUtil = PreferenceUtil(this)
