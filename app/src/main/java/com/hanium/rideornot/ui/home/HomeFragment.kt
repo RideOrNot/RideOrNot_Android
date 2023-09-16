@@ -109,14 +109,14 @@ class HomeFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        val rotateAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.rotate360)
-        binding.fabRefresh.startAnimation(rotateAnimation)
-
-        // 주변 알림 - 도착 정보 재조회
-        viewModel.showNearestStationName(fusedLocationClient)
-        viewModel.nearestStation.observe(viewLifecycleOwner) {
-            stationName = it
-        }
+//        val rotateAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.rotate360)
+//        binding.fabRefresh.startAnimation(rotateAnimation)
+//
+//        // 주변 알림 - 도착 정보 재조회
+//        viewModel.showNearestStationName(fusedLocationClient)
+//        viewModel.nearestStation.observe(viewLifecycleOwner) {
+//            stationName = it
+//        }
     }
 
     /**
