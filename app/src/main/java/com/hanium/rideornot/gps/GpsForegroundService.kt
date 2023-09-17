@@ -82,8 +82,8 @@ class GpsForegroundService : Service() {
         )
 
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("탈래말래 Foreground Service")
-            .setContentText("주변 지하철 역을 탐색 중입니다")
+            .setContentTitle("위치 정보 탐색 중")
+            .setContentText("주변 지하철 역을 찾고 있습니다")
             .setSmallIcon(R.drawable.ic_app_logo_round)
             .setColor(ContextCompat.getColor(this, R.color.blue))
             .setContentIntent(pendingIntent)

@@ -329,15 +329,19 @@
             android:id="@+id/temp_left"
             android:layout_width="70dp"
             android:layout_height="match_parent"
+            android:background="@color/transparent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
 
         <View
             android:id="@+id/temp_right"
             android:layout_width="70dp"
+            android:background="@color/transparent"
             android:layout_height="match_parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

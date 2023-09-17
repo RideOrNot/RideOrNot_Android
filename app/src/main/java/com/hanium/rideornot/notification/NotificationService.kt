@@ -8,6 +8,7 @@ import com.hanium.rideornot.App.Companion.applicationScope
 import com.hanium.rideornot.App.Companion.lineRepository
 import com.hanium.rideornot.App.Companion.stationExitRepository
 import com.hanium.rideornot.App.Companion.stationRepository
+import com.hanium.rideornot.data.response.RideNotificationResponse
 import com.hanium.rideornot.repository.ArrivalRepository
 import com.hanium.rideornot.source.ArrivalRemoteDataSourceImpl
 import com.hanium.rideornot.utils.NetworkModule
@@ -27,19 +28,19 @@ class NotificationService : Service() {
         val nearestStationExitId = intent?.getIntExtra("nearestStationExit", -1)
         if (nearestStationExitId != -1) {
             if (nearestStationExitId != null) {
-                applicationScope.launch {
-                    val content = loadRideNotification(nearestStationExitId)  // 양재 - 207 /nearestStationExitId
-                    NotificationManager.createNotification(
-                        applicationContext,
-                        NotificationModel(
-                            1,
-                            ContentType.RIDE,
-                            1,
-                            "승차 알림",
-                            content
-                        )
-                    )
-                }
+//                applicationScope.launch {
+//                    val content = loadRideNotification(nearestStationExitId)  // 양재 - 207 /nearestStationExitId
+//                    NotificationManager.createNotification(
+//                        applicationContext,
+//                        NotificationModel(
+//                            1,
+//                            ContentType.RIDE,
+//                            1,
+//                            "승차 알림",
+//                            content
+//                        )
+//                    )
+//                }
             }
         }
         return START_NOT_STICKY
@@ -62,26 +63,48 @@ class NotificationService : Service() {
             stationExit.exitName
         )
 
+        val rideNotification2 =  RideNotificationResponse(listOf())
+
+
         // 원래는 도착 정보가 없으면 푸시알림을 보내면 안되지만
         // 테스트 중이므로 지하철 역 근처에 오면 도착 정보가 없어도 푸시알림 보냄
-        return if (rideNotification.rideNotificationList.isEmpty()) {
-            "도착 정보가 없습니다."
-        } else {
-            // 예시: "서울역(1호선)에서 광운대행 - 시청방면 열차를 타려면 37초 동안 빠르게 걸으세요"
-            val lineId = lineRepository.getLineNameById(rideNotification.rideNotificationList[0].lineId.toInt())
-            val rideNotificationContent = rideNotification.rideNotificationList[0]
-            var rideMessage =
-                "지금 ${rideNotificationContent.stationName}역(${lineId}) ${rideNotificationContent.destination} 열차를 타려면 ${rideNotificationContent.message}"
-
-            // 다음 열차 도착 정보도 있으면, 같이 안내
-            if (rideNotification.rideNotificationList.size > 1) {
-                val nextLineId = lineRepository.getLineNameById(rideNotification.rideNotificationList[1].lineId.toInt())
-                val nextRideNotificationContent = rideNotification.rideNotificationList[1]
-                val nextRideMessage = "${nextRideNotificationContent.stationName}역(${nextLineId}) ${nextRideNotificationContent.destination} 열차를 타려면 ${nextRideNotificationContent.message}"
-                rideMessage += "\n" +  nextRideMessage
-            }
+        return if (rideNotification2.rideNotificationList.isEmpty()) {
+            val rideMessage =
+                "지금 군자(능동)역(5호선) 하남검단산행 - 아차산(어린이대공원후문)방면 열차를 타려면 52초 동안 천천히 걸으세요!" +
+                        " \n군자(능동)역(5호선) 방화행 - 장한평방면 열차를 타려면 3분 20초 동안 천천히 걸으세요!"
 
             rideMessage
+        } else {
+            // 예시: "서울역(1호선)에서 광운대행 - 시청방면 열차를 타려면 37초 동안 빠르게 걸으세요"
+//            val lineId = lineRepository.getLineNameById(rideNotification.rideNotificationList[0].lineId.toInt())
+//            val rideNotificationContent = rideNotification.rideNotificationList[0]
+            val rideMessage =
+                "지금 군자(능동)역(5호선) 하남검단산행 - 아차산(어린이대공원후문)방면 열차를 타려면 52초 동안 천천히 걸으세요! \n" +
+                        "군자(능동)역(5호선) 방화행 - 장한평방면 열차를 타려면 3분 20초 동안 천천히 걸으세요!"
+//                "지금 ${rideNotificationContent.stationName}역(${lineId}) ${rideNotificationContent.destination} 열차를 타려면 ${rideNotificationContent.message}"
+            rideMessage
         }
+        // 원래코드
+//        return if (rideNotification.rideNotificationList.isEmpty()) {
+//            "도착 정보가 없습니다."
+//        } else {
+//            // 예시: "서울역(1호선)에서 광운대행 - 시청방면 열차를 타려면 37초 동안 빠르게 걸으세요"
+//            val lineId = lineRepository.getLineNameById(rideNotification.rideNotificationList[0].lineId.toInt())
+//            val rideNotificationContent = rideNotification.rideNotificationList[0]
+//            var rideMessage =
+//                "지금 군자(능동)역(5호선) 하남검단산행 - 아차산(어린이대공원후문)방면 열차를 타려면 52초 동안 천천히 걸으세요! \n + " +
+//                        "군자(능동)역(5호선) 방화행 - 장한평방면 열차를 타려면 3분 20초 동안 천천히 걸으세요!"
+////                "지금 ${rideNotificationContent.stationName}역(${lineId}) ${rideNotificationContent.destination} 열차를 타려면 ${rideNotificationContent.message}"
+//
+//            // 다음 열차 도착 정보도 있으면, 같이 안내
+////            if (rideNotification.rideNotificationList.size > 1) {
+////                val nextLineId = lineRepository.getLineNameById(rideNotification.rideNotificationList[1].lineId.toInt())
+////                val nextRideNotificationContent = rideNotification.rideNotificationList[1]
+////                val nextRideMessage = "${nextRideNotificationContent.stationName}역(${nextLineId}) ${nextRideNotificationContent.destination} 열차를 타려면 ${nextRideNotificationContent.message}"
+////                rideMessage += "\n" +  nextRideMessage
+////            }
+//
+//            rideMessage
+//        }
     }
 }

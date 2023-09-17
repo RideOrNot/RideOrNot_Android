@@ -1,6 +1,9 @@
 package com.hanium.rideornot.ui.home
 
+import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.*
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -17,8 +20,15 @@ import com.hanium.rideornot.MainActivity
 import com.hanium.rideornot.R
 import com.hanium.rideornot.databinding.FragmentHomeBinding
 import com.hanium.rideornot.domain.Station
+import com.hanium.rideornot.notification.ContentType
+import com.hanium.rideornot.notification.NotificationManager
+import com.hanium.rideornot.notification.NotificationModel
 import com.hanium.rideornot.ui.common.ViewModelFactory
 import com.hanium.rideornot.ui.dialog.VerticalDialog
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 class HomeFragment : Fragment() {
@@ -31,6 +41,8 @@ class HomeFragment : Fragment() {
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var stationName: String = ""
+
+    var thread = 0
 
     private var isFirstAnimation = true
 
@@ -50,25 +62,45 @@ class HomeFragment : Fragment() {
             val dialog = VerticalDialog(requireContext() as AppCompatActivity)
             dialog.show(
                 "열차에 탑승하셨나요?",
-                "앱의 정확도 향상을 위해 탑승 성공 여부를 알려주세요!",
+                "앱의 정확도 향상을 위해\n탑승 성공 여부를 알려주세요!",
                 "탑승에 성공했어요!",
                 "탑승에 실패했어요..."
             )
             dialog.topBtnClickListener {
                 if (it) {
-                    Toast.makeText(requireContext(), "피드백 감사합니다!",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "피드백 감사합니다!", Toast.LENGTH_SHORT).show()
                     true
                 }
             }
             dialog.bottomBtnClickListener { it ->
                 if (it) {
-                    Toast.makeText(requireContext(), "피드백 감사합니다!",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "피드백 감사합니다!", Toast.LENGTH_SHORT).show()
                     true
                 }
             }
         }
 
-        binding.tempLeft.setOnClickListener {
+        binding.tempRight.setOnClickListener {
+            val content =
+                "지금 군자(능동)역(5호선) 하남검단산행 - 아차산(어린이대공원후문)방면 열차를 타려면 52초 동안 천천히 걸으세요!" +
+                        " \n군자(능동)역(5호선) 방화행 - 장한평방면 열차를 타려면 3분 20초 동안 천천히 걸으세요!" +
+                        " \n군자(능동)역이 평소보다 여유롭습니다."
+            if (thread == 0)
+                CoroutineScope(Dispatchers.Main).launch {
+                    thread++
+                    delay(5000)
+                    NotificationManager.createNotification(
+                        requireContext(),
+                        NotificationModel(
+                            1,
+                            ContentType.RIDE,
+                            1,
+                            "승차 알림",
+                            content
+                        )
+                    )
+                    thread--
+                }
 
         }
 
@@ -86,7 +118,11 @@ class HomeFragment : Fragment() {
         binding.rvLastStation.adapter = homeLastStationRVAdapter
 
         binding.clNoticeBtn.setOnClickListener {
-            Toast.makeText(requireContext(), getString(R.string.toast_not_yet_implemented), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.toast_not_yet_implemented),
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
         // 주변 알림 - 근처 역, 도착 정보 조회

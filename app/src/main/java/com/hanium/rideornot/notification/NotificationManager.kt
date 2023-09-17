@@ -121,6 +121,7 @@ object NotificationManager {
             .addAction(R.drawable.ic_app_logo_round, "해제", dismissPendingIntent)
             .addAction(R.drawable.ic_app_logo_round, "확인", pendingIntent)
             .setAutoCancel(true)
+            .setOnlyAlertOnce(true)
             .build()
     }
 
