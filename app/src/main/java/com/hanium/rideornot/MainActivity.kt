@@ -153,7 +153,7 @@ class MainActivity : AppCompatActivity() {
 //        supportFragmentManager.beginTransaction()
 //            .replace(R.id.frm_main, SignUpFragment1())
 //            .commit()
-        startSignIn()
+//        startSignIn()
     }
 
     fun startSignIn() {

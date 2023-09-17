@@ -5,16 +5,20 @@ import android.view.*
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.hanium.rideornot.App
 import com.hanium.rideornot.App.Companion.getApplicationContext
+import com.hanium.rideornot.MainActivity
 import com.hanium.rideornot.R
 import com.hanium.rideornot.databinding.FragmentHomeBinding
 import com.hanium.rideornot.domain.Station
 import com.hanium.rideornot.ui.common.ViewModelFactory
+import com.hanium.rideornot.ui.dialog.VerticalDialog
 
 
 class HomeFragment : Fragment() {
@@ -41,6 +45,32 @@ class HomeFragment : Fragment() {
 
         fusedLocationClient =
             LocationServices.getFusedLocationProviderClient(getApplicationContext())
+
+        binding.tempLeft.setOnClickListener {
+            val dialog = VerticalDialog(requireContext() as AppCompatActivity)
+            dialog.show(
+                "열차에 탑승하셨나요?",
+                "앱의 정확도 향상을 위해 탑승 성공 여부를 알려주세요!",
+                "탑승에 성공했어요!",
+                "탑승에 실패했어요..."
+            )
+            dialog.topBtnClickListener {
+                if (it) {
+                    Toast.makeText(requireContext(), "피드백 감사합니다!",Toast.LENGTH_SHORT).show()
+                    true
+                }
+            }
+            dialog.bottomBtnClickListener { it ->
+                if (it) {
+                    Toast.makeText(requireContext(), "피드백 감사합니다!",Toast.LENGTH_SHORT).show()
+                    true
+                }
+            }
+        }
+
+        binding.tempLeft.setOnClickListener {
+
+        }
 
         return binding.root
     }
