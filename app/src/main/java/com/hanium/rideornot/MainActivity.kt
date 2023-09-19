@@ -1,22 +1,22 @@
 package com.hanium.rideornot
 
+import android.app.Activity.RESULT_FIRST_USER
 import android.app.AlertDialog
+import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.content.IntentSender
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
-import android.telephony.CarrierConfigManager.Gps
 import android.util.Log
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat.startIntentSenderForResult
 import androidx.core.content.ContextCompat
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.lifecycle.ViewModel
+import androidx.databinding.DataBindingUtil.setContentView
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -25,8 +25,8 @@ import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.CommonStatusCodes
+import com.hanium.rideornot.App.Companion.startSignIn
 import com.hanium.rideornot.data.request.SignInRequestBody
-import com.hanium.rideornot.data.response.ProfileGetResponse
 import com.hanium.rideornot.databinding.ActivityMainBinding
 import com.hanium.rideornot.gps.GpsForegroundService
 import com.hanium.rideornot.gps.GpsManager
@@ -34,7 +34,6 @@ import com.hanium.rideornot.gps.LOCATION_PERMISSION_REQUEST_CODE
 import com.hanium.rideornot.notification.NOTIFICATION_PERMISSION_REQUEST_CODE
 import com.hanium.rideornot.notification.NotificationManager
 import com.hanium.rideornot.ui.dialog.PermissionInfoDialog
-import com.hanium.rideornot.ui.setting.SettingViewModel
 import com.hanium.rideornot.ui.signUp.SignUpFragment1
 import com.hanium.rideornot.ui.signUp.SignUpViewModel
 import com.hanium.rideornot.utils.NetworkModule
@@ -53,9 +52,9 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var signUpViewModel: SignUpViewModel
-
-    //    private lateinit var settingViewModel: SettingViewModel
     private lateinit var preferenceUtil: PreferenceUtil
+
+
 
     // 안드로이드 기기의 API 레벨(31 이하?)이 낮을 경우 원탭로그인이 동작하지 않음.
     // missing feature{name=auth_api_credentials_begin_sign_in, version=8}
@@ -102,6 +101,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var permissionDialog: PermissionInfoDialog
 
     companion object {
+        var loginResultObserver = LoginResultObserver()
+            private set
+
         // 앱 설정 화면으로 이동
         fun moveAppSettings(mainActivity: MainActivity, requestCode: Int) {
             val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
@@ -207,15 +209,19 @@ class MainActivity : AppCompatActivity() {
                             )
                         } catch (e: IntentSender.SendIntentException) {
                             Log.e("oneTapUiFailure", "Couldn't start One Tap UI: ${e.localizedMessage}")
+                            loginResultObserver.onLoginFailure()
                         }
                     }
                     .addOnFailureListener(this@MainActivity) { e ->
                         // No saved credentials found. Launch the One Tap sign-up flow, or
                         // do nothing and continue presenting the signed-out UI.
                         Log.d("beginSignInFailure", e.localizedMessage)
+                        loginResultObserver.onLoginFailure()
                     }
             } else if (response.resultCode == NetworkModule.SUCCESS) {
                 // jwt가 유효하고 프로필이 설정되어 있을 시, 정상 로그인 처리
+                loginResultObserver.onLoginSuccess()
+
             }
         }
 
@@ -244,6 +250,7 @@ class MainActivity : AppCompatActivity() {
                             }
                             App.preferenceUtil.setJwt(jwtResponse.body().toString())
                             val profileGetResponse = NetworkModule.getProfileService().getProfile()
+                            loginResultObserver.onLoginSuccess()
                             // 계정 생성 시 ageRange = 0, gender = 0, nickName = "구글 계정의 이름" 이 할당됨.
                             if (profileGetResponse.result.ageRange == 0 || profileGetResponse.result.gender == 0
 //                                || profileResponse.result.nickName == null

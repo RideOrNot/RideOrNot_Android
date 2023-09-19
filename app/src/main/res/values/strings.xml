@@ -60,7 +60,7 @@
     <string name="logout">계정 변경</string>
     <string name="unregister">회원탈퇴</string>
     <string name="logout_message">로그아웃 하시겠습니까?</string>
-    <string name="logout_caption">기기에 두 개 이상의 구글 계정이 등록되어\n있을 경우, 계정을 변경할 수 있습니다.</string>
+    <string name="logout_caption">기기에 두 개 이상의 구글 계정이 등록되어 있을 경우, 계정을 변경할 수 있습니다.</string>
     <string name="unregister_message">회원탈퇴하시겠습니까?</string>
     <string name="unregister_caption">탈퇴 시 모든 정보가 삭제됩니다.</string>
     <string name="unregister_confirmation_message">정말로 회원탈퇴하시겠습니까?</string>

@@ -9,9 +9,7 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.hanium.rideornot.App
-import com.hanium.rideornot.MainActivity
-import com.hanium.rideornot.R
+import com.hanium.rideornot.*
 import com.hanium.rideornot.data.response.ProfileGetResponse
 import com.hanium.rideornot.databinding.FragmentSettingBinding
 import com.hanium.rideornot.ui.dialog.BaseDialog
@@ -20,7 +18,7 @@ import com.hanium.rideornot.utils.NetworkModule
 import kotlinx.coroutines.*
 import retrofit2.Response
 
-class SettingFragment : Fragment() {
+class SettingFragment : Fragment(), ILoginResultListener {
 
     private lateinit var binding: FragmentSettingBinding
     private lateinit var onBackPressedCallback: OnBackPressedCallback
@@ -44,8 +42,9 @@ class SettingFragment : Fragment() {
     ): View {
         binding = FragmentSettingBinding.inflate(inflater, container, false)
 
-        setBackBtnHandling()
+        MainActivity.loginResultObserver.addListener(this)
 
+        setBackBtnHandling()
         initView()
 
         CoroutineScope(Dispatchers.Main).launch {
@@ -63,6 +62,26 @@ class SettingFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    override fun onLoginSuccess() {
+        CoroutineScope(Dispatchers.Main).launch {
+            val response = withContext(Dispatchers.Default) {
+                NetworkModule.getProfileService().getProfile()
+            }
+            profiles = response.result
+            Log.d("responseSetting", response.toString())
+            if (response.result != null) {
+                binding.tvNickname.text = response.result.nickName
+                binding.tvEmail.text = response.result.email
+            } else {
+                binding.tvNickname.text = "계정 정보 확인 불가"
+            }
+        }
+    }
+
+    override fun onLoginFailure() {
+
     }
 
     private fun initView() {
