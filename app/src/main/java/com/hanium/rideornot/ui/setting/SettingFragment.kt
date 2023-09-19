@@ -14,6 +14,7 @@ import com.hanium.rideornot.MainActivity
 import com.hanium.rideornot.R
 import com.hanium.rideornot.data.response.ProfileGetResponse
 import com.hanium.rideornot.databinding.FragmentSettingBinding
+import com.hanium.rideornot.ui.dialog.BaseDialog
 import com.hanium.rideornot.ui.dialog.VerticalDialog
 import com.hanium.rideornot.utils.NetworkModule
 import kotlinx.coroutines.*
@@ -138,13 +139,17 @@ class SettingFragment : Fragment() {
 
         binding.btnAccountInfo.setOnClickListener {
             // TODO: 계정 정보 설정 구현하기
-            Toast.makeText(requireContext(), getString(R.string.toast_not_yet_implemented),Toast.LENGTH_SHORT).show()
+            BaseDialog(requireContext() as AppCompatActivity).show(getString(R.string.toast_not_yet_implemented))
         }
 
         binding.btnWalkingSpeedSetting.setOnClickListener {
             // TODO: 걸음 속도 설정 구현하기
-            Toast.makeText(requireContext(), getString(R.string.toast_not_yet_implemented),Toast.LENGTH_SHORT).show()
+            BaseDialog(requireContext() as AppCompatActivity).show(getString(R.string.toast_not_yet_implemented))
+        }
+        
+        binding.switchPushNotificationReception.setOnClickListener {
+            // TODO: 푸시알림 해제 설정 구현하기
+            BaseDialog(requireContext() as AppCompatActivity).show(getString(R.string.toast_not_yet_implemented))
         }
     }
-
 }

@@ -66,6 +66,18 @@ class SearchResultRVAdapter(
                     lineItemView.id = View.generateViewId()
                     val lineBtn = lineItemView.findViewById<AppCompatButton>(R.id.btn_line)
                     lineBtn.text = searchViewModel.getLineNameByLineId(lineId).firstOrNull().toString()
+                    lineBtn.setOnClickListener {
+                        val position = adapterPosition
+                        if (position != RecyclerView.NO_POSITION) {
+                            val clickedItem = itemList[position]
+                            searchResultRVInterface.onSearchResultItemClick(clickedItem)
+                            searchViewModel.insertSearchHistory(
+                                SearchHistory(
+                                    stationName = clickedItem.stationName
+                                )
+                            )
+                        }
+                    }
                     val color = ContextCompat.getColor(context, getLineColorIdByLineId(lineId))
                     lineBtn.backgroundTintList = ColorStateList.valueOf(color)
                     val backgroundDrawable = lineBtn.background as? GradientDrawable
@@ -93,11 +105,12 @@ class SearchResultRVAdapter(
                         )
                     }
                 }
-
             }
+
         }
-
-
     }
 
+
 }
+
+

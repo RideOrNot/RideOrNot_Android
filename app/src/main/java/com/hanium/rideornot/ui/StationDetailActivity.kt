@@ -13,6 +13,7 @@ import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.navigation.navArgs
@@ -74,11 +75,12 @@ class StationDetailActivity : AppCompatActivity() {
                 val existingFavorite = favoriteViewModel.getFavorite(args.stationName)
                 if (existingFavorite != null) {
                     binding.btnToggleFavorite.setImageResource(R.drawable.ic_favorite)
-                    favoriteViewModel.deleteFavorite(existingFavorite)
+                   favoriteViewModel.deleteFavorite(existingFavorite)
+                    Toast.makeText(this@StationDetailActivity, "즐겨찾기에서 해제되었습니다!", Toast.LENGTH_SHORT).show()
                 } else {
                     binding.btnToggleFavorite.setImageResource(R.drawable.ic_favorite_on)
                     favoriteViewModel.insertFavorite(args.stationName)
-                }
+                    Toast.makeText(this@StationDetailActivity, "즐겨찾기에 등록되었습니다!", Toast.LENGTH_SHORT).show()                }
             }
         }
 
@@ -143,6 +145,8 @@ class StationDetailActivity : AppCompatActivity() {
             } else if (prevStationName != "종착") {
                 // 이전 역 이름이 "종착"이 아닌 경우에만 역 이동
                 moveToStation(prevStationName)
+            } else if (prevStationName == "종착") {
+                Toast.makeText(this, "종착역입니다.", Toast.LENGTH_SHORT).show()
             }
         }
         binding.ivLineBgNext.setOnClickListener {
@@ -154,6 +158,8 @@ class StationDetailActivity : AppCompatActivity() {
             } else if (nextStationName != "종착") {
                 // 이후 역 이름이 "종착"이 아닌 경우에만 역 이동
                 moveToStation(nextStationName)
+            } else if (nextStationName == "종착") {
+                Toast.makeText(this, "종착역입니다.", Toast.LENGTH_SHORT).show()
             }
         }
 

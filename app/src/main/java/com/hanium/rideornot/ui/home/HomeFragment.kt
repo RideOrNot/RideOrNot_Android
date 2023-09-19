@@ -5,6 +5,7 @@ import android.view.*
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -15,6 +16,7 @@ import com.hanium.rideornot.R
 import com.hanium.rideornot.databinding.FragmentHomeBinding
 import com.hanium.rideornot.domain.Station
 import com.hanium.rideornot.ui.common.ViewModelFactory
+import com.hanium.rideornot.ui.dialog.BaseDialog
 
 class HomeFragment : Fragment() {
 
@@ -58,14 +60,14 @@ class HomeFragment : Fragment() {
         // 플레이스토어 정책 위반(반응하지 않는 버튼) 때문에 임시로 토스트 출력
         // TODO: 최근 역 편집 기능 구현
         binding.btnRecentStationEdit.setOnClickListener{
-            Toast.makeText(requireContext(), getString(R.string.toast_not_yet_implemented),Toast.LENGTH_SHORT).show()
+            BaseDialog(requireContext() as AppCompatActivity).show(getString(R.string.toast_not_yet_implemented))
         }
         binding.rvLastStation.setOnClickListener {
-            Toast.makeText(requireContext(), getString(R.string.toast_not_yet_implemented),Toast.LENGTH_SHORT).show()
+            BaseDialog(requireContext() as AppCompatActivity).show(getString(R.string.toast_not_yet_implemented))
         }
 
         binding.clNoticeBtn.setOnClickListener {
-            Toast.makeText(requireContext(), getString(R.string.toast_not_yet_implemented), Toast.LENGTH_SHORT).show()
+            BaseDialog(requireContext() as AppCompatActivity).show(getString(R.string.toast_not_yet_implemented))
         }
 
 
@@ -102,7 +104,7 @@ class HomeFragment : Fragment() {
             val rotateAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.rotate360)
             binding.fabRefresh.startAnimation(rotateAnimation)
 
-            Toast.makeText(requireContext(), getString(R.string.toast_not_yet_implemented), Toast.LENGTH_SHORT).show()
+            BaseDialog(requireContext() as AppCompatActivity).show(getString(R.string.toast_not_yet_implemented))
 
 //            // 도착 정보 API 호출
 //            viewModel.loadArrivalInfo(stationName)

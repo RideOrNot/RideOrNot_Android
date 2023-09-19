@@ -69,6 +69,9 @@ class SearchHistoryRVAdapter(
                     lineItemView.id = View.generateViewId()
                     val lineBtn = lineItemView.findViewById<AppCompatButton>(R.id.btn_line)
                     lineBtn.text = searchViewModel.getLineNameByLineId(lineId).firstOrNull().toString()
+                    lineBtn.setOnClickListener {
+                        searchHistoryRVInterface.onSearchHistoryItemClick(itemList[adapterPosition].stationName)
+                    }
                     val color = ContextCompat.getColor(context, getLineColorIdByLineId(lineId))
                     lineBtn.backgroundTintList = ColorStateList.valueOf(color)
                     val backgroundDrawable = lineBtn.background as? GradientDrawable

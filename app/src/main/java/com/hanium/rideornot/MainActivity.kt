@@ -7,6 +7,7 @@ import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
+import android.telephony.CarrierConfigManager.Gps
 import android.util.Log
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.IntentSenderRequest
@@ -14,6 +15,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
@@ -51,7 +53,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var signUpViewModel: SignUpViewModel
-//    private lateinit var settingViewModel: SettingViewModel
+
+    //    private lateinit var settingViewModel: SettingViewModel
     private lateinit var preferenceUtil: PreferenceUtil
 
     // 안드로이드 기기의 API 레벨(31 이하?)이 낮을 경우 원탭로그인이 동작하지 않음.
@@ -307,6 +310,61 @@ class MainActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+//        // 모든 권한이 허용된 경우
+//        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE
+//            && GpsManager.arePermissionsGranted(this)
+//            && NotificationManager.isPermissionGranted(this)
+//        ) {
+//            // 포그라운드 서비스 시작
+//            val serviceIntent = Intent(this, GpsForegroundService::class.java)
+//            ContextCompat.startForegroundService(this, serviceIntent)
+//            return
+//        }
+//
+//        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE
+//            && GpsManager.arePermissionsGranted(this)
+//            && !NotificationManager.isPermissionGranted(this)
+//        ) {
+//            NotificationManager.initNotificationManager(this)
+//            return
+//        }
+//
+//        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE
+//            && !GpsManager.arePermissionsGranted(this)
+//            && NotificationManager.isPermissionGranted(this)
+//        ) {
+//            // 포그라운드 서비스가 진행 중이면 종료
+//            if (GpsForegroundService.isServiceRunning) {
+//                val serviceIntent = Intent(this, GpsForegroundService::class.java)
+//                stopService(serviceIntent)
+//            }
+//            val builder = AlertDialog.Builder(this)
+//            builder.setTitle("위치 정보 접근 권한 허용 설정 안내").setCancelable(false)
+//            builder.setMessage(
+//                "이 앱은 앱이 종료되었거나 사용 중이 아닐 때도 실시간으로 위치 데이터를 수집하여 사용자의 위치를 파악하고,"
+//                        + " 주변 지하철역을 탐색하여 열차의 도착 안내를 제공합니다."
+//                        + " 그리고 해당 기능을 이용하기 위하여, 위치 권한의 설정이 필요합니다.\n"
+//                        + "'설정 - 권한' 에서 위치 정보 접근 권한을 '항상 허용' 으로 설정해 주세요.\n\n"
+//                        + " ※ 위치 정보 수집을 거부하시면 사용자님의 위치는 수집되지 않습니다. 그러나 해당 권한이 앱의 주요 기능에"
+//                        + " 필수적임에 따라, 앱을 이용하실 수 없게 됩니다."
+//            )
+//            builder.setPositiveButton("설정으로 이동") { _, _ ->
+//                moveAppSettings(this, requestCode)
+//            }
+//            builder.show()
+//            return
+//        }
+//
+//        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE
+//            && !GpsManager.arePermissionsGranted(this)
+//            && !NotificationManager.isPermissionGranted(this)
+//        ) {
+//            NotificationManager.initNotificationManager(this)
+//        }
+
+
+
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             if (GpsManager.arePermissionsGranted(this)) {
                 // 권한이 허용된 경우
@@ -327,8 +385,15 @@ class MainActivity : AppCompatActivity() {
 
                 if (NotificationManager.isPermissionGranted(this)) {
                     val builder = AlertDialog.Builder(this)
-                    builder.setTitle("서비스 이용 알림").setCancelable(false)
-                    builder.setMessage("앱을 사용하기 위해서는 위치 권한이 필요합니다. 설정으로 이동하여 권한을 항상 허용해주세요.")
+                    builder.setTitle("위치 정보 접근 권한 허용 설정 안내").setCancelable(false)
+                    builder.setMessage(
+                        "이 앱은 앱이 종료되었거나 사용 중이 아닐 때도 실시간으로 위치 데이터를 수집하여 사용자의 위치를 파악하고,"
+                                + " 주변 지하철역을 탐색하여 열차의 도착 안내를 제공합니다."
+                                + " 그리고 해당 기능을 이용하기 위하여, 위치 권한의 설정이 필요합니다.\n"
+                                + "'설정 - 권한' 에서 위치 정보 접근 권한을 '항상 허용' 으로 설정해 주세요.\n\n"
+                                + " ※ 위치 정보 수집을 거부하시면 사용자님의 위치는 수집되지 않습니다. 그러나 해당 권한이 앱의 주요 기능에"
+                                + " 필수적임에 따라, 앱을 이용하실 수 없게 됩니다."
+                    )
                     builder.setPositiveButton("설정으로 이동") { _, _ ->
                         moveAppSettings(this, requestCode)
                     }
@@ -337,7 +402,9 @@ class MainActivity : AppCompatActivity() {
                     NotificationManager.initNotificationManager(this)
                 }
             }
-        } else if (requestCode == NOTIFICATION_PERMISSION_REQUEST_CODE) {
+        }
+
+        else if (requestCode == NOTIFICATION_PERMISSION_REQUEST_CODE) {
             if (NotificationManager.isPermissionGranted(this)) {
                 // 권한이 허용된 경우
                 if (GpsManager.arePermissionsGranted(this)) {
@@ -346,8 +413,15 @@ class MainActivity : AppCompatActivity() {
                     ContextCompat.startForegroundService(this, serviceIntent)
                 } else {
                     val builder = AlertDialog.Builder(this)
-                    builder.setTitle("서비스 이용 알림").setCancelable(false)
-                    builder.setMessage("앱을 사용하기 위해서는 위치 권한이 필요합니다. 설정으로 이동하여 권한을 항상 허용해주세요.")
+                    builder.setTitle("위치 정보 접근 권한 허용 설정 안내").setCancelable(false)
+                    builder.setMessage(
+                        "이 앱은 앱이 종료되었거나 사용 중이 아닐 때도 실시간으로 위치 데이터를 수집하여 사용자의 위치를 파악하고,"
+                                + " 주변 지하철역을 탐색하여 열차의 도착 안내를 제공합니다."
+                                + " 그리고 해당 기능을 이용하기 위하여, 위치 권한의 설정이 필요합니다.\n"
+                                + "'설정 - 권한' 에서 위치 정보 접근 권한을 '항상 허용' 으로 설정해 주세요.\n\n"
+                                + " ※ 위치 정보 수집을 거부하시면 사용자님의 위치는 수집되지 않습니다. 그러나 해당 권한이 앱의 주요 기능에"
+                                + " 필수적임에 따라, 앱을 이용하실 수 없게 됩니다."
+                    )
                     builder.setPositiveButton("설정으로 이동") { _, _ ->
                         moveAppSettings(this, LOCATION_PERMISSION_REQUEST_CODE)
                     }
@@ -371,7 +445,15 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     val builder = AlertDialog.Builder(this)
                     builder.setTitle("서비스 이용 알림").setCancelable(false)
-                    builder.setMessage("앱을 사용하기 위해서는 위치, 알림 권한이 필요합니다. 설정으로 이동하여 권한을 항상 허용해주세요.")
+                    builder.setTitle("위치 정보 접근 권한 허용 설정 안내").setCancelable(false)
+                    builder.setMessage(
+                        "이 앱은 앱이 종료되었거나 사용 중이 아닐 때도 실시간으로 위치 데이터를 수집하여 사용자의 위치를 파악하고,"
+                                + " 주변 지하철역을 탐색하여 열차의 도착 안내를 제공합니다."
+                                + " 그리고 해당 기능을 이용하기 위하여, 위치 권한의 설정이 필요합니다.\n"
+                                + "'설정 - 권한' 에서 위치 정보 접근 권한을 '항상 허용' 으로 설정해 주세요.\n\n"
+                                + " ※ 위치 정보 수집을 거부하시면 사용자님의 위치는 수집되지 않습니다. 그러나 해당 권한이 앱의 주요 기능에"
+                                + " 필수적임에 따라, 앱을 이용하실 수 없게 됩니다."
+                    )
                     builder.setPositiveButton("설정으로 이동") { _, _ ->
                         moveAppSettings(this, requestCode)
                     }
@@ -381,6 +463,23 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+//    private fun buildLocationAlert(): AlertDialog.Builder {
+//        val builder = AlertDialog.Builder(this)
+//        builder.setTitle("위치 정보 접근 권한 허용 설정 안내").setCancelable(false)
+//        builder.setMessage(
+//            "이 앱은 앱이 종료되었거나 사용 중이 아닐 때도 실시간으로 위치 데이터를 수집하여 사용자의 위치를 파악하고,"
+//                    + " 주변 지하철역을 탐색하여 열차의 도착 안내를 제공합니다."
+//                    + " 그리고 해당 기능을 이용하기 위하여, 위치 권한의 설정이 필요합니다.\n"
+//                    + "'설정 - 권한' 에서 위치 정보 접근 권한을 '항상 허용' 으로 설정해 주세요.\n\n"
+//                    + " ※ 위치 정보 수집을 거부하시면 사용자님의 위치는 수집되지 않습니다. 그러나 해당 권한이 앱의 주요 기능에"
+//                    + " 필수적임에 따라, 앱을 이용하실 수 없게 됩니다."
+//        )
+//        builder.setPositiveButton("설정으로 이동") { _, _ ->
+//            moveAppSettings(this, LOCATION_PERMISSION_REQUEST_CODE)
+//        }
+//        return builder
+//    }
 
     private val moveLocationSettingsLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
