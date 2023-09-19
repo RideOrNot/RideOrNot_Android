@@ -2,6 +2,7 @@ package com.hanium.rideornot.ui.favorite
 
 import android.content.Context
 import android.content.res.ColorStateList
+import android.graphics.PorterDuff
 import android.graphics.drawable.GradientDrawable
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,6 +11,8 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
+import androidx.appcompat.widget.AppCompatImageView
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.hanium.rideornot.R
@@ -75,15 +78,13 @@ class FavoriteEditRVAdapter(
                 llLines.removeAllViews()
                 val lineIdList = searchViewModel.findLinesByStationName(item.stationName)
                 for (lineId in lineIdList) {
-                    val lineItemView = LayoutInflater.from(context).inflate(R.layout.item_line, llLines, false)
+                    val lineItemView = LayoutInflater.from(context).inflate(R.layout.item_line_small, llLines, false)
                     lineItemView.id = View.generateViewId()
-                    val lineBtn = lineItemView.findViewById<AppCompatButton>(R.id.btn_line)
-                    lineBtn.text = searchViewModel.getLineNameByLineId(lineId).firstOrNull().toString()
+                    val ivLine = lineItemView.findViewById<AppCompatImageView>(R.id.iv_line)
+                    val tvLine = lineItemView.findViewById<AppCompatTextView>(R.id.tv_line)
+                    tvLine.text = searchViewModel.getLineNameByLineId(lineId).firstOrNull().toString()
                     val color = ContextCompat.getColor(context, getLineColorIdByLineId(lineId))
-                    lineBtn.backgroundTintList = ColorStateList.valueOf(color)
-                    val backgroundDrawable = lineBtn.background as? GradientDrawable
-                    backgroundDrawable?.setStroke(4, color)
-                    lineBtn.background = backgroundDrawable
+                    ivLine.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
                     // lineItemView를 부모 view의 LinearLayout에 추가
                     val parentLayout = itemView.findViewById<LinearLayout>(R.id.ll_lines)
                     parentLayout.addView(lineItemView)
