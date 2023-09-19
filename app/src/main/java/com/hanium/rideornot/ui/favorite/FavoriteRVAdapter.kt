@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hanium.rideornot.R
 import com.hanium.rideornot.databinding.ItemFavoriteBinding
 import com.hanium.rideornot.domain.Favorite
+import com.hanium.rideornot.domain.SearchHistory
 import com.hanium.rideornot.ui.search.SearchViewModel
 import com.hanium.rideornot.utils.methods.getLineColorIdByLineId
 import kotlinx.coroutines.CoroutineScope
@@ -74,6 +75,13 @@ class FavoriteRVAdapter(
                     lineItemView.id = View.generateViewId()
                     val lineBtn = lineItemView.findViewById<AppCompatButton>(R.id.btn_line)
                     lineBtn.text = searchViewModel.getLineNameByLineId(lineId).firstOrNull().toString()
+                    lineBtn.setOnClickListener {
+                        val position = adapterPosition
+                        if (position != RecyclerView.NO_POSITION) {
+                            val clickedItem = itemList[position]
+                            favoriteRVInterface.onFavoriteItemClick(clickedItem)
+                        }
+                    }
                     val color = ContextCompat.getColor(context, getLineColorIdByLineId(lineId))
                     lineBtn.backgroundTintList = ColorStateList.valueOf(color)
                     val backgroundDrawable = lineBtn.background as? GradientDrawable
