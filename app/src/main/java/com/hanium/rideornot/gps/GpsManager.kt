@@ -2,6 +2,7 @@ package com.hanium.rideornot.gps
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -78,12 +79,25 @@ object GpsManager {
                 locationPermissions[2]
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            ActivityCompat.requestPermissions(
-                activity,
-                locationPermissions,
-                // Geofence 떄문에 백그라운드 위치정보 접근권한 요청 다시 추가함
-                LOCATION_PERMISSION_REQUEST_CODE
+            val builder = AlertDialog.Builder(activity)
+            builder.setTitle("위치 정보 접근 권한 허용 설정 안내").setCancelable(false)
+            builder.setMessage(
+                "이 앱은 앱이 종료되었거나 사용 중이 아닐 때도 실시간으로 위치 데이터를 수집하여 사용자의 위치를 파악하고,"
+                        + " 주변 지하철역을 탐색하여 열차의 도착 안내를 제공합니다."
+                        + " 그리고 해당 기능을 이용하기 위하여, 위치 권한의 설정이 필요합니다.\n"
+                        + "'설정 - 권한' 에서 위치 정보 접근 권한을 '항상 허용' 으로 설정해 주세요.\n\n"
+                        + " ※ 위치 정보 수집을 거부하시면 사용자님의 위치는 수집되지 않습니다. 그러나 해당 권한이 앱의 주요 기능에"
+                        + " 필수적임에 따라, 앱을 이용하실 수 없게 됩니다."
             )
+            builder.setPositiveButton("확인") { _, _ ->
+                ActivityCompat.requestPermissions(
+                    activity,
+                    locationPermissions,
+                    // Geofence 떄문에 백그라운드 위치정보 접근권한 요청 다시 추가함
+                    LOCATION_PERMISSION_REQUEST_CODE
+                )
+            }
+            builder.show()
         } else {
             NotificationManager.initNotificationManager(activity)
         }
