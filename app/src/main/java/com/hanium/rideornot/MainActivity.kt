@@ -1,11 +1,8 @@
 package com.hanium.rideornot
 
-import android.app.Activity.RESULT_FIRST_USER
 import android.app.AlertDialog
-import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.content.IntentSender
-import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
@@ -14,9 +11,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat.startIntentSenderForResult
 import androidx.core.content.ContextCompat
-import androidx.databinding.DataBindingUtil.setContentView
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -25,7 +20,6 @@ import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.CommonStatusCodes
-import com.hanium.rideornot.App.Companion.startSignIn
 import com.hanium.rideornot.data.request.SignInRequestBody
 import com.hanium.rideornot.databinding.ActivityMainBinding
 import com.hanium.rideornot.gps.GpsForegroundService
@@ -38,23 +32,19 @@ import com.hanium.rideornot.ui.signUp.SignUpFragment1
 import com.hanium.rideornot.ui.signUp.SignUpViewModel
 import com.hanium.rideornot.utils.NetworkModule
 import com.hanium.rideornot.utils.PreferenceUtil
-import kotlinx.coroutines.*
+import com.hanium.rideornot.utils.observers.LoginResultObserver
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 private const val REQ_ONE_TAP = 2
-private const val PREFS_NAME = "mainActivity"
-private const val FIRST_RUN_KEY = "firstRun"
-
-private const val AUTH_PREFS_NAME = "auth"
-private const val JWT_KEY = "jwt"
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var signUpViewModel: SignUpViewModel
-    private lateinit var preferenceUtil: PreferenceUtil
-
-
 
     // 안드로이드 기기의 API 레벨(31 이하?)이 낮을 경우 원탭로그인이 동작하지 않음.
     // missing feature{name=auth_api_credentials_begin_sign_in, version=8}
@@ -123,22 +113,17 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        throw java.lang.IllegalArgumentException("test for DefaultUncaughtExceptionHandler")
-
         initBottomNavigation()
 
-//        preferenceUtil = PreferenceUtil(this)
-//        preferenceUtil.setJwt("")
-        val preferences: SharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-        val isFirstRun = preferences.getBoolean(FIRST_RUN_KEY, true)
+        val isFirstRun = App.preferenceUtil.prefs.getBoolean(PreferenceUtil.FIRST_RUN_KEY, true)
 
         if (isFirstRun) {
             // 최초 실행인 경우, 접근 권한 안내 창을 표시
             showPermissionInfoDialog()
 
             // 최초 실행 여부 업데이트
-            val editor = preferences.edit()
-            editor.putBoolean(FIRST_RUN_KEY, false)
+            val editor = App.preferenceUtil.prefs.edit()
+            editor.putBoolean(PreferenceUtil.FIRST_RUN_KEY, false)
             editor.apply()
         } else {
             // 최초 실행이 아닌 경우
@@ -161,6 +146,11 @@ class MainActivity : AppCompatActivity() {
 //            .replace(R.id.frm_main, SignUpFragment1())
 //            .commit()
         startSignIn()
+    }
+
+    fun startSignOut() {
+        oneTapClient = Identity.getSignInClient(this@MainActivity)
+        oneTapClient.signOut()
     }
 
     fun startSignIn() {
@@ -209,18 +199,18 @@ class MainActivity : AppCompatActivity() {
                             )
                         } catch (e: IntentSender.SendIntentException) {
                             Log.e("oneTapUiFailure", "Couldn't start One Tap UI: ${e.localizedMessage}")
-                            loginResultObserver.onLoginFailure()
+                            loginResultObserver.notifyLoginFailure()
                         }
                     }
                     .addOnFailureListener(this@MainActivity) { e ->
                         // No saved credentials found. Launch the One Tap sign-up flow, or
                         // do nothing and continue presenting the signed-out UI.
                         Log.d("beginSignInFailure", e.localizedMessage)
-                        loginResultObserver.onLoginFailure()
+                        loginResultObserver.notifyLoginFailure()
                     }
             } else if (response.resultCode == NetworkModule.SUCCESS) {
                 // jwt가 유효하고 프로필이 설정되어 있을 시, 정상 로그인 처리
-                loginResultObserver.onLoginSuccess()
+                loginResultObserver.notifyLoginSuccess()
 
             }
         }
@@ -250,7 +240,7 @@ class MainActivity : AppCompatActivity() {
                             }
                             App.preferenceUtil.setJwt(jwtResponse.body().toString())
                             val profileGetResponse = NetworkModule.getProfileService().getProfile()
-                            loginResultObserver.onLoginSuccess()
+                            loginResultObserver.notifyLoginSuccess()
                             // 계정 생성 시 ageRange = 0, gender = 0, nickName = "구글 계정의 이름" 이 할당됨.
                             if (profileGetResponse.result.ageRange == 0 || profileGetResponse.result.gender == 0
 //                                || profileResponse.result.nickName == null

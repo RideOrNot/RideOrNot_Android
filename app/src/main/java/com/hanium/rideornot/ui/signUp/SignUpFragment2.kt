@@ -10,12 +10,12 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.hanium.rideornot.R
-import com.hanium.rideornot.databinding.FragmentSignIn2Binding
+import com.hanium.rideornot.databinding.FragmentSignUp2Binding
 import com.hanium.rideornot.ui.signUp.SignUpViewModel.AgeRange
 
 
 class SignUpFragment2 : Fragment() {
-    private lateinit var binding: FragmentSignIn2Binding
+    private lateinit var binding: FragmentSignUp2Binding
     private lateinit var signUpViewModel: SignUpViewModel
     private lateinit var onBackPressedCallback: OnBackPressedCallback
     private fun setBackBtnHandling() {
@@ -34,7 +34,7 @@ class SignUpFragment2 : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         super.onCreate(savedInstanceState)
-        binding = FragmentSignIn2Binding.inflate(inflater, container, false)
+        binding = FragmentSignUp2Binding.inflate(inflater, container, false)
         signUpViewModel = ViewModelProvider(requireActivity())[SignUpViewModel::class.java]
         setBackBtnHandling()
 

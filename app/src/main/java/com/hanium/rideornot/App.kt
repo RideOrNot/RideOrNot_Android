@@ -32,7 +32,8 @@ class App : Application() {
             return instance.applicationContext
         }
 
-        fun signOut() {
+        fun signOut(mainActivity: MainActivity) {
+            mainActivity.startSignOut()
             preferenceUtil.setJwt("")
         }
 

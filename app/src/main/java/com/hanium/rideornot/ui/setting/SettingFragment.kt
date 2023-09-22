@@ -15,6 +15,8 @@ import com.hanium.rideornot.databinding.FragmentSettingBinding
 import com.hanium.rideornot.ui.dialog.BaseDialog
 import com.hanium.rideornot.ui.dialog.VerticalDialog
 import com.hanium.rideornot.utils.NetworkModule
+import com.hanium.rideornot.utils.PreferenceUtil
+import com.hanium.rideornot.utils.observers.ILoginResultListener
 import kotlinx.coroutines.*
 import retrofit2.Response
 
@@ -74,6 +76,7 @@ class SettingFragment : Fragment(), ILoginResultListener {
             if (response.result != null) {
                 binding.tvNickname.text = response.result.nickName
                 binding.tvEmail.text = response.result.email
+                Toast.makeText(requireContext(),R.string.toast_login_success, Toast.LENGTH_SHORT)
             } else {
                 binding.tvNickname.text = "계정 정보 확인 불가"
             }
@@ -81,7 +84,7 @@ class SettingFragment : Fragment(), ILoginResultListener {
     }
 
     override fun onLoginFailure() {
-
+        Toast.makeText(requireContext(),R.string.toast_login_failure, Toast.LENGTH_SHORT)
     }
 
     private fun initView() {
@@ -95,9 +98,14 @@ class SettingFragment : Fragment(), ILoginResultListener {
             )
             dialog.topBtnClickListener {
                 if (it) {
-                    Toast.makeText(requireContext(), getString(R.string.toast_logout_success),Toast.LENGTH_SHORT).show()
-                    App.signOut()
-                    App.startSignIn(requireActivity() as MainActivity)
+                    if (profiles != null) {
+                        Toast.makeText(requireContext(), getString(R.string.toast_logout_success), Toast.LENGTH_SHORT).show()
+                        App.signOut(requireActivity() as MainActivity)
+                        App.startSignIn(requireActivity() as MainActivity)
+                    } else {
+                        Toast.makeText(requireContext(), getString(R.string.toast_logout_failure), Toast.LENGTH_SHORT).show()
+                        App.signOut(requireActivity() as MainActivity)
+                    }
                     true
                 }
             }
@@ -133,11 +141,15 @@ class SettingFragment : Fragment(), ILoginResultListener {
                                 // TODO: 서버 응답 BaseResponse 형식으로 바뀌면 구현 수정하기
                                 lateinit var deleteResponse: Response<String>
                                 withContext(Dispatchers.Default) {
-                                   deleteResponse = NetworkModule.getProfileService().deleteUser(profiles!!.id)
+                                    deleteResponse = NetworkModule.getProfileService().deleteUser(profiles!!.id)
                                 }
                                 if (deleteResponse.isSuccessful) {
-                                    Toast.makeText(requireContext(), getString(R.string.toast_unregister_success),Toast.LENGTH_SHORT).show()
-                                    App.signOut()
+                                    Toast.makeText(
+                                        requireContext(),
+                                        getString(R.string.toast_unregister_success),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    App.signOut(requireActivity() as MainActivity)
                                     App.startSignIn(requireActivity() as MainActivity)
                                 }
                             }
@@ -165,10 +177,9 @@ class SettingFragment : Fragment(), ILoginResultListener {
             // TODO: 걸음 속도 설정 구현하기
             BaseDialog(requireContext() as AppCompatActivity).show(getString(R.string.toast_not_yet_implemented))
         }
-        
+
         binding.switchPushNotificationReception.setOnClickListener {
-            // TODO: 푸시알림 해제 설정 구현하기
-            BaseDialog(requireContext() as AppCompatActivity).show(getString(R.string.toast_not_yet_implemented))
+            App.preferenceUtil.prefs.edit().putBoolean(PreferenceUtil.PUSH_NOTIFICATION_KEY, true)
         }
     }
 }

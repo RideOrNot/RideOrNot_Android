@@ -4,7 +4,6 @@ plugins {
     id 'kotlin-kapt'
     id 'androidx.navigation.safeargs.kotlin'
 }
-
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 def NAVER_MAP = properties.getProperty("NAVER_MAP")
@@ -15,9 +14,9 @@ android {
 
     defaultConfig {
         applicationId "com.hanium.rideornot"
-        minSdk 33
+        minSdk 27
         targetSdk 33
-        versionCode 19
+        versionCode 21
         versionName "1.0.5"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

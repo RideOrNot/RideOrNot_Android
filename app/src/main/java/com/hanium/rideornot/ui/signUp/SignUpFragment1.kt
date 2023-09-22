@@ -8,18 +8,16 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.hanium.rideornot.R
-import com.hanium.rideornot.databinding.FragmentSignIn1Binding
-import kotlin.math.sign
+import com.hanium.rideornot.databinding.FragmentSignUp1Binding
 
 private const val FIRST_ANIM_DELAY: Long = 400
 private const val SECOND_ANIM_DELAY: Long = 1200
 private const val THIRD_ANIM_DELAY: Long = 2000
 
 class SignUpFragment1 : Fragment() {
-    private lateinit var binding: FragmentSignIn1Binding
+    private lateinit var binding: FragmentSignUp1Binding
     private lateinit var signUpViewModel: SignUpViewModel
     private lateinit var onBackPressedCallback: OnBackPressedCallback
     private fun setBackBtnHandling() {
@@ -40,7 +38,7 @@ class SignUpFragment1 : Fragment() {
     ): View? {
         super.onCreate(savedInstanceState)
         signUpViewModel = ViewModelProvider(requireActivity())[SignUpViewModel::class.java]
-        binding = FragmentSignIn1Binding.inflate(inflater, container, false)
+        binding = FragmentSignUp1Binding.inflate(inflater, container, false)
         setBackBtnHandling()
 
         val fadeInAnim1 = AnimationUtils.loadAnimation(context, R.anim.fade_in)

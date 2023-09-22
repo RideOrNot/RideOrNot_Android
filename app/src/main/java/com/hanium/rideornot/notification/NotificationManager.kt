@@ -49,7 +49,12 @@ object NotificationManager {
                 } else {
                     val builder = AlertDialog.Builder(activity)
                     builder.setTitle("서비스 이용 알림").setCancelable(false)
-                    builder.setMessage("앱을 사용하기 위해서는 위치, 알림 권한이 필요합니다. 설정으로 이동하여 권한을 항상 허용해주세요.")
+                    builder.setMessage("이 앱은 앱이 종료되었거나 사용 중이 아닐 때도 실시간으로 위치 데이터를 수집하여 사용자의 위치를 파악하고,"
+                            + " 주변 지하철역을 탐색하여 열차의 도착 안내를 제공합니다."
+                            + " 그리고 해당 기능을 이용하기 위하여, 위치 권한의 설정이 필요합니다.\n"
+                            + "'설정 - 권한' 에서 위치 정보 접근 권한을 '항상 허용' 으로 설정해 주세요.\n\n"
+                            + " ※ 위치 정보 수집을 거부하시면 사용자님의 위치는 수집되지 않습니다. 그러나 해당 권한이 앱의 주요 기능에"
+                            + " 필수적임에 따라, 앱을 이용하실 수 없게 됩니다.")
                     builder.setPositiveButton("설정으로 이동") { _, _ ->
                         moveAppSettings(activity, LOCATION_PERMISSION_REQUEST_CODE)
                     }

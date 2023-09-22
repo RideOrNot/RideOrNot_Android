@@ -13,12 +13,10 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.hanium.rideornot.R
 import com.hanium.rideornot.data.request.ProfilePostRequestBody
-import com.hanium.rideornot.data.response.ProfileGetResponse
-import com.hanium.rideornot.databinding.FragmentSignIn4Binding
+import com.hanium.rideornot.databinding.FragmentSignUp4Binding
 import com.hanium.rideornot.ui.setting.SettingViewModel
 import com.hanium.rideornot.utils.NetworkModule
 import kotlinx.coroutines.CoroutineScope
@@ -31,7 +29,7 @@ private const val SECOND_ANIM_DELAY: Long = 800
 private const val MAX_NICKNAME_BYTES: Int = 24
 
 class SignUpFragment4 : Fragment() {
-    private lateinit var binding: FragmentSignIn4Binding
+    private lateinit var binding: FragmentSignUp4Binding
     private lateinit var signUpViewModel: SignUpViewModel
     private lateinit var settingViewModel: SettingViewModel
     private lateinit var onBackPressedCallback: OnBackPressedCallback
@@ -54,7 +52,7 @@ class SignUpFragment4 : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         super.onCreate(savedInstanceState)
-        binding = FragmentSignIn4Binding.inflate(inflater, container, false)
+        binding = FragmentSignUp4Binding.inflate(inflater, container, false)
         signUpViewModel = ViewModelProvider(requireActivity())[SignUpViewModel::class.java]
 
         setBackBtnHandling()
