@@ -148,9 +148,9 @@ class MainActivity : AppCompatActivity() {
         startSignIn()
     }
 
-    fun startSignOut() {
+    fun signOutOneTapClient() {
         oneTapClient = Identity.getSignInClient(this@MainActivity)
-        oneTapClient.signOut()
+//        oneTapClient.signOut()
     }
 
     fun startSignIn() {
@@ -211,7 +211,6 @@ class MainActivity : AppCompatActivity() {
             } else if (response.resultCode == NetworkModule.SUCCESS) {
                 // jwt가 유효하고 프로필이 설정되어 있을 시, 정상 로그인 처리
                 loginResultObserver.notifyLoginSuccess()
-
             }
         }
 

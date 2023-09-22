@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -18,6 +19,19 @@ class OuterSearchFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var binding: FragmentSearchOuterBinding
 
+    private lateinit var onBackPressedCallback: OnBackPressedCallback
+    private fun setBackBtnHandling() {
+        onBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                requireActivity().finish()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            onBackPressedCallback
+        )
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -27,15 +41,16 @@ class OuterSearchFragment : Fragment(), OnMapReadyCallback {
         val bottomNavigationView = requireActivity().findViewById<BottomNavigationView>(R.id.bnv_main)
         bottomNavigationView.visibility = View.VISIBLE
 
-        binding.tvSearch.setOnClickListener {
-            handleTextViewClick()
+        binding.clEditTextSearch.setOnClickListener {
+            switchToInnerSearchFragment()
         }
 
         initView()
+        setBackBtnHandling()
         return binding.root
     }
 
-    private fun handleTextViewClick() {
+    private fun switchToInnerSearchFragment() {
         findNavController().navigate(
             OuterSearchFragmentDirections.actionFragmentOuterSearchToFragmentInnerSearch()
         )

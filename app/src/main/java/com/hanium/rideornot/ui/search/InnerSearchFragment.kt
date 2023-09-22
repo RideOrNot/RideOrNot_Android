@@ -31,18 +31,18 @@ class InnerSearchFragment : Fragment(),
     private val searchViewModel: SearchViewModel by viewModels { ViewModelFactory(requireContext()) }
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Main)
 
-    private lateinit var onBackPressedCallback: OnBackPressedCallback
-    private fun setBackBtnHandling() {
-        onBackPressedCallback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                requireActivity().finish()
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner,
-            onBackPressedCallback
-        )
-    }
+//    private lateinit var onBackPressedCallback: OnBackPressedCallback
+//    private fun setBackBtnHandling() {
+//        onBackPressedCallback = object : OnBackPressedCallback(true) {
+//            override fun handleOnBackPressed() {
+//                requireActivity().finish()
+//            }
+//        }
+//        requireActivity().onBackPressedDispatcher.addCallback(
+//            viewLifecycleOwner,
+//            onBackPressedCallback
+//        )
+//    }
 
     private fun handleSwitchToSearchHistory(searchHistoryList: List<SearchHistory>) {
         initSearchHistoryRecycler(searchHistoryList)
@@ -64,7 +64,7 @@ class InnerSearchFragment : Fragment(),
         // innerFragment가 출력되는 버그가 발생하였음. 이를 방지하기 위해 inner fragment에서 bnv를 사라지게 설정하였음.
         val bottomNavigationView = requireActivity().findViewById<BottomNavigationView>(R.id.bnv_main)
         bottomNavigationView.visibility = View.GONE
-        setBackBtnHandling()
+//        setBackBtnHandling()
 
         binding.rvSearch.layoutManager =
             LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
@@ -219,8 +219,6 @@ class InnerSearchFragment : Fragment(),
     }
 
     private fun switchToOuterSearchFragment() {
-        findNavController().navigate(
-            InnerSearchFragmentDirections.actionFragmentInnerSearchToFragmentOuterSearch()
-        )
+        findNavController().navigateUp()
     }
 }

@@ -33,7 +33,7 @@ class App : Application() {
         }
 
         fun signOut(mainActivity: MainActivity) {
-            mainActivity.startSignOut()
+            mainActivity.signOutOneTapClient()
             prefUtil.setJwt("")
         }
 
