@@ -69,10 +69,20 @@
     <string name="toast_login_success">성공적으로 로그인하였습니다.</string>
     <string name="toast_login_failure">로그인에 실패하였습니다.</string>
     <string name="toast_logout_success">성공적으로 로그아웃하였습니다.</string>
-    <string name="toast_logout_failure">계정 정보를 찾지 못하여 로그아웃에 실패하였습니다.</string>
+    <string name="toast_account_not_exists">계정 정보 확인에 실패했습니다.</string>
     <string name="toast_unregister_success">회원 탈퇴가 완료되었습니다. 이전에 수집된 모든 개인정보는 삭제됩니다.</string>
     <string name="toast_notification_on">푸시 알림이 설정되었습니다.</string>
     <string name="toast_notification_off">푸시 알림이 해제되었습니다.</string>
+
+
+    <!-- Profile Dialog -->
+    <string name="profile_account_info">내 계정 정보</string>
+    <string name="profile_email">이메일</string>
+    <string name="profile_nickname">닉네임</string>
+    <string name="profile_gender">성 별</string>
+    <string name="profile_age_range">연령대</string>
+    <string name="profile_reset">프로필 재설정하기</string>
+
 
     <!-- Dialog -->
     <string name="check">확인</string>

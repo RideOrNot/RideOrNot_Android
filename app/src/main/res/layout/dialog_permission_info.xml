@@ -6,7 +6,7 @@
     android:background="@drawable/dialog_bg">
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_permission_info_title"
+        android:id="@+id/tv_profile_account_info"
         style="@style/Text.Header2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_permission_info_caption"
+        android:id="@+id/tv_profile_email"
         style="@style/Text.Body2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
         android:textColor="@color/gray_800"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_permission_info_title" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_profile_account_info" />
 
     <View
         android:id="@+id/v_first"
@@ -41,7 +41,7 @@
         android:background="@color/gray_300"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_permission_info_caption" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_profile_email" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_permission_info_essential_title"
