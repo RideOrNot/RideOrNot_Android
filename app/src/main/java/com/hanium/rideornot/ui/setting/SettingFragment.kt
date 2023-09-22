@@ -55,7 +55,6 @@ class SettingFragment : Fragment(), ILoginResultListener {
                 NetworkModule.getProfileService().getProfile()
             }
             profiles = response.result
-            Log.d("responseSetting", response.toString())
             if (response.result != null) {
                 binding.tvNickname.text = response.result.nickName
                 binding.tvEmail.text = response.result.email
@@ -73,7 +72,6 @@ class SettingFragment : Fragment(), ILoginResultListener {
                 NetworkModule.getProfileService().getProfile()
             }
             profiles = response.result
-            Log.d("responseSetting", response.toString())
             if (response.result != null) {
                 binding.tvNickname.text = response.result.nickName
                 binding.tvEmail.text = response.result.email
@@ -101,11 +99,11 @@ class SettingFragment : Fragment(), ILoginResultListener {
                 if (it) {
                     if (profiles != null) {
                         Toast.makeText(requireContext(), getString(R.string.toast_logout_success), Toast.LENGTH_SHORT).show()
-                        App.signOut(requireActivity() as MainActivity)
+                        App.signOut()
                         App.startSignIn(requireActivity() as MainActivity)
                     } else {
                         Toast.makeText(requireContext(), getString(R.string.toast_account_not_exists), Toast.LENGTH_SHORT).show()
-                        App.signOut(requireActivity() as MainActivity)
+                        App.signOut()
                     }
                     true
                 }
@@ -150,7 +148,7 @@ class SettingFragment : Fragment(), ILoginResultListener {
                                         getString(R.string.toast_unregister_success),
                                         Toast.LENGTH_SHORT
                                     ).show()
-                                    App.signOut(requireActivity() as MainActivity)
+                                    App.signOut()
                                     App.startSignIn(requireActivity() as MainActivity)
                                 }
                             }
@@ -189,17 +187,9 @@ class SettingFragment : Fragment(), ILoginResultListener {
         binding.switchPushNotificationReception.setOnClickListener {
             if (binding.switchPushNotificationReception.isChecked) {
                 App.prefUtil.prefs.edit().putBoolean(PreferenceUtil.PUSH_NOTIFICATION_KEY, true).apply()
-                Log.d(
-                    "notification_prefs-on",
-                    App.prefUtil.prefs.getBoolean(PreferenceUtil.PUSH_NOTIFICATION_KEY, true).toString()
-                )
                 Toast.makeText(requireContext(), getString(R.string.toast_notification_on), Toast.LENGTH_SHORT).show()
             } else {
                 App.prefUtil.prefs.edit().putBoolean(PreferenceUtil.PUSH_NOTIFICATION_KEY, false).apply()
-                Log.d(
-                    "notification_prefs-off",
-                    App.prefUtil.prefs.getBoolean(PreferenceUtil.PUSH_NOTIFICATION_KEY, true).toString()
-                )
                 Toast.makeText(requireContext(), getString(R.string.toast_notification_off), Toast.LENGTH_SHORT).show()
             }
         }

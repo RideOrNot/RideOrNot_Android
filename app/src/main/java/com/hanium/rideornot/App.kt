@@ -32,8 +32,8 @@ class App : Application() {
             return instance.applicationContext
         }
 
-        fun signOut(mainActivity: MainActivity) {
-            mainActivity.signOutOneTapClient()
+        fun signOut() {
+//            mainActivity.signOutOneTapClient()
             prefUtil.setJwt("")
         }
 
@@ -54,12 +54,13 @@ class App : Application() {
 //            throwable.printStackTrace()
             // 또는 오류 메시지를 사용자에게 표시
             // 예외 처리 후 앱 종료 여부를 결정할 수 있음
-            Log.d("exception handle","handling")
+            Log.d("exception handle", "handling")
+            Log.d("error", throwable.localizedMessage)
             caughtException()
         }
     }
 
-    private fun caughtException(){
+    private fun caughtException() {
         // start error activity
         startErrorActivity()
         // kill process
@@ -69,7 +70,7 @@ class App : Application() {
         exitProcess(-1)
     }
 
-    private fun startErrorActivity(){
+    private fun startErrorActivity() {
         val intent = Intent(this, ErrorActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)

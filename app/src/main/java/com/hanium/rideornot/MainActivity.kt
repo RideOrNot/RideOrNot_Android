@@ -55,9 +55,9 @@ class MainActivity : AppCompatActivity() {
     private val loginResultHandler = registerForActivityResult<IntentSenderRequest, ActivityResult>(
         ActivityResultContracts.StartIntentSenderForResult()
     ) { result: ActivityResult ->
-        if (result.resultCode == RESULT_OK) Log.d("loginResultHandler", "RESULT_OK.")
-        if (result.resultCode == RESULT_CANCELED) Log.d("loginResultHandler", "RESULT_CANCELED.")
-        if (result.resultCode == RESULT_FIRST_USER) Log.d("loginResultHandler", "RESULT_FIRST_USER.")
+//        if (result.resultCode == RESULT_OK) Log.d("loginResultHandler", "RESULT_OK.")
+//        if (result.resultCode == RESULT_CANCELED) Log.d("loginResultHandler", "RESULT_CANCELED.")
+//        if (result.resultCode == RESULT_FIRST_USER) Log.d("loginResultHandler", "RESULT_FIRST_USER.")
         try {
             val credential = oneTapClient.getSignInCredentialFromIntent(result.data)
             val idToken = credential.googleIdToken
@@ -150,7 +150,7 @@ class MainActivity : AppCompatActivity() {
 
     fun signOutOneTapClient() {
         oneTapClient = Identity.getSignInClient(this@MainActivity)
-//        oneTapClient.signOut()
+        oneTapClient.signOut()
     }
 
     fun startSignIn() {
@@ -162,7 +162,7 @@ class MainActivity : AppCompatActivity() {
                 NetworkModule.getProfileService().getProfile()
             }
 
-            Log.d("responseProfileGet", response.toString())
+//            Log.d("responseProfileGet", response.toString())
             // jwt가 만료되었을 시 혹은 프로필 설정이 안 되어있을 시 로그인 시도 및 계정 생성
             if (response.result == null || response.result.ageRange == 0
                 || response.result.gender == 0
