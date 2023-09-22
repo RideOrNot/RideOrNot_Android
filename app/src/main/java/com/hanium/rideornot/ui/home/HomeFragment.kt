@@ -104,6 +104,8 @@ class HomeFragment : Fragment() {
             val rotateAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.rotate360)
             binding.fabRefresh.startAnimation(rotateAnimation)
 
+            // 홈 화면에 표시되는 역 갱신
+            viewModel.showNearestStationName(fusedLocationClient)
             // 도착 정보 API 호출
             viewModel.loadArrivalInfo(stationName)
         }

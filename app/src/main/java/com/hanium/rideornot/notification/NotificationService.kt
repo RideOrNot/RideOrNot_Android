@@ -4,6 +4,7 @@ import android.app.Service
 import android.content.Intent
 import android.os.IBinder
 import android.util.Log
+import com.hanium.rideornot.App
 import com.hanium.rideornot.App.Companion.applicationScope
 import com.hanium.rideornot.App.Companion.lineRepository
 import com.hanium.rideornot.App.Companion.stationExitRepository
@@ -25,21 +26,19 @@ class NotificationService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val nearestStationExitId = intent?.getIntExtra("nearestStationExit", -1)
-        if (nearestStationExitId != -1) {
-            if (nearestStationExitId != null) {
-                applicationScope.launch {
-                    val content = loadRideNotification(nearestStationExitId)  // 양재 - 207 /nearestStationExitId
-                    NotificationManager.createNotification(
-                        applicationContext,
-                        NotificationModel(
-                            1,
-                            ContentType.RIDE,
-                            1,
-                            "승차 알림",
-                            content
-                        )
+        if (nearestStationExitId != -1 && nearestStationExitId != null) {
+            applicationScope.launch {
+                val content = loadRideNotification(nearestStationExitId)  // 양재 - 207 /nearestStationExitId
+                NotificationManager.createNotification(
+                    applicationContext,
+                    NotificationModel(
+                        1,
+                        ContentType.RIDE,
+                        1,
+                        "승차 알림",
+                        content
                     )
-                }
+                )
             }
         }
         return START_NOT_STICKY
@@ -77,8 +76,9 @@ class NotificationService : Service() {
             if (rideNotification.rideNotificationList.size > 1) {
                 val nextLineId = lineRepository.getLineNameById(rideNotification.rideNotificationList[1].lineId.toInt())
                 val nextRideNotificationContent = rideNotification.rideNotificationList[1]
-                val nextRideMessage = "${nextRideNotificationContent.stationName}역(${nextLineId}) ${nextRideNotificationContent.destination} 열차를 타려면 ${nextRideNotificationContent.message}"
-                rideMessage += "\n" +  nextRideMessage
+                val nextRideMessage =
+                    "${nextRideNotificationContent.stationName}역(${nextLineId}) ${nextRideNotificationContent.destination} 열차를 타려면 ${nextRideNotificationContent.message}"
+                rideMessage += "\n" + nextRideMessage
             }
 
             rideMessage

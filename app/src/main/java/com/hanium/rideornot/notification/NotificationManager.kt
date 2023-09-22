@@ -10,11 +10,13 @@ import android.os.Build
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import com.hanium.rideornot.App
 import com.hanium.rideornot.MainActivity
 import com.hanium.rideornot.MainActivity.Companion.moveAppSettings
 import com.hanium.rideornot.R
 import com.hanium.rideornot.gps.GpsManager
 import com.hanium.rideornot.gps.LOCATION_PERMISSION_REQUEST_CODE
+import com.hanium.rideornot.utils.PreferenceUtil
 
 const val NOTIFICATION_PERMISSION_REQUEST_CODE: Int = 2
 
@@ -62,15 +64,16 @@ object NotificationManager {
                 }
             }
         }
-
     }
 
     fun createNotification(context: Context, notificationData: NotificationModel) {
+        if (!App.prefUtil.prefs.getBoolean(PreferenceUtil.PUSH_NOTIFICATION_KEY, true))
+            return
+
         val notificationManager: NotificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         createNotificationChannel(context, notificationManager)
-
         notificationManager.notify(
             index, buildNotification(
                 context, notificationData

@@ -26,7 +26,7 @@ class App : Application() {
 
         lateinit var instance: App
 
-        lateinit var preferenceUtil: PreferenceUtil
+        lateinit var prefUtil: PreferenceUtil
 
         fun getApplicationContext(): Context {
             return instance.applicationContext
@@ -34,7 +34,7 @@ class App : Application() {
 
         fun signOut(mainActivity: MainActivity) {
             mainActivity.startSignOut()
-            preferenceUtil.setJwt("")
+            prefUtil.setJwt("")
         }
 
         fun startSignIn(mainActivity: MainActivity) {
@@ -44,7 +44,7 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        preferenceUtil = PreferenceUtil(applicationContext)
+        prefUtil = PreferenceUtil(applicationContext)
         instance = this
         // 다크모드 임시 비활성화
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)

@@ -115,14 +115,14 @@ class MainActivity : AppCompatActivity() {
 
         initBottomNavigation()
 
-        val isFirstRun = App.preferenceUtil.prefs.getBoolean(PreferenceUtil.FIRST_RUN_KEY, true)
+        val isFirstRun = App.prefUtil.prefs.getBoolean(PreferenceUtil.FIRST_RUN_KEY, true)
 
         if (isFirstRun) {
             // 최초 실행인 경우, 접근 권한 안내 창을 표시
             showPermissionInfoDialog()
 
             // 최초 실행 여부 업데이트
-            val editor = App.preferenceUtil.prefs.edit()
+            val editor = App.prefUtil.prefs.edit()
             editor.putBoolean(PreferenceUtil.FIRST_RUN_KEY, false)
             editor.apply()
         } else {
@@ -238,7 +238,7 @@ class MainActivity : AppCompatActivity() {
                                     SignInRequestBody(idToken)
                                 )
                             }
-                            App.preferenceUtil.setJwt(jwtResponse.body().toString())
+                            App.prefUtil.setJwt(jwtResponse.body().toString())
                             val profileGetResponse = NetworkModule.getProfileService().getProfile()
                             loginResultObserver.notifyLoginSuccess()
                             // 계정 생성 시 ageRange = 0, gender = 0, nickName = "구글 계정의 이름" 이 할당됨.

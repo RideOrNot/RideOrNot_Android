@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 
 private const val PREFS_NAME = "mainActivity"
 
-/** App.preferenceUtil 을 통해 접근 */
+/** App.prefUtil 을 통해 접근 */
 class PreferenceUtil(context: Context) {
     companion object {
         const val FIRST_RUN_KEY = "firstRun"

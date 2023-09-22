@@ -76,7 +76,7 @@ class SettingFragment : Fragment(), ILoginResultListener {
             if (response.result != null) {
                 binding.tvNickname.text = response.result.nickName
                 binding.tvEmail.text = response.result.email
-                Toast.makeText(requireContext(),R.string.toast_login_success, Toast.LENGTH_SHORT)
+                Toast.makeText(requireContext(), R.string.toast_login_success, Toast.LENGTH_SHORT)
             } else {
                 binding.tvNickname.text = "계정 정보 확인 불가"
             }
@@ -84,7 +84,7 @@ class SettingFragment : Fragment(), ILoginResultListener {
     }
 
     override fun onLoginFailure() {
-        Toast.makeText(requireContext(),R.string.toast_login_failure, Toast.LENGTH_SHORT)
+        Toast.makeText(requireContext(), R.string.toast_login_failure, Toast.LENGTH_SHORT)
     }
 
     private fun initView() {
@@ -178,8 +178,17 @@ class SettingFragment : Fragment(), ILoginResultListener {
             BaseDialog(requireContext() as AppCompatActivity).show(getString(R.string.toast_not_yet_implemented))
         }
 
+        binding.switchPushNotificationReception.isChecked = App.prefUtil.prefs.getBoolean(PreferenceUtil.PUSH_NOTIFICATION_KEY, true)
         binding.switchPushNotificationReception.setOnClickListener {
-            App.preferenceUtil.prefs.edit().putBoolean(PreferenceUtil.PUSH_NOTIFICATION_KEY, true)
+            if (binding.switchPushNotificationReception.isChecked) {
+                App.prefUtil.prefs.edit().putBoolean(PreferenceUtil.PUSH_NOTIFICATION_KEY, true).apply()
+                Log.d("notification_prefs-on", App.prefUtil.prefs.getBoolean(PreferenceUtil.PUSH_NOTIFICATION_KEY, true).toString())
+                Toast.makeText(requireContext(), getString(R.string.toast_notification_on), Toast.LENGTH_SHORT).show()
+            } else {
+                App.prefUtil.prefs.edit().putBoolean(PreferenceUtil.PUSH_NOTIFICATION_KEY, false).apply()
+                Log.d("notification_prefs-off", App.prefUtil.prefs.getBoolean(PreferenceUtil.PUSH_NOTIFICATION_KEY, true).toString())
+                Toast.makeText(requireContext(), getString(R.string.toast_notification_off), Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }

@@ -1,9 +1,5 @@
 package com.hanium.rideornot.utils
 
-import android.content.Context
-import android.content.SharedPreferences
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import com.hanium.rideornot.App
 import com.hanium.rideornot.BuildConfig.BASE_URL
 import com.hanium.rideornot.data.ArrivalService
@@ -54,7 +50,7 @@ object NetworkModule {
     class AppInterceptor : Interceptor {
         @Throws(IOException::class)
         override fun intercept(chain: Interceptor.Chain): Response = with(chain) {
-            val jwt = App.preferenceUtil.getJwt()
+            val jwt = App.prefUtil.getJwt()
             val authRequest = request().newBuilder()
                 .addHeader("Authorization", "$jwt").build()
             proceed(authRequest)
