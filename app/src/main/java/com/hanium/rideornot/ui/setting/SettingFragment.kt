@@ -1,5 +1,6 @@
 package com.hanium.rideornot.ui.setting
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -26,6 +27,7 @@ class SettingFragment : Fragment(), ILoginResultListener {
     private lateinit var binding: FragmentSettingBinding
     private lateinit var onBackPressedCallback: OnBackPressedCallback
     private var profiles: ProfileGetResponse? = null
+    private lateinit var context: Context
 
     private fun setBackBtnHandling() {
         onBackPressedCallback = object : OnBackPressedCallback(true) {
@@ -37,6 +39,11 @@ class SettingFragment : Fragment(), ILoginResultListener {
             viewLifecycleOwner,
             onBackPressedCallback
         )
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        this.context = context
     }
 
     override fun onCreateView(
@@ -75,7 +82,7 @@ class SettingFragment : Fragment(), ILoginResultListener {
             if (response.result != null) {
                 binding.tvNickname.text = response.result.nickName
                 binding.tvEmail.text = response.result.email
-                Toast.makeText(requireContext(), R.string.toast_login_success, Toast.LENGTH_SHORT)
+                Toast.makeText(context, R.string.toast_login_success, Toast.LENGTH_SHORT)
             } else {
                 binding.tvNickname.text = "계정 정보 확인 불가"
             }
@@ -83,12 +90,12 @@ class SettingFragment : Fragment(), ILoginResultListener {
     }
 
     override fun onLoginFailure() {
-        Toast.makeText(requireContext(), R.string.toast_login_failure, Toast.LENGTH_SHORT)
+        Toast.makeText(context, R.string.toast_login_failure, Toast.LENGTH_SHORT)
     }
 
     private fun initView() {
         binding.btnLogout.setOnClickListener {
-            val dialog = VerticalDialog(requireContext() as AppCompatActivity)
+            val dialog = VerticalDialog(context as AppCompatActivity)
             dialog.show(
                 getString(R.string.logout_message),
                 getString(R.string.logout_caption),
@@ -98,11 +105,11 @@ class SettingFragment : Fragment(), ILoginResultListener {
             dialog.topBtnClickListener {
                 if (it) {
                     if (profiles != null) {
-                        Toast.makeText(requireContext(), getString(R.string.toast_logout_success), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, getString(R.string.toast_logout_success), Toast.LENGTH_SHORT).show()
                         App.signOut()
                         App.startSignIn(requireActivity() as MainActivity)
                     } else {
-                        Toast.makeText(requireContext(), getString(R.string.toast_account_not_exists), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, getString(R.string.toast_account_not_exists), Toast.LENGTH_SHORT).show()
                         App.signOut()
                     }
                     true
@@ -114,7 +121,7 @@ class SettingFragment : Fragment(), ILoginResultListener {
         }
 
         binding.btnUnregister.setOnClickListener {
-            val dialog = VerticalDialog(requireContext() as AppCompatActivity)
+            val dialog = VerticalDialog(context as AppCompatActivity)
             dialog.show(
                 getString(R.string.unregister_message),
                 getString(R.string.unregister_caption),
@@ -123,7 +130,7 @@ class SettingFragment : Fragment(), ILoginResultListener {
             )
             dialog.topBtnClickListener { dialogTopBtnClicked ->
                 if (dialogTopBtnClicked) {
-                    val confirmationDialog = VerticalDialog(requireContext() as AppCompatActivity)
+                    val confirmationDialog = VerticalDialog(context as AppCompatActivity)
                     confirmationDialog.show(
                         getString(R.string.unregister_confirmation_message),
                         getString(R.string.unregister_confirmation_caption),
@@ -134,7 +141,7 @@ class SettingFragment : Fragment(), ILoginResultListener {
                         if (it) {
                             CoroutineScope(Dispatchers.Main).launch {
                                 if (profiles == null) {
-                                    Toast.makeText(requireContext(), getString(R.string.action_fail), Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(context, getString(R.string.action_fail), Toast.LENGTH_SHORT).show()
                                     return@launch
                                 }
                                 // TODO: 서버 응답 BaseResponse 형식으로 바뀌면 구현 수정하기
@@ -144,7 +151,7 @@ class SettingFragment : Fragment(), ILoginResultListener {
                                 }
                                 if (deleteResponse.isSuccessful) {
                                     Toast.makeText(
-                                        requireContext(),
+                                        context,
                                         getString(R.string.toast_unregister_success),
                                         Toast.LENGTH_SHORT
                                     ).show()
@@ -169,17 +176,17 @@ class SettingFragment : Fragment(), ILoginResultListener {
 
         binding.btnAccountInfo.setOnClickListener {
             if (profiles == null) {
-                Toast.makeText(requireContext(), getString(R.string.toast_account_not_exists), Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(R.string.toast_account_not_exists), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            ProfileDialog(requireContext() as AppCompatActivity).show(
+            ProfileDialog(context as AppCompatActivity).show(
                 profiles!!.email, profiles!!.nickName, profiles!!.gender, profiles!!.ageRange
             )
         }
 
         binding.btnWalkingSpeedSetting.setOnClickListener {
             // TODO: 걸음 속도 설정 구현하기
-            BaseDialog(requireContext() as AppCompatActivity).show(getString(R.string.toast_not_yet_implemented))
+            BaseDialog(context as AppCompatActivity).show(getString(R.string.toast_not_yet_implemented))
         }
 
         binding.switchPushNotificationReception.isChecked =
@@ -187,10 +194,10 @@ class SettingFragment : Fragment(), ILoginResultListener {
         binding.switchPushNotificationReception.setOnClickListener {
             if (binding.switchPushNotificationReception.isChecked) {
                 App.prefUtil.prefs.edit().putBoolean(PreferenceUtil.PUSH_NOTIFICATION_KEY, true).apply()
-                Toast.makeText(requireContext(), getString(R.string.toast_notification_on), Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(R.string.toast_notification_on), Toast.LENGTH_SHORT).show()
             } else {
                 App.prefUtil.prefs.edit().putBoolean(PreferenceUtil.PUSH_NOTIFICATION_KEY, false).apply()
-                Toast.makeText(requireContext(), getString(R.string.toast_notification_off), Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(R.string.toast_notification_off), Toast.LENGTH_SHORT).show()
             }
         }
     }
