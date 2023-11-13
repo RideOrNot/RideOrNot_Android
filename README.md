@@ -45,4 +45,7 @@
 [https://youtu.be/bMhVxTmJhqk](https://youtu.be/bMhVxTmJhqk)
 
 ## 결과물 상세 이미지
-추후 작성
+
+|실시간 도착정보|검색|북마크|승차 알림|
+|:---:|:---:|:---:|:---:|
+|<img src = "https://github.com/RideOrNot/RideOrNot_Android/assets/68229317/49d5d35c-9c32-4fb7-b2c3-e07d615475af" width = 120vw height = 250vh>|<img src = "https://github.com/RideOrNot/RideOrNot_Android/assets/68229317/d685ad63-5d31-435a-b1eb-c978ea108ff1" width = 120vw height = 250vh>|<img src = "https://github.com/RideOrNot/RideOrNot_Android/assets/68229317/c632697d-8d04-4e2e-93c2-fcdd717b2693" width = 120vw height = 250vh>|<img src = "https://github.com/RideOrNot/RideOrNot_Android/assets/68229317/34d12ae0-70ec-471d-af85-3f9c766b6d73" width = 120vw height = 250vh>|
